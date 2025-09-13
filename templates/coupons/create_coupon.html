@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Create Coupon - JOOG Admin{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12">
+    <div class="max-w-2xl mx-auto">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">Create New Coupon</h1>
+            <a href="{% url 'coupons:admin_coupons' %}" class="btn btn-outline">
+                <i class="fas fa-arrow-left mr-2"></i> Back to Coupons
+            </a>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-lg p-8">
+            <form method="POST" class="space-y-6">
+                {% csrf_token %}
+                
+                <div>
+                    <label class="form-label">{{ form.code.label_tag }}</label>
+                    {{ form.code }}
+                    {% if form.code.errors %}
+                    <div class="form-error">{{ form.code.errors.0 }}</div>
+                    {% endif %}
+                    <p class="text-sm text-gray-500 mt-1">Unique coupon code (e.g., SAVE20, WELCOME10)</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="form-label">{{ form.discount_type.label_tag }}</label>
+                        {{ form.discount_type }}
+                        {% if form.discount_type.errors %}
+                        <div class="form-error">{{ form.discount_type.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label class="form-label">{{ form.discount_value.label_tag }}</label>
+                        {{ form.discount_value }}
+                        {% if form.discount_value.errors %}
+                        <div class="form-error">{{ form.discount_value.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="form-label">{{ form.minimum_amount.label_tag }}</label>
+                        {{ form.minimum_amount }}
+                        {% if form.minimum_amount.errors %}
+                        <div class="form-error">{{ form.minimum_amount.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label class="form-label">{{ form.max_uses.label_tag }}</label>
+                        {{ form.max_uses }}
+                        {% if form.max_uses.errors %}
+                        <div class="form-error">{{ form.max_uses.errors.0 }}</div>
+                        {% endif %}
+                        <p class="text-sm text-gray-500 mt-1">Leave empty for unlimited uses</p>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="form-label">{{ form.valid_from.label_tag }}</label>
+                        {{ form.valid_from }}
+                        {% if form.valid_from.errors %}
+                        <div class="form-error">{{ form.valid_from.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label class="form-label">{{ form.valid_to.label_tag }}</label>
+                        {{ form.valid_to }}
+                        {% if form.valid_to.errors %}
+                        <div class="form-error">{{ form.valid_to.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="flex items-center">
+                    {{ form.active }}
+                    <label class="ml-2 text-sm text-gray-700">{{ form.active.label }}</label>
+                    {% if form.active.errors %}
+                    <div class="form-error">{{ form.active.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="flex space-x-4">
+                    <button type="submit" class="btn btn-primary">
+                        Create Coupon <i class="fas fa-plus ml-2"></i>
+                    </button>
+                    <a href="{% url 'coupons:admin_coupons' %}" class="btn btn-outline">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

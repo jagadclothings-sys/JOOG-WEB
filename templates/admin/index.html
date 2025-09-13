@@ -1,0 +1,147 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrahead %}
+{{ block.super }}
+<style>
+    .admin-dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin: 2rem 0;
+    }
+    
+    .admin-card {
+        background: white;
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        padding: 1.5rem;
+        border-left: 4px solid #dc2626;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .admin-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+    
+    .admin-card h3 {
+        color: #dc2626;
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+    
+    .admin-card p {
+        color: #6b7280;
+        margin-bottom: 1rem;
+    }
+    
+    .admin-card a {
+        color: #dc2626;
+        text-decoration: none;
+        font-weight: 500;
+    }
+    
+    .admin-card a:hover {
+        color: #ef4444;
+    }
+    
+    .quick-actions {
+        background: #f9fafb;
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+        margin: 2rem 0;
+    }
+    
+    .quick-actions h2 {
+        color: #374151;
+        margin-bottom: 1rem;
+    }
+    
+    .quick-actions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+    
+    .quick-action-btn {
+        background: #dc2626;
+        color: white;
+        padding: 0.75rem 1rem;
+        border-radius: 0.375rem;
+        text-decoration: none;
+        text-align: center;
+        transition: background 0.2s;
+    }
+    
+    .quick-action-btn:hover {
+        background: #ef4444;
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-dashboard-grid">
+    <div class="admin-card">
+        <h3><i class="fas fa-box mr-2"></i>Products</h3>
+        <p>Manage your product catalog, add new products, and update existing ones.</p>
+        <a href="{% url 'admin:products_product_changelist' %}">View Products →</a>
+    </div>
+    
+    <div class="admin-card">
+        <h3><i class="fas fa-users mr-2"></i>Customers</h3>
+        <p>View and manage customer accounts and their information.</p>
+        <a href="{% url 'admin:accounts_customuser_changelist' %}">View Customers →</a>
+    </div>
+    
+    <div class="admin-card">
+        <h3><i class="fas fa-shopping-bag mr-2"></i>Orders</h3>
+        <p>Track and manage customer orders and their status.</p>
+        <a href="{% url 'admin:orders_order_changelist' %}">View Orders →</a>
+    </div>
+    
+    <div class="admin-card">
+        <h3><i class="fas fa-tags mr-2"></i>Categories</h3>
+        <p>Organize your products with categories and subcategories.</p>
+        <a href="{% url 'admin:products_category_changelist' %}">View Categories →</a>
+    </div>
+    
+    <div class="admin-card">
+        <h3><i class="fas fa-percent mr-2"></i>Coupons</h3>
+        <p>Create and manage discount coupons for your customers.</p>
+        <a href="{% url 'admin:coupons_coupon_changelist' %}">View Coupons →</a>
+    </div>
+    
+    <div class="admin-card">
+        <h3><i class="fas fa-star mr-2"></i>Reviews</h3>
+        <p>Monitor customer reviews and ratings for your products.</p>
+        <a href="{% url 'admin:products_review_changelist' %}">View Reviews →</a>
+    </div>
+</div>
+
+<div class="quick-actions">
+    <h2><i class="fas fa-bolt mr-2"></i>Quick Actions</h2>
+    <div class="quick-actions-grid">
+        <a href="{% url 'products:add_product' %}" class="quick-action-btn">
+            <i class="fas fa-plus mr-2"></i>Add Product
+        </a>
+        <a href="{% url 'products:admin_dashboard' %}" class="quick-action-btn">
+            <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+        </a>
+        <a href="{% url 'products:admin_analytics' %}" class="quick-action-btn">
+            <i class="fas fa-chart-bar mr-2"></i>Analytics
+        </a>
+        <a href="{% url 'admin:products_product_add' %}" class="quick-action-btn">
+            <i class="fas fa-edit mr-2"></i>Admin Add Product
+        </a>
+    </div>
+</div>
+
+<div class="admin-card">
+    <h3><i class="fas fa-info-circle mr-2"></i>Welcome to JOOG Admin</h3>
+    <p>This is your custom admin interface. Use the navigation above or the quick actions to manage your e-commerce store. For advanced features, use the traditional Django admin interface below.</p>
+    <p><strong>Note:</strong> All admin functions are now integrated with your custom theme and dashboard.</p>
+</div>
+{% endblock %}

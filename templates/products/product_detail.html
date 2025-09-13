@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ product.name }} - JOOG{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+        <!-- Product Images -->
+        <div class="space-y-4">
+            <div class="aspect-square rounded-lg overflow-hidden bg-gray-100">
+                {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" 
+                     class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+                {% else %}
+                <div class="w-full h-full flex items-center justify-center">
+                    <i class="fas fa-image text-gray-400 text-6xl"></i>
+                </div>
+                {% endif %}
+            </div>
+            {% if product.images.exists %}
+            <div class="grid grid-cols-4 gap-2">
+                {% for image in product.images.all %}
+                <div class="aspect-square rounded-lg overflow-hidden bg-gray-100 cursor-pointer hover:ring-2 hover:ring-red-500">
+                    {% if image.image %}
+                    <img src="{{ image.image.url }}" alt="{{ image.alt_text }}" 
+                         class="w-full h-full object-cover">
+                    {% else %}
+                    <div class="w-full h-full flex items-center justify-center">
+                        <i class="fas fa-image text-gray-400 text-lg"></i>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        
+        <!-- Product Info -->
+        <div class="space-y-6">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">{{ product.name }}</h1>
+                <p class="text-gray-600">{{ product.category.name }}</p>
+            </div>
+            
+            <div class="text-3xl font-bold text-red-600">₹{{ product.price }}</div>
+            
+            <div>
+                <h3 class="font-semibold mb-2">Description</h3>
+                <p class="text-gray-600 leading-relaxed">{{ product.description }}</p>
+            </div>
+            
+            <div>
+                <h3 class="font-semibold mb-2">Availability</h3>
+                {% if product.stock > 0 %}
+                <p class="text-green-600 flex items-center">
+                    <i class="fas fa-check-circle mr-2"></i>
+                    In Stock ({{ product.stock }} available)
+                </p>
+                {% else %}
+                <p class="text-red-600 flex items-center">
+                    <i class="fas fa-times-circle mr-2"></i>
+                    Out of Stock
+                </p>
+                {% endif %}
+            </div>
+            
+            {% if product.stock > 0 %}
+            <div class="space-y-4">
+                <form method="POST" action="{% url 'orders:add_to_cart' product.id %}" class="space-y-4">
+                    {% csrf_token %}
+                    <div class="flex items-center space-x-4">
+                        <label class="font-semibold">Quantity:</label>
+                        <select name="quantity" class="form-input w-20">
+                            {% for i in "12345" %}
+                            <option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="flex space-x-4">
+                        <button type="submit" class="btn btn-primary flex-1">
+                            Add to Cart <i class="fas fa-shopping-cart ml-2"></i>
+                        </button>
+                        <button type="button" class="btn btn-outline">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Product Reviews -->
+    <div class="bg-white rounded-lg shadow-lg p-8 mb-12">
+        <h2 class="text-2xl font-bold mb-6">Customer Reviews</h2>
+        
+        {% if user.is_authenticated and review_form %}
+        <div class="bg-gray-50 p-6 rounded-lg mb-8">
+            <h3 class="font-semibold mb-4">Write a Review</h3>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="form-label">Rating</label>
+                        {{ review_form.rating }}
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label">Comment</label>
+                    {{ review_form.comment }}
+                </div>
+                <button type="submit" class="btn btn-primary">Submit Review</button>
+            </form>
+        </div>
+        {% endif %}
+        
+        {% if reviews %}
+        <div class="space-y-6">
+            {% for review in reviews %}
+            <div class="border-b border-gray-200 pb-6 last:border-b-0">
+                <div class="flex items-center justify-between mb-3">
+                    <h4 class="font-semibold">{{ review.user.get_full_name|default:review.user.username }}</h4>
+                    <div class="flex items-center space-x-2">
+                        <div class="flex text-yellow-500">
+                            {% for i in "12345" %}
+                            {% if forloop.counter <= review.rating %}
+                            <i class="fas fa-star"></i>
+                            {% else %}
+                            <i class="far fa-star"></i>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                        <span class="text-gray-500 text-sm">{{ review.created_at|date:"M d, Y" }}</span>
+                    </div>
+                </div>
+                <p class="text-gray-600">{{ review.comment }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-gray-500 text-center py-8">No reviews yet. Be the first to review this product!</p>
+        {% endif %}
+    </div>
+    
+    <!-- Related Products -->
+    {% if related_products %}
+    <div class="mb-16">
+        <h2 class="text-2xl font-bold mb-8 text-gray-800">You Might Also Like</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {% for product in related_products %}
+            <div class="product-card">
+                <div class="relative overflow-hidden group">
+                    <a href="{% url 'products:product_detail' product.slug %}">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" 
+                             class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
+                        {% else %}
+                        <div class="w-full h-48 bg-gray-200 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+                            <i class="fas fa-image text-gray-400 text-3xl"></i>
+                        </div>
+                        {% endif %}
+                    </a>
+                </div>
+                <div class="p-4">
+                    <h3 class="font-semibold text-lg mb-2">{{ product.name }}</h3>
+                    <p class="text-red-600 font-bold">₹{{ product.price }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

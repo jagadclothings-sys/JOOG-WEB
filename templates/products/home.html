@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Hero Banner -->
+<section class="relative bg-gradient-to-r from-red-600 to-red-700 text-white py-20">
+    <div class="container mx-auto px-4 text-center">
+        <div class="animate-fade-in-up">
+            <h1 class="text-5xl md:text-6xl font-bold mb-6">JOOG</h1>
+            <p class="text-xl md:text-2xl mb-8 text-red-100">Premium Fashion Collection</p>
+            <p class="text-lg mb-8 max-w-2xl mx-auto text-red-50">
+                Discover our exclusive range of premium clothing designed for those who appreciate quality, 
+                style, and sophistication. Each piece is carefully crafted to elevate your wardrobe.
+            </p>
+            <a href="{% url 'products:product_list' %}" class="btn btn-white inline-block">
+                Shop Collection <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+        </div>
+    </div>
+    <div class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white to-transparent"></div>
+</section>
+
+<!-- Featured Categories -->
+<section class="py-16">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">Shop by Category</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {% for category in categories %}
+            <div class="category-card group">
+                <a href="{% url 'products:category' category.slug %}">
+                    <div class="relative overflow-hidden rounded-lg bg-gray-200 h-64">
+                        {% if category.image %}
+                        <img src="{{ category.image.url }}" alt="{{ category.name }}" 
+                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        {% else %}
+                        <div class="w-full h-full bg-gradient-to-br from-red-100 to-red-200 flex items-center justify-center">
+                            <i class="fas fa-tshirt text-4xl text-red-600"></i>
+                        </div>
+                        {% endif %}
+                        <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300"></div>
+                        <div class="absolute bottom-4 left-4 text-white">
+                            <h3 class="text-xl font-bold">{{ category.name }}</h3>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products -->
+<section class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">Featured Products</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {% for product in featured_products %}
+            <div class="product-card">
+                <div class="relative overflow-hidden rounded-lg group">
+                    <a href="{% url 'products:product_detail' product.slug %}">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" 
+                             class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300">
+                        {% else %}
+                        <div class="w-full h-64 bg-gray-200 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+                            <i class="fas fa-image text-gray-400 text-4xl"></i>
+                        </div>
+                        {% endif %}
+                    </a>
+                    <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <form method="POST" action="{% url 'orders:add_to_cart' product.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="bg-red-600 text-white p-2 rounded-full hover:bg-red-700 transition-colors">
+                                <i class="fas fa-shopping-cart"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                <div class="p-4">
+                    <h3 class="font-semibold text-lg mb-2 text-gray-800">{{ product.name }}</h3>
+                    <p class="text-red-600 font-bold text-xl">₹{{ product.price }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-12">
+            <a href="{% url 'products:product_list' %}" class="btn btn-primary">
+                View All Products
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- About Section -->
+<section class="py-16">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+                <h2 class="text-3xl font-bold mb-6 text-gray-800">About JOOG</h2>
+                <p class="text-lg text-gray-600 mb-6">
+                    At JOOG, we believe in creating clothing that doesn't just look good, but feels exceptional. 
+                    Our premium collection features carefully selected fabrics, expert craftsmanship, and timeless designs 
+                    that elevate your personal style.
+                </p>
+                <p class="text-lg text-gray-600 mb-8">
+                    From casual wear to formal attire, each piece is designed with attention to detail and quality 
+                    that lasts. Experience the difference that premium fashion makes in your everyday life.
+                </p>
+                <a href="{% url 'products:product_list' %}" class="btn btn-outline">
+                    Discover Our Story
+                </a>
+            </div>
+            <div class="relative">
+                <div class="bg-gradient-to-br from-red-100 to-red-200 rounded-lg p-8 h-96 flex items-center justify-center">
+                    <i class="fas fa-award text-6xl text-red-600"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

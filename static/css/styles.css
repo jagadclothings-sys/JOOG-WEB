@@ -1,0 +1,252 @@
+/* JOOG E-commerce Custom Styles */
+:root {
+    --red-primary: #DC2626;
+    --red-secondary: #B91C1C;
+    --red-light: #FEF2F2;
+    --ivory: #FFF8E7;
+    --ivory-dark: #FEF3C7;
+}
+
+/* Base Styles */
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height: 1.6;
+    color: #1F2937;
+}
+
+.bg-ivory-50 {
+    background-color: var(--ivory);
+}
+
+.bg-ivory-100 {
+    background-color: var(--ivory-dark);
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.animate-fade-in-up {
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.animate-slide-in {
+    animation: slideIn 0.6s ease-out;
+}
+
+/* Navigation */
+.nav-link {
+    @apply text-gray-700 hover:text-red-600 font-medium transition-colors duration-300;
+}
+
+/* Buttons */
+.btn {
+    @apply px-6 py-3 rounded-lg font-semibold transition-all duration-300 inline-flex items-center justify-center;
+}
+
+.btn-primary {
+    @apply bg-red-600 text-white hover:bg-red-700 shadow-md hover:shadow-lg transform hover:-translate-y-0.5;
+}
+
+.btn-outline {
+    @apply border-2 border-red-600 text-red-600 hover:bg-red-600 hover:text-white;
+}
+
+.btn-white {
+    @apply bg-white text-red-600 hover:bg-gray-50 shadow-md hover:shadow-lg;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+/* Forms */
+.form-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #D1D5DB;
+    border-radius: 0.5rem;
+    outline: none;
+    transition: all 0.2s ease-in-out;
+}
+
+.form-input:focus {
+    ring: 2px;
+    ring-color: #DC2626;
+    border-color: #DC2626;
+}
+
+.form-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.5rem;
+}
+
+.form-error {
+    color: #DC2626;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.form-checkbox {
+    height: 1rem;
+    width: 1rem;
+    color: #DC2626;
+    border: 1px solid #D1D5DB;
+    border-radius: 0.25rem;
+}
+
+.form-checkbox:focus {
+    ring: 2px;
+    ring-color: #DC2626;
+}
+
+/* Alerts */
+.alert {
+    @apply px-4 py-3 rounded-lg border;
+}
+
+.alert-success {
+    @apply bg-green-50 border-green-200 text-green-800;
+}
+
+.alert-error {
+    @apply bg-red-50 border-red-200 text-red-800;
+}
+
+.alert-warning {
+    @apply bg-orange-50 border-orange-200 text-orange-800;
+}
+
+.alert-info {
+    @apply bg-blue-50 border-blue-200 text-blue-800;
+}
+
+/* Product Cards */
+.product-card {
+    @apply bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2;
+}
+
+.category-card {
+    @apply bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2;
+}
+
+/* Dashboard Cards */
+.dashboard-card {
+    @apply bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 block;
+}
+
+.admin-card {
+    @apply bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 block text-center hover:transform hover:scale-105;
+}
+
+.stat-card {
+    @apply bg-white p-6 rounded-lg shadow-md;
+}
+
+/* Cart */
+.cart-item {
+    @apply hover:bg-gray-50 transition-colors duration-200;
+}
+
+.quantity-btn {
+    @apply w-8 h-8 bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors duration-200 flex items-center justify-center;
+}
+
+/* Status Badges */
+.status-badge {
+    @apply px-3 py-1 rounded-full text-sm font-semibold uppercase tracking-wide;
+}
+
+.status-pending {
+    @apply bg-yellow-100 text-yellow-800;
+}
+
+.status-confirmed {
+    @apply bg-blue-100 text-blue-800;
+}
+
+.status-shipped {
+    @apply bg-purple-100 text-purple-800;
+}
+
+.status-delivered {
+    @apply bg-green-100 text-green-800;
+}
+
+.status-cancelled {
+    @apply bg-red-100 text-red-800;
+}
+
+/* Hover Effects */
+.hover-lift {
+    @apply transition-all duration-300;
+}
+
+.hover-lift:hover {
+    transform: translateY(-4px);
+}
+
+/* Loading Animation */
+.loading {
+    @apply inline-block w-4 h-4 border-2 border-gray-300 border-t-red-600 rounded-full animate-spin;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        @apply px-4;
+    }
+    
+    .btn {
+        @apply w-full justify-center;
+    }
+    
+    .grid-cols-responsive {
+        @apply grid-cols-1;
+    }
+}
+
+/* Smooth Transitions */
+* {
+    transition: all 0.2s ease-in-out;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--red-primary);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--red-secondary);
+}

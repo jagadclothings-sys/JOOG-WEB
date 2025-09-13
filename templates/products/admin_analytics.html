@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Analytics Dashboard - JOOG Admin{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12">
+    <div class="flex justify-between items-center mb-8">
+        <h1 class="text-3xl font-bold text-gray-800">Analytics Dashboard</h1>
+        <a href="{% url 'products:admin_dashboard' %}" class="btn btn-outline">
+            <i class="fas fa-arrow-left mr-2"></i> Back to Dashboard
+        </a>
+    </div>
+    
+    <!-- Revenue Analytics -->
+    <div class="mb-8">
+        <h2 class="text-2xl font-bold mb-4">Revenue Analytics</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600">Last 7 Days</p>
+                        <p class="text-2xl font-bold text-green-600">₹{{ revenue_7_days|floatformat:2 }}</p>
+                    </div>
+                    <i class="fas fa-calendar-week text-3xl text-green-600"></i>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600">Last 30 Days</p>
+                        <p class="text-2xl font-bold text-blue-600">₹{{ revenue_30_days|floatformat:2 }}</p>
+                    </div>
+                    <i class="fas fa-calendar-alt text-3xl text-blue-600"></i>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600">Last 90 Days</p>
+                        <p class="text-2xl font-bold text-purple-600">₹{{ revenue_90_days|floatformat:2 }}</p>
+                    </div>
+                    <i class="fas fa-chart-line text-3xl text-purple-600"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Order Analytics -->
+    <div class="mb-8">
+        <h2 class="text-2xl font-bold mb-4">Order Analytics</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600">Orders (7 Days)</p>
+                        <p class="text-2xl font-bold text-orange-600">{{ orders_7_days }}</p>
+                    </div>
+                    <i class="fas fa-shopping-bag text-3xl text-orange-600"></i>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600">Orders (30 Days)</p>
+                        <p class="text-2xl font-bold text-red-600">{{ orders_30_days }}</p>
+                    </div>
+                    <i class="fas fa-shopping-cart text-3xl text-red-600"></i>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600">Orders (90 Days)</p>
+                        <p class="text-2xl font-bold text-indigo-600">{{ orders_90_days }}</p>
+                    </div>
+                    <i class="fas fa-chart-bar text-3xl text-indigo-600"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Product Analytics -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h3 class="text-xl font-bold mb-4">Best Selling Products</h3>
+            {% if best_selling_products %}
+            <div class="space-y-3">
+                {% for product in best_selling_products %}
+                <div class="flex items-center justify-between p-3 border border-gray-200 rounded">
+                    <div class="flex items-center space-x-3">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" 
+                             class="w-12 h-12 object-cover rounded">
+                        {% else %}
+                        <div class="w-12 h-12 bg-gray-200 flex items-center justify-center rounded">
+                            <i class="fas fa-image text-gray-400 text-sm"></i>
+                        </div>
+                        {% endif %}
+                        <div>
+                            <p class="font-semibold">{{ product.name }}</p>
+                            <p class="text-sm text-gray-600">₹{{ product.price }}</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="font-bold text-green-600">{{ product.total_sold }} sold</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-gray-500">No sales data available</p>
+            {% endif %}
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h3 class="text-xl font-bold mb-4">Category Performance</h3>
+            {% if category_sales %}
+            <div class="space-y-3">
+                {% for category in category_sales %}
+                <div class="flex items-center justify-between p-3 border border-gray-200 rounded">
+                    <div>
+                        <p class="font-semibold">{{ category.name }}</p>
+                        <p class="text-sm text-gray-600">{{ category.total_sold }} items sold</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="font-bold text-blue-600">₹{{ category.total_revenue|floatformat:2 }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-gray-500">No category sales data available</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Top Customers -->
+    <div class="bg-white rounded-lg shadow-lg p-6">
+        <h3 class="text-xl font-bold mb-4">Top Customers</h3>
+        {% if top_customers %}
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">Customer</th>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">Email</th>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">Orders</th>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">Total Spent</th>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    {% for customer in top_customers %}
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-4 py-2">{{ customer.get_full_name|default:customer.username }}</td>
+                        <td class="px-4 py-2">{{ customer.email }}</td>
+                        <td class="px-4 py-2">
+                            <span class="font-bold text-blue-600">{{ customer.total_orders }}</span>
+                        </td>
+                        <td class="px-4 py-2">
+                            <span class="font-bold text-green-600">₹{{ customer.total_spent|floatformat:2 }}</span>
+                        </td>
+                        <td class="px-4 py-2">
+                            <a href="{% url 'products:customer_detail' customer.id %}" 
+                               class="text-red-600 hover:text-red-700">View Details</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-gray-500">No customer data available</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

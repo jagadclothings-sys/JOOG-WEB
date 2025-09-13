@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+
+{% block title %}Returns & Exchanges - JOOG{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12">
+    <!-- Hero Section -->
+    <div class="text-center mb-16">
+        <h1 class="text-5xl font-bold text-gray-800 mb-6">Returns & Exchanges</h1>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+            We want you to love your purchase. If you're not completely satisfied, we're here to help with easy returns and exchanges.
+        </p>
+    </div>
+
+    <!-- Return Policy Overview -->
+    <div class="bg-red-50 rounded-lg p-8 mb-12">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+            <div>
+                <div class="bg-red-500 text-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-calendar-alt text-2xl"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">30 Days</h3>
+                <p class="text-gray-600">Return window from delivery date</p>
+            </div>
+            <div>
+                <div class="bg-red-500 text-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-tag text-2xl"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">With Tags</h3>
+                <p class="text-gray-600">Items must be unworn with original tags</p>
+            </div>
+            <div>
+                <div class="bg-red-500 text-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-undo text-2xl"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">Free Returns</h3>
+                <p class="text-gray-600">We cover return shipping costs</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <!-- Return Process -->
+        <div>
+            <h2 class="text-3xl font-bold text-gray-800 mb-8">How to Return</h2>
+            
+            <div class="space-y-6">
+                <div class="flex items-start">
+                    <div class="bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center mr-4 mt-1 font-bold">1</div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Log into Your Account</h3>
+                        <p class="text-gray-600">Go to your account dashboard and find the order you want to return.</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start">
+                    <div class="bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center mr-4 mt-1 font-bold">2</div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Start Return Process</h3>
+                        <p class="text-gray-600">Click "Return Item" and select the items you want to return along with the reason.</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start">
+                    <div class="bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center mr-4 mt-1 font-bold">3</div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Print Return Label</h3>
+                        <p class="text-gray-600">We'll email you a prepaid return shipping label. Print it and attach to your package.</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start">
+                    <div class="bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center mr-4 mt-1 font-bold">4</div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Ship Your Return</h3>
+                        <p class="text-gray-600">Drop off your package at any authorized shipping location or schedule a pickup.</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start">
+                    <div class="bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center mr-4 mt-1 font-bold">5</div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Receive Refund</h3>
+                        <p class="text-gray-600">Once we receive and process your return, you'll get your refund within 3-5 business days.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exchange Process -->
+        <div>
+            <h2 class="text-3xl font-bold text-gray-800 mb-8">How to Exchange</h2>
+            
+            <div class="space-y-6">
+                <div class="flex items-start">
+                    <div class="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center mr-4 mt-1 font-bold">1</div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Choose Exchange Option</h3>
+                        <p class="text-gray-600">During the return process, select "Exchange" instead of "Return" and choose your new size or color.</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start">
+                    <div class="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center mr-4 mt-1 font-bold">2</div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Return Original Item</h3>
+                        <p class="text-gray-600">Follow the same return process to send back your original item.</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start">
+                    <div class="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center mr-4 mt-1 font-bold">3</div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Receive New Item</h3>
+                        <p class="text-gray-600">We'll ship your exchange item as soon as we process your return. You'll get tracking information via email.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-blue-50 rounded-lg p-6 mt-8">
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">Exchange Policy</h3>
+                <ul class="text-gray-600 space-y-1">
+                    <li>• Exchanges are free of charge</li>
+                    <li>• Available for size and color changes</li>
+                    <li>• Must be within 30 days of delivery</li>
+                    <li>• Original item must be in new condition</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Return Conditions -->
+    <div class="mt-16">
+        <h2 class="text-3xl font-bold text-gray-800 text-center mb-12">Return Conditions</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="bg-green-50 rounded-lg p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                    <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                    Items We Accept
+                </h3>
+                <ul class="text-gray-600 space-y-2">
+                    <li>• Unworn items with original tags attached</li>
+                    <li>• Items in original packaging</li>
+                    <li>• Items returned within 30 days</li>
+                    <li>• Items that haven't been altered or damaged</li>
+                    <li>• Items purchased directly from JOOG</li>
+                </ul>
+            </div>
+            
+            <div class="bg-red-50 rounded-lg p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                    <i class="fas fa-times-circle text-red-500 mr-2"></i>
+                    Items We Cannot Accept
+                </h3>
+                <ul class="text-gray-600 space-y-2">
+                    <li>• Worn or used items</li>
+                    <li>• Items without original tags</li>
+                    <li>• Items returned after 30 days</li>
+                    <li>• Items that have been altered or damaged</li>
+                    <li>• Items purchased from third-party sellers</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Refund Information -->
+    <div class="mt-16">
+        <h2 class="text-3xl font-bold text-gray-800 text-center mb-8">Refund Information</h2>
+        <div class="max-w-4xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                    <div class="bg-gray-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-clock text-gray-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Processing Time</h3>
+                    <p class="text-gray-600">3-5 business days after we receive your return</p>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                    <div class="bg-gray-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-credit-card text-gray-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Refund Method</h3>
+                    <p class="text-gray-600">Refunded to your original payment method</p>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                    <div class="bg-gray-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-shipping-fast text-gray-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Shipping Costs</h3>
+                    <p class="text-gray-600">Original shipping costs are non-refundable</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Support -->
+    <div class="bg-gray-50 rounded-lg p-8 text-center mt-16">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Need Help with Your Return?</h2>
+        <p class="text-gray-600 mb-6">Our customer service team is here to assist you with any return or exchange questions.</p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="{% url 'products:contact' %}" class="bg-red-500 text-white px-6 py-3 rounded-md hover:bg-red-600 transition-colors">
+                Contact Support
+            </a>
+            <a href="tel:+15551234567" class="bg-gray-800 text-white px-6 py-3 rounded-md hover:bg-gray-700 transition-colors">
+                Call Us: (555) 123-4567
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

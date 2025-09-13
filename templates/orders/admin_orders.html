@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Manage Orders - JOOG Admin{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12">
+    <div class="flex justify-between items-center mb-8">
+        <h1 class="text-3xl font-bold text-gray-800">Manage Orders</h1>
+        <a href="{% url 'products:admin_dashboard' %}" class="btn btn-outline">
+            <i class="fas fa-arrow-left mr-2"></i> Back to Dashboard
+        </a>
+    </div>
+    
+    <!-- Filter Options -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+        <div class="flex flex-wrap gap-2">
+            <a href="{% url 'orders:admin_orders' %}" 
+               class="filter-btn {% if not current_status %}active{% endif %}">
+                All Orders
+            </a>
+            <a href="?status=pending" 
+               class="filter-btn {% if current_status == 'pending' %}active{% endif %}">
+                Pending
+            </a>
+            <a href="?status=confirmed" 
+               class="filter-btn {% if current_status == 'confirmed' %}active{% endif %}">
+                Confirmed
+            </a>
+            <a href="?status=shipped" 
+               class="filter-btn {% if current_status == 'shipped' %}active{% endif %}">
+                Shipped
+            </a>
+            <a href="?status=delivered" 
+               class="filter-btn {% if current_status == 'delivered' %}active{% endif %}">
+                Delivered
+            </a>
+        </div>
+    </div>
+    
+    <!-- Orders List -->
+    {% if orders %}
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    {% for order in orders %}
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="font-semibold text-gray-800">#{{ order.order_number }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-gray-800">{{ order.user.get_full_name|default:order.user.username }}</div>
+                            <div class="text-gray-500 text-sm">{{ order.user.email }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="font-bold text-red-600">₹{{ order.final_amount }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="status-badge status-{{ order.status }}">{{ order.get_status_display }}</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-500">
+                            {{ order.created_at|date:"M d, Y" }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <a href="{% url 'orders:order_detail' order.order_number %}" 
+                               class="text-red-600 hover:text-red-700 font-semibold">
+                                View Details
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <div class="text-center py-16">
+        <i class="fas fa-box text-6xl text-gray-300 mb-6"></i>
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">No orders found</h2>
+        <p class="text-gray-600">Orders will appear here once customers start purchasing</p>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.filter-btn {
+    @apply px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-red-50 hover:text-red-600 transition-colors;
+}
+
+.filter-btn.active {
+    @apply bg-red-600 text-white;
+}
+</style>
+{% endblock %}

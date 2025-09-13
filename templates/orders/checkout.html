@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Checkout - JOOG{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12">
+    <h1 class="text-3xl font-bold mb-8 text-gray-800">Checkout</h1>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Shipping Information -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-xl font-bold mb-6 text-gray-800">Shipping Information</h2>
+            
+            <form method="POST" id="checkout-form">
+                {% csrf_token %}
+                <div class="space-y-6">
+                    <div>
+                        <label class="form-label">{{ form.shipping_address.label_tag }}</label>
+                        {{ form.shipping_address }}
+                        {% if form.shipping_address.errors %}
+                        <div class="form-error">{{ form.shipping_address.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="form-label">{{ form.shipping_city.label_tag }}</label>
+                            {{ form.shipping_city }}
+                            {% if form.shipping_city.errors %}
+                            <div class="form-error">{{ form.shipping_city.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <label class="form-label">{{ form.shipping_postal_code.label_tag }}</label>
+                            {{ form.shipping_postal_code }}
+                            {% if form.shipping_postal_code.errors %}
+                            <div class="form-error">{{ form.shipping_postal_code.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="form-label">{{ form.shipping_country.label_tag }}</label>
+                        {{ form.shipping_country }}
+                        {% if form.shipping_country.errors %}
+                        <div class="form-error">{{ form.shipping_country.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Coupon Code -->
+                    <div class="border-t pt-6">
+                        <h3 class="font-semibold mb-3">Coupon Code</h3>
+                        <div class="flex space-x-2">
+                            <input type="text" name="coupon_code" placeholder="Enter coupon code" 
+                                   class="form-input flex-1" id="coupon-input">
+                            <button type="button" id="apply-coupon" class="btn btn-outline">Apply</button>
+                        </div>
+                        <div id="coupon-message" class="mt-2"></div>
+                        <!-- Hidden field to store validated coupon for form submission -->
+                        <input type="hidden" name="validated_coupon" id="validated-coupon" value="">
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Order Summary -->
+        <div class="bg-white rounded-lg shadow-lg p-6 h-fit sticky top-24">
+            <h2 class="text-xl font-bold mb-6 text-gray-800">Order Summary</h2>
+            
+            <div class="space-y-4 mb-6">
+                {% for item in cart.items.all %}
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center space-x-3">
+                        {% if item.product.image %}
+                        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" 
+                             class="w-12 h-12 object-cover rounded">
+                        {% else %}
+                        <div class="w-12 h-12 bg-gray-200 flex items-center justify-center rounded">
+                            <i class="fas fa-image text-gray-400 text-xs"></i>
+                        </div>
+                        {% endif %}
+                        <div>
+                            <h4 class="font-semibold">{{ item.product.name }}</h4>
+                            <p class="text-sm text-gray-600">Qty: {{ item.quantity }}</p>
+                        </div>
+                    </div>
+                    <span class="font-bold">₹{{ item.get_total_price }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="border-t pt-4 space-y-2 mb-6">
+                <div class="flex justify-between">
+                    <span>Subtotal:</span>
+                    <span id="subtotal">₹{{ cart.get_total_price }}</span>
+                </div>
+                <div class="flex justify-between text-green-600" id="discount-row" style="display: none;">
+                    <span>Discount:</span>
+                    <span id="discount-amount">-₹0.00</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>Shipping:</span>
+                    <span class="text-green-600">Free</span>
+                </div>
+                <div class="border-t pt-2 flex justify-between font-bold text-lg">
+                    <span>Total:</span>
+                    <span id="final-total">₹{{ cart.get_total_price }}</span>
+                </div>
+            </div>
+            
+            <button type="submit" form="checkout-form" class="btn btn-primary w-full">
+                Place Order <i class="fas fa-credit-card ml-2"></i>
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}

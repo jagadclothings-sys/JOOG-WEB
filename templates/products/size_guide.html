@@ -1,0 +1,349 @@
+{% extends 'base.html' %}
+
+{% block title %}Size Guide - JOOG{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12">
+    <!-- Hero Section -->
+    <div class="text-center mb-16">
+        <h1 class="text-5xl font-bold text-gray-800 mb-6">Size Guide</h1>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+            Find your perfect fit with our comprehensive sizing charts and measurement guides.
+        </p>
+    </div>
+
+    <!-- How to Measure -->
+    <div class="bg-gray-50 rounded-lg p-8 mb-16">
+        <h2 class="text-3xl font-bold text-gray-800 text-center mb-8">How to Measure</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="text-center">
+                <div class="bg-red-500 text-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-ruler text-2xl"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-3">Use a Measuring Tape</h3>
+                <p class="text-gray-600">Use a flexible measuring tape for accurate measurements. Keep it snug but not tight.</p>
+            </div>
+            
+            <div class="text-center">
+                <div class="bg-red-500 text-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-user text-2xl"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-3">Measure Over Underwear</h3>
+                <p class="text-gray-600">Take measurements over your undergarments for the most accurate fit.</p>
+            </div>
+            
+            <div class="text-center">
+                <div class="bg-red-500 text-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-expand-arrows-alt text-2xl"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-3">Stand Naturally</h3>
+                <p class="text-gray-600">Stand in a natural, relaxed posture when taking measurements.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Women's Sizing -->
+    <div class="mb-16">
+        <h2 class="text-3xl font-bold text-gray-800 text-center mb-12">Women's Sizing</h2>
+        
+        <!-- Women's Tops -->
+        <div class="mb-12">
+            <h3 class="text-2xl font-bold text-gray-800 mb-6">Tops & Dresses</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full bg-white rounded-lg shadow-md">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-800">Size</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-800">Bust (inches)</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-800">Waist (inches)</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-800">Hip (inches)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        <tr>
+                            <td class="px-6 py-4 text-sm font-medium text-gray-800">XS</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">32-33</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">24-25</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">34-35</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 text-sm font-medium text-gray-800">S</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">34-35</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">26-27</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">36-37</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 text-sm font-medium text-gray-800">M</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">36-37</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">28-29</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">38-39</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 text-sm font-medium text-gray-800">L</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">38-39</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">30-31</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">40-41</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 text-sm font-medium text-gray-800">XL</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">40-41</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">32-33</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">42-43</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Women's Bottoms -->
+        <div class="mb-12">
+            <h3 class="text-2xl font-bold text-gray-800 mb-6">Bottoms</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full bg-white rounded-lg shadow-md">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-800">Size</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-800">Waist (inches)</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-800">Hip (inches)</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-800">Inseam (inches)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        <tr>
+                            <td class="px-6 py-4 text-sm font-medium text-gray-800">XS</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">24-25</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">34-35</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">28-29</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 text-sm font-medium text-gray-800">S</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">26-27</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">36-37</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">29-30</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 text-sm font-medium text-gray-800">M</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">28-29</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">38-39</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">30-31</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 text-sm font-medium text-gray-800">L</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">30-31</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">40-41</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">31-32</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 text-sm font-medium text-gray-800">XL</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">32-33</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">42-43</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">32-33</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Men's Sizing -->
+    <div class="mb-16">
+        <h2 class="text-3xl font-bold text-gray-800 text-center mb-12">Men's Sizing</h2>
+        
+        <!-- Men's Tops -->
+        <div class="mb-12">
+            <h3 class="text-2xl font-bold text-gray-800 mb-6">Tops</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full bg-white rounded-lg shadow-md">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-800">Size</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-800">Chest (inches)</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-800">Waist (inches)</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-800">Sleeve (inches)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        <tr>
+                            <td class="px-6 py-4 text-sm font-medium text-gray-800">S</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">34-36</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">28-30</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">32-33</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 text-sm font-medium text-gray-800">M</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">38-40</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">32-34</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">33-34</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 text-sm font-medium text-gray-800">L</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">42-44</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">36-38</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">34-35</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 text-sm font-medium text-gray-800">XL</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">46-48</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">40-42</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">35-36</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 text-sm font-medium text-gray-800">XXL</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">50-52</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">44-46</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">36-37</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Men's Bottoms -->
+        <div class="mb-12">
+            <h3 class="text-2xl font-bold text-gray-800 mb-6">Bottoms</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full bg-white rounded-lg shadow-md">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-800">Size</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-800">Waist (inches)</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-800">Hip (inches)</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-800">Inseam (inches)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        <tr>
+                            <td class="px-6 py-4 text-sm font-medium text-gray-800">S</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">28-30</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">36-38</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">30-32</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 text-sm font-medium text-gray-800">M</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">32-34</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">40-42</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">32-34</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 text-sm font-medium text-gray-800">L</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">36-38</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">44-46</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">34-36</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 text-sm font-medium text-gray-800">XL</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">40-42</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">48-50</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">36-38</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 text-sm font-medium text-gray-800">XXL</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">44-46</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">52-54</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">38-40</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shoes Sizing -->
+    <div class="mb-16">
+        <h2 class="text-3xl font-bold text-gray-800 text-center mb-12">Shoes Sizing</h2>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Women's Shoes -->
+            <div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-6">Women's Shoes</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full bg-white rounded-lg shadow-md">
+                        <thead class="bg-gray-100">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-sm font-semibold text-gray-800">US Size</th>
+                                <th class="px-6 py-4 text-left text-sm font-semibold text-gray-800">EU Size</th>
+                                <th class="px-6 py-4 text-left text-sm font-semibold text-gray-800">UK Size</th>
+                                <th class="px-6 py-4 text-left text-sm font-semibold text-gray-800">Foot Length (inches)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <tr><td class="px-6 py-4 text-sm font-medium text-gray-800">5</td><td class="px-6 py-4 text-sm text-gray-600">35</td><td class="px-6 py-4 text-sm text-gray-600">3</td><td class="px-6 py-4 text-sm text-gray-600">8.5</td></tr>
+                            <tr><td class="px-6 py-4 text-sm font-medium text-gray-800">6</td><td class="px-6 py-4 text-sm text-gray-600">36</td><td class="px-6 py-4 text-sm text-gray-600">4</td><td class="px-6 py-4 text-sm text-gray-600">8.75</td></tr>
+                            <tr><td class="px-6 py-4 text-sm font-medium text-gray-800">7</td><td class="px-6 py-4 text-sm text-gray-600">37</td><td class="px-6 py-4 text-sm text-gray-600">5</td><td class="px-6 py-4 text-sm text-gray-600">9.25</td></tr>
+                            <tr><td class="px-6 py-4 text-sm font-medium text-gray-800">8</td><td class="px-6 py-4 text-sm text-gray-600">38</td><td class="px-6 py-4 text-sm text-gray-600">6</td><td class="px-6 py-4 text-sm text-gray-600">9.5</td></tr>
+                            <tr><td class="px-6 py-4 text-sm font-medium text-gray-800">9</td><td class="px-6 py-4 text-sm text-gray-600">39</td><td class="px-6 py-4 text-sm text-gray-600">7</td><td class="px-6 py-4 text-sm text-gray-600">9.75</td></tr>
+                            <tr><td class="px-6 py-4 text-sm font-medium text-gray-800">10</td><td class="px-6 py-4 text-sm text-gray-600">40</td><td class="px-6 py-4 text-sm text-gray-600">8</td><td class="px-6 py-4 text-sm text-gray-600">10</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Men's Shoes -->
+            <div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-6">Men's Shoes</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full bg-white rounded-lg shadow-md">
+                        <thead class="bg-gray-100">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-sm font-semibold text-gray-800">US Size</th>
+                                <th class="px-6 py-4 text-left text-sm font-semibold text-gray-800">EU Size</th>
+                                <th class="px-6 py-4 text-left text-sm font-semibold text-gray-800">UK Size</th>
+                                <th class="px-6 py-4 text-left text-sm font-semibold text-gray-800">Foot Length (inches)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <tr><td class="px-6 py-4 text-sm font-medium text-gray-800">7</td><td class="px-6 py-4 text-sm text-gray-600">40</td><td class="px-6 py-4 text-sm text-gray-600">6</td><td class="px-6 py-4 text-sm text-gray-600">9.5</td></tr>
+                            <tr><td class="px-6 py-4 text-sm font-medium text-gray-800">8</td><td class="px-6 py-4 text-sm text-gray-600">41</td><td class="px-6 py-4 text-sm text-gray-600">7</td><td class="px-6 py-4 text-sm text-gray-600">9.75</td></tr>
+                            <tr><td class="px-6 py-4 text-sm font-medium text-gray-800">9</td><td class="px-6 py-4 text-sm text-gray-600">42</td><td class="px-6 py-4 text-sm text-gray-600">8</td><td class="px-6 py-4 text-sm text-gray-600">10</td></tr>
+                            <tr><td class="px-6 py-4 text-sm font-medium text-gray-800">10</td><td class="px-6 py-4 text-sm text-gray-600">43</td><td class="px-6 py-4 text-sm text-gray-600">9</td><td class="px-6 py-4 text-sm text-gray-600">10.25</td></tr>
+                            <tr><td class="px-6 py-4 text-sm font-medium text-gray-800">11</td><td class="px-6 py-4 text-sm text-gray-600">44</td><td class="px-6 py-4 text-sm text-gray-600">10</td><td class="px-6 py-4 text-sm text-gray-600">10.5</td></tr>
+                            <tr><td class="px-6 py-4 text-sm font-medium text-gray-800">12</td><td class="px-6 py-4 text-sm text-gray-600">45</td><td class="px-6 py-4 text-sm text-gray-600">11</td><td class="px-6 py-4 text-sm text-gray-600">10.75</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tips Section -->
+    <div class="bg-gray-50 rounded-lg p-8 mb-16">
+        <h2 class="text-3xl font-bold text-gray-800 text-center mb-8">Sizing Tips</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">General Tips</h3>
+                <ul class="text-gray-600 space-y-2">
+                    <li>• Measure yourself regularly as sizes can change</li>
+                    <li>• Different brands may have slightly different sizing</li>
+                    <li>• When in doubt, size up rather than down</li>
+                    <li>• Consider the fabric - some materials stretch more</li>
+                    <li>• Check product descriptions for fit notes</li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Fit Guide</h3>
+                <ul class="text-gray-600 space-y-2">
+                    <li>• <strong>Snug:</strong> Fits close to the body</li>
+                    <li>• <strong>Regular:</strong> Standard fit with some ease</li>
+                    <li>• <strong>Relaxed:</strong> Loose, comfortable fit</li>
+                    <li>• <strong>Oversized:</strong> Intentionally loose fit</li>
+                    <li>• <strong>Fitted:</strong> Tailored, close-fitting</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Support -->
+    <div class="bg-gray-50 rounded-lg p-8 text-center">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Still Unsure About Your Size?</h2>
+        <p class="text-gray-600 mb-6">Our customer service team can help you find the perfect fit.</p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="{% url 'products:contact' %}" class="bg-red-500 text-white px-6 py-3 rounded-md hover:bg-red-600 transition-colors">
+                Contact Support
+            </a>
+            <a href="tel:+15551234567" class="bg-gray-800 text-white px-6 py-3 rounded-md hover:bg-gray-700 transition-colors">
+                Call Us: (555) 123-4567
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Profile - JOOG{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12">
+    <div class="max-w-2xl mx-auto">
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+            <div class="bg-gradient-to-r from-red-600 to-red-700 text-white p-6">
+                <h1 class="text-2xl font-bold">Profile Settings</h1>
+                <p class="text-red-100">Update your personal information</p>
+            </div>
+            
+            <div class="p-6">
+                <form method="POST" class="space-y-6">
+                    {% csrf_token %}
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="form-label">{{ form.first_name.label_tag }}</label>
+                            {{ form.first_name }}
+                            {% if form.first_name.errors %}
+                            <div class="form-error">{{ form.first_name.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <label class="form-label">{{ form.last_name.label_tag }}</label>
+                            {{ form.last_name }}
+                            {% if form.last_name.errors %}
+                            <div class="form-error">{{ form.last_name.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="form-label">{{ form.email.label_tag }}</label>
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                        <div class="form-error">{{ form.email.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        <label class="form-label">{{ form.phone_number.label_tag }}</label>
+                        {{ form.phone_number }}
+                        {% if form.phone_number.errors %}
+                        <div class="form-error">{{ form.phone_number.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        <label class="form-label">{{ form.address.label_tag }}</label>
+                        {{ form.address }}
+                        {% if form.address.errors %}
+                        <div class="form-error">{{ form.address.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="form-label">{{ form.city.label_tag }}</label>
+                            {{ form.city }}
+                            {% if form.city.errors %}
+                            <div class="form-error">{{ form.city.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <label class="form-label">{{ form.postal_code.label_tag }}</label>
+                            {{ form.postal_code }}
+                            {% if form.postal_code.errors %}
+                            <div class="form-error">{{ form.postal_code.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <label class="form-label">{{ form.country.label_tag }}</label>
+                            {{ form.country }}
+                            {% if form.country.errors %}
+                            <div class="form-error">{{ form.country.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="flex space-x-4">
+                        <button type="submit" class="btn btn-primary">
+                            Update Profile <i class="fas fa-save ml-2"></i>
+                        </button>
+                        <a href="{% url 'accounts:dashboard' %}" class="btn btn-outline">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

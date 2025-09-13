@@ -1,0 +1,249 @@
+{% extends 'base.html' %}
+
+{% block title %}Shipping Information - JOOG{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12">
+    <!-- Hero Section -->
+    <div class="text-center mb-16">
+        <h1 class="text-5xl font-bold text-gray-800 mb-6">Shipping Information</h1>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+            Fast, reliable shipping to get your favorite pieces to you quickly and safely.
+        </p>
+    </div>
+
+    <!-- Shipping Options -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+        <div class="bg-white rounded-lg shadow-md p-6 text-center">
+            <div class="bg-red-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-shipping-fast text-red-500 text-2xl"></i>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">Standard Shipping</h3>
+            <p class="text-gray-600 mb-4">5-7 business days</p>
+            <p class="text-2xl font-bold text-red-500">FREE</p>
+            <p class="text-sm text-gray-500 mt-2">On orders over ₹5000</p>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-md p-6 text-center border-2 border-red-500">
+            <div class="bg-red-500 text-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-rocket text-white text-2xl"></i>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">Express Shipping</h3>
+            <p class="text-gray-600 mb-4">2-3 business days</p>
+            <p class="text-2xl font-bold text-red-500">₹199</p>
+            <p class="text-sm text-gray-500 mt-2">Flat rate</p>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-md p-6 text-center">
+            <div class="bg-red-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-clock text-red-500 text-2xl"></i>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">Next Day Delivery</h3>
+            <p class="text-gray-600 mb-4">1 business day</p>
+            <p class="text-2xl font-bold text-red-500">₹399</p>
+            <p class="text-sm text-gray-500 mt-2">Available in select areas</p>
+        </div>
+    </div>
+
+    <!-- Shipping Details -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+        <!-- Domestic Shipping -->
+        <div>
+            <h2 class="text-3xl font-bold text-gray-800 mb-8">Domestic Shipping (US)</h2>
+            
+            <div class="space-y-6">
+                <div class="bg-gray-50 rounded-lg p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3">Processing Time</h3>
+                    <p class="text-gray-600">Orders are processed within 1-2 business days. Orders placed after 2 PM EST will be processed the next business day.</p>
+                </div>
+                
+                <div class="bg-gray-50 rounded-lg p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3">Delivery Times</h3>
+                    <ul class="text-gray-600 space-y-1">
+                        <li>• Standard: 5-7 business days</li>
+                        <li>• Express: 2-3 business days</li>
+                        <li>• Next Day: 1 business day</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-gray-50 rounded-lg p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3">Shipping Carriers</h3>
+                    <p class="text-gray-600">We use UPS, FedEx, and USPS for reliable delivery. The carrier is automatically selected based on your location and shipping method.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- International Shipping -->
+        <div>
+            <h2 class="text-3xl font-bold text-gray-800 mb-8">International Shipping</h2>
+            
+            <div class="space-y-6">
+                <div class="bg-gray-50 rounded-lg p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3">Available Countries</h3>
+                    <p class="text-gray-600">We ship to most countries worldwide. Shipping costs and delivery times vary by destination.</p>
+                </div>
+                
+                <div class="bg-gray-50 rounded-lg p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3">Delivery Times</h3>
+                    <ul class="text-gray-600 space-y-1">
+                        <li>• Canada: 7-10 business days</li>
+                        <li>• Europe: 10-14 business days</li>
+                        <li>• Asia: 14-21 business days</li>
+                        <li>• Other regions: 14-28 business days</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-gray-50 rounded-lg p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3">Customs & Duties</h3>
+                    <p class="text-gray-600">International orders may be subject to customs duties and taxes. These charges are the responsibility of the customer.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Tracking -->
+    <div class="bg-red-50 rounded-lg p-8 mb-16">
+        <h2 class="text-3xl font-bold text-gray-800 text-center mb-8">Track Your Order</h2>
+        <div class="max-w-2xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="text-center">
+                    <div class="bg-red-500 text-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-envelope text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Email Notification</h3>
+                    <p class="text-gray-600">You'll receive tracking information via email once your order ships.</p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="bg-red-500 text-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-user text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Account Dashboard</h3>
+                    <p class="text-gray-600">Log into your account to view order status and tracking information.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shipping Restrictions -->
+    <div class="mb-16">
+        <h2 class="text-3xl font-bold text-gray-800 text-center mb-12">Shipping Restrictions</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                    <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                    What We Ship
+                </h3>
+                <ul class="text-gray-600 space-y-2">
+                    <li>• All clothing and accessories</li>
+                    <li>• Shoes and footwear</li>
+                    <li>• Jewelry and watches</li>
+                    <li>• Bags and handbags</li>
+                    <li>• Beauty and skincare products</li>
+                </ul>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                    <i class="fas fa-times-circle text-red-500 mr-2"></i>
+                    What We Cannot Ship
+                </h3>
+                <ul class="text-gray-600 space-y-2">
+                    <li>• Hazardous materials</li>
+                    <li>• Perishable items</li>
+                    <li>• Fragile electronics</li>
+                    <li>• Items requiring special handling</li>
+                    <li>• Restricted or prohibited items</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="mb-16">
+        <h2 class="text-3xl font-bold text-gray-800 text-center mb-12">Shipping FAQ</h2>
+        <div class="max-w-4xl mx-auto">
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-md">
+                    <button class="w-full text-left p-6 focus:outline-none" onclick="toggleFAQ(this)">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-lg font-semibold text-gray-800">How can I track my order?</h3>
+                            <i class="fas fa-chevron-down text-gray-400"></i>
+                        </div>
+                    </button>
+                    <div class="px-6 pb-6 hidden">
+                        <p class="text-gray-600">Once your order ships, you'll receive a tracking number via email. You can also check your order status in your account dashboard.</p>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-md">
+                    <button class="w-full text-left p-6 focus:outline-none" onclick="toggleFAQ(this)">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-lg font-semibold text-gray-800">What if my package is lost or damaged?</h3>
+                            <i class="fas fa-chevron-down text-gray-400"></i>
+                        </div>
+                    </button>
+                    <div class="px-6 pb-6 hidden">
+                        <p class="text-gray-600">Contact us immediately if your package is lost or damaged. We'll work with the shipping carrier to resolve the issue and ensure you receive your items.</p>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-md">
+                    <button class="w-full text-left p-6 focus:outline-none" onclick="toggleFAQ(this)">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-lg font-semibold text-gray-800">Can I change my shipping address after placing an order?</h3>
+                            <i class="fas fa-chevron-down text-gray-400"></i>
+                        </div>
+                    </button>
+                    <div class="px-6 pb-6 hidden">
+                        <p class="text-gray-600">You can change your shipping address if your order hasn't shipped yet. Contact our customer service team immediately to make changes.</p>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-md">
+                    <button class="w-full text-left p-6 focus:outline-none" onclick="toggleFAQ(this)">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-lg font-semibold text-gray-800">Do you offer same-day delivery?</h3>
+                            <i class="fas fa-chevron-down text-gray-400"></i>
+                        </div>
+                    </button>
+                    <div class="px-6 pb-6 hidden">
+                        <p class="text-gray-600">Same-day delivery is available in select metropolitan areas. Check during checkout to see if it's available in your location.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Support -->
+    <div class="bg-gray-50 rounded-lg p-8 text-center">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Have Shipping Questions?</h2>
+        <p class="text-gray-600 mb-6">Our customer service team is here to help with any shipping inquiries.</p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="{% url 'products:contact' %}" class="bg-red-500 text-white px-6 py-3 rounded-md hover:bg-red-600 transition-colors">
+                Contact Support
+            </a>
+            <a href="tel:+15551234567" class="bg-gray-800 text-white px-6 py-3 rounded-md hover:bg-gray-700 transition-colors">
+                Call Us: (555) 123-4567
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleFAQ(button) {
+    const content = button.nextElementSibling;
+    const icon = button.querySelector('i');
+    
+    if (content.classList.contains('hidden')) {
+        content.classList.remove('hidden');
+        icon.classList.remove('fa-chevron-down');
+        icon.classList.add('fa-chevron-up');
+    } else {
+        content.classList.add('hidden');
+        icon.classList.remove('fa-chevron-up');
+        icon.classList.add('fa-chevron-down');
+    }
+}
+</script>
+{% endblock %}

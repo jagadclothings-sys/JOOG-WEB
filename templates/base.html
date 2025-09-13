@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}JOOG - Premium Fashion{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    {% load static %}
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+</head>
+<body class="bg-ivory-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <!-- Logo -->
+                <a href="{% url 'products:home' %}" class="text-3xl font-bold text-red-600 hover:text-red-700 transition-colors duration-300">
+                    JOOG
+                </a>
+                
+                <!-- Navigation Links -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="{% url 'products:home' %}" class="nav-link">Home</a>
+                    <a href="{% url 'products:product_list' %}" class="nav-link">Products</a>
+                    
+                    <!-- Categories Dropdown -->
+                    <div class="relative group">
+                        <button class="nav-link flex items-center">
+                            Categories <i class="fas fa-chevron-down ml-1"></i>
+                        </button>
+                        <div class="absolute hidden group-hover:block top-full left-0 bg-white shadow-lg rounded-lg py-2 w-48 z-50">
+                            {% for category in all_categories %}
+                            <a href="{% url 'products:category' category.slug %}" class="block px-4 py-2 hover:bg-red-50 hover:text-red-600 transition-colors">
+                                {{ category.name }}
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- User Actions -->
+                <div class="flex items-center space-x-4">
+                    <!-- Search -->
+                    <form method="GET" action="{% url 'products:product_list' %}" class="hidden md:block">
+                        <input type="text" name="q" placeholder="Search products..." 
+                               class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                    </form>
+                    
+                    <!-- Cart -->
+                    {% if user.is_authenticated %}
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'orders:cart' %}" class="relative p-2 text-gray-600 hover:text-red-600 transition-colors">
+                        <i class="fas fa-shopping-cart text-xl"></i>
+                        {% if cart_total_items > 0 %}
+                        <span class="absolute -top-1 -right-1 bg-red-600 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
+                            {{ cart_total_items }}
+                        </span>
+                        {% endif %}
+                    </a>
+                    {% endif %}
+                    {% endif %}
+                    
+                    <!-- User Menu -->
+                    {% if user.is_authenticated %}
+                    <div class="relative group">
+                        <button class="flex items-center space-x-2 text-gray-600 hover:text-red-600 transition-colors">
+                            <i class="fas fa-user"></i>
+                            <span>{{ user.username }}</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="absolute hidden group-hover:block top-full right-0 bg-white shadow-lg rounded-lg py-2 w-48 z-50">
+                            <a href="{% url 'accounts:dashboard' %}" class="block px-4 py-2 hover:bg-red-50 hover:text-red-600 transition-colors">
+                                Dashboard
+                            </a>
+                            <a href="{% url 'accounts:profile' %}" class="block px-4 py-2 hover:bg-red-50 hover:text-red-600 transition-colors">
+                                Profile
+                            </a>
+                            <a href="{% url 'accounts:orders' %}" class="block px-4 py-2 hover:bg-red-50 hover:text-red-600 transition-colors">
+                                My Orders
+                            </a>
+                            {% if user.is_staff %}
+                            <div class="border-t border-gray-200 my-1"></div>
+                            <a href="{% url 'products:admin_dashboard' %}" class="block px-4 py-2 hover:bg-red-50 hover:text-red-600 transition-colors">
+                                Admin Dashboard
+                            </a>
+                            {% endif %}
+                            <div class="border-t border-gray-200 my-1"></div>
+                            <a href="{% url 'accounts:logout' %}" class="block px-4 py-2 hover:bg-red-50 hover:text-red-600 transition-colors">
+                                Logout
+                            </a>
+                        </div>
+                    </div>
+                    {% else %}
+                    <a href="{% url 'accounts:login' %}" class="btn btn-primary">Login</a>
+                    <a href="{% url 'accounts:register' %}" class="btn btn-outline">Register</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Messages -->
+    {% if messages %}
+    <div class="container mx-auto px-4 py-4">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} mb-4">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <!-- Main Content -->
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12 mt-16">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-2xl font-bold text-red-500 mb-4">JAGAD CLOTHINGS</h3>
+                    <div class="text-gray-300 space-y-2">
+                        <p class="text-sm leading-relaxed">
+                            # 23/1, Ground Floor, Srinivasa Complex,<br>
+                            2nd Mn. CKC Garden, Mission Road,<br>
+                            Bengaluru-560 027
+                        </p>
+                        <p class="text-sm">
+                            <a href="https://www.joogwear.com" class="text-red-400 hover:text-red-300 transition-colors">www.joogwear.com</a>
+                        </p>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="{% url 'products:home' %}" class="text-gray-300 hover:text-white transition-colors">Home</a></li>
+                        <li><a href="{% url 'products:product_list' %}" class="text-gray-300 hover:text-white transition-colors">Products</a></li>
+                        <li><a href="{% url 'products:about' %}" class="text-gray-300 hover:text-white transition-colors">About</a></li>
+                        <li><a href="{% url 'products:contact' %}" class="text-gray-300 hover:text-white transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Contact Us</h4>
+                    <div class="text-gray-300 space-y-3">
+                        <div class="flex items-start space-x-3">
+                            <i class="fas fa-envelope text-red-500 mt-1"></i>
+                            <div>
+                                <p class="text-sm">Customer Support:</p>
+                                <a href="mailto:contact@joogwear.com" class="text-red-400 hover:text-red-300 transition-colors text-sm">contact@joogwear.com</a>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <i class="fas fa-phone text-red-500 mt-1"></i>
+                            <div>
+                                <p class="text-sm">Phone:</p>
+                                <a href="tel:08035910158" class="text-red-400 hover:text-red-300 transition-colors text-sm">080 35910158</a>
+                            </div>
+                        </div>
+                        <div class="flex space-x-4 mt-4">
+                            <a href="https://www.facebook.com/profile.php?id=61579283000853" class="text-gray-300 hover:text-white transition-colors" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook text-xl"></i></a>
+                            <a href="https://www.instagram.com/joogindia/" class="text-gray-300 hover:text-white transition-colors" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram text-xl"></i></a>
+                            <a href="https://x.com/JoogIndia" class="text-gray-300 hover:text-white transition-colors" target="_blank" rel="noopener noreferrer"><i class="fab fa-x-twitter text-xl"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-300">
+                <p>&copy; 2024 JAGAD CLOTHINGS. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

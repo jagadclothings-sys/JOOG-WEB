@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block title %}About Us - JOOG{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12">
+    <!-- Hero Section -->
+    <div class="text-center mb-16">
+        <h1 class="text-5xl font-bold text-gray-800 mb-6">About JOOG</h1>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+            We're passionate about bringing you premium fashion that defines your unique style and elevates your everyday experience.
+        </p>
+    </div>
+
+    <!-- Mission Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+        <div>
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">Our Mission</h2>
+            <p class="text-gray-600 mb-4">
+                At JOOG, we believe that fashion is more than just clothing – it's a form of self-expression, confidence, and personal identity. Our mission is to curate and deliver premium fashion pieces that not only look exceptional but also make you feel extraordinary.
+            </p>
+            <p class="text-gray-600">
+                We're committed to providing our customers with high-quality garments that blend contemporary style with timeless elegance, ensuring every piece in your wardrobe tells a story of sophistication and authenticity.
+            </p>
+        </div>
+        <div class="bg-gray-100 rounded-lg p-8 flex items-center justify-center">
+            <div class="text-center">
+                <i class="fas fa-heart text-red-500 text-6xl mb-4"></i>
+                <h3 class="text-xl font-semibold text-gray-800">Passion for Fashion</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Values Section -->
+    <div class="mb-16">
+        <h2 class="text-3xl font-bold text-gray-800 text-center mb-12">Our Values</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="text-center">
+                <div class="bg-red-100 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-gem text-red-500 text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-800 mb-3">Quality First</h3>
+                <p class="text-gray-600">We never compromise on quality. Every piece is carefully selected and crafted to meet our high standards.</p>
+            </div>
+            <div class="text-center">
+                <div class="bg-red-100 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-users text-red-500 text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-800 mb-3">Customer Focus</h3>
+                <p class="text-gray-600">Your satisfaction is our priority. We're here to help you find the perfect pieces for your style.</p>
+            </div>
+            <div class="text-center">
+                <div class="bg-red-100 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-leaf text-red-500 text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-800 mb-3">Sustainability</h3>
+                <p class="text-gray-600">We're committed to responsible fashion, working with brands that share our values for sustainability.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Story Section -->
+    <div class="bg-gray-50 rounded-lg p-8 mb-16">
+        <h2 class="text-3xl font-bold text-gray-800 text-center mb-8">Our Story</h2>
+        <div class="max-w-4xl mx-auto">
+            <p class="text-gray-600 mb-4">
+                JOOG was born from a simple yet powerful idea: everyone deserves access to premium fashion that makes them feel confident and stylish. Founded by fashion enthusiasts who understood the gap between high-end luxury and everyday accessibility, we set out to bridge that divide.
+            </p>
+            <p class="text-gray-600 mb-4">
+                What started as a small collection of carefully curated pieces has grown into a comprehensive fashion destination. Today, we're proud to serve thousands of customers who trust us to help them express their unique style through quality clothing and accessories.
+            </p>
+            <p class="text-gray-600">
+                Our journey continues as we expand our collection, improve our services, and build lasting relationships with our community of fashion-forward individuals.
+            </p>
+        </div>
+    </div>
+
+    <!-- Team Section -->
+    <div class="text-center">
+        <h2 class="text-3xl font-bold text-gray-800 mb-8">Meet Our Team</h2>
+        <p class="text-gray-600 mb-8 max-w-2xl mx-auto">
+            Our dedicated team of fashion experts, customer service specialists, and logistics professionals work tirelessly to bring you the best shopping experience possible.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="bg-gray-200 rounded-full w-24 h-24 mx-auto mb-4"></div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">Sarah Johnson</h3>
+                <p class="text-red-500 mb-2">Founder & CEO</p>
+                <p class="text-gray-600 text-sm">Fashion industry veteran with 15+ years of experience in luxury retail.</p>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="bg-gray-200 rounded-full w-24 h-24 mx-auto mb-4"></div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">Michael Chen</h3>
+                <p class="text-red-500 mb-2">Head of Design</p>
+                <p class="text-gray-600 text-sm">Creative director with expertise in contemporary fashion trends.</p>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="bg-gray-200 rounded-full w-24 h-24 mx-auto mb-4"></div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">Emily Rodriguez</h3>
+                <p class="text-red-500 mb-2">Customer Experience</p>
+                <p class="text-gray-600 text-sm">Passionate about ensuring every customer has an exceptional experience.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

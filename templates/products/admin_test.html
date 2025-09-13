@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Admin Test - JOOG{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold text-gray-800 mb-8">Admin Test Page</h1>
+        
+        <div class="bg-white rounded-lg shadow-lg p-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Admin Pages Test</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="admin-card">
+                    <h3 class="text-xl font-bold text-red-600 mb-4">Add Product</h3>
+                    <p class="text-gray-600 mb-4">Test the add product functionality</p>
+                    <a href="{% url 'products:add_product' %}" class="btn btn-primary">
+                        <i class="fas fa-plus mr-2"></i> Add Product
+                    </a>
+                </div>
+                
+                <div class="admin-card">
+                    <h3 class="text-xl font-bold text-red-600 mb-4">Manage Products</h3>
+                    <p class="text-gray-600 mb-4">View and manage all products</p>
+                    <a href="{% url 'products:admin_products' %}" class="btn btn-primary">
+                        <i class="fas fa-list mr-2"></i> Manage Products
+                    </a>
+                </div>
+                
+                <div class="admin-card">
+                    <h3 class="text-xl font-bold text-red-600 mb-4">Customers</h3>
+                    <p class="text-gray-600 mb-4">View and manage customers</p>
+                    <a href="{% url 'products:admin_customers' %}" class="btn btn-primary">
+                        <i class="fas fa-users mr-2"></i> Manage Customers
+                    </a>
+                </div>
+                
+                <div class="admin-card">
+                    <h3 class="text-xl font-bold text-red-600 mb-4">Analytics</h3>
+                    <p class="text-gray-600 mb-4">View analytics and reports</p>
+                    <a href="{% url 'products:admin_analytics' %}" class="btn btn-primary">
+                        <i class="fas fa-chart-bar mr-2"></i> View Analytics
+                    </a>
+                </div>
+                
+                <div class="admin-card">
+                    <h3 class="text-xl font-bold text-red-600 mb-4">Orders</h3>
+                    <p class="text-gray-600 mb-4">View and manage orders</p>
+                    <a href="{% url 'orders:admin_orders' %}" class="btn btn-primary">
+                        <i class="fas fa-shopping-bag mr-2"></i> Manage Orders
+                    </a>
+                </div>
+                
+                <div class="admin-card">
+                    <h3 class="text-xl font-bold text-red-600 mb-4">Coupons</h3>
+                    <p class="text-gray-600 mb-4">View and manage coupons</p>
+                    <a href="{% url 'coupons:admin_coupons' %}" class="btn btn-primary">
+                        <i class="fas fa-ticket-alt mr-2"></i> Manage Coupons
+                    </a>
+                </div>
+            </div>
+            
+            <div class="mt-8 p-4 bg-gray-100 rounded-lg">
+                <h3 class="text-lg font-bold text-gray-800 mb-2">Test Results</h3>
+                <p class="text-gray-600">If you can see this page, the admin templates are working correctly.</p>
+                <p class="text-gray-600">Click on the buttons above to test each admin functionality.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

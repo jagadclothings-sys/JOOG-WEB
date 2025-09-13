@@ -1,0 +1,252 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Admin Dashboard - JOOG{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12">
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-800 mb-2">Admin Dashboard</h1>
+        <p class="text-gray-600">Manage your JOOG store</p>
+    </div>
+    
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div class="stat-card">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600">Total Products</p>
+                    <p class="text-2xl font-bold text-gray-800">{{ total_products }}</p>
+                </div>
+                <i class="fas fa-tshirt text-3xl text-red-600"></i>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600">Total Orders</p>
+                    <p class="text-2xl font-bold text-gray-800">{{ total_orders }}</p>
+                </div>
+                <i class="fas fa-shopping-bag text-3xl text-red-600"></i>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600">Total Revenue</p>
+                    <p class="text-2xl font-bold text-green-600">₹{{ total_revenue|floatformat:2 }}</p>
+                </div>
+                <i class="fas fa-dollar-sign text-3xl text-green-600"></i>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600">Total Customers</p>
+                    <p class="text-2xl font-bold text-gray-800">{{ total_customers }}</p>
+                </div>
+                <i class="fas fa-users text-3xl text-red-600"></i>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Additional Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div class="stat-card">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600">Pending Orders</p>
+                    <p class="text-2xl font-bold text-orange-600">{{ pending_orders }}</p>
+                </div>
+                <i class="fas fa-clock text-3xl text-orange-600"></i>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600">Monthly Revenue</p>
+                    <p class="text-2xl font-bold text-blue-600">₹{{ monthly_revenue|floatformat:2 }}</p>
+                </div>
+                <i class="fas fa-chart-line text-3xl text-blue-600"></i>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600">New Customers</p>
+                    <p class="text-2xl font-bold text-purple-600">{{ new_customers }}</p>
+                </div>
+                <i class="fas fa-user-plus text-3xl text-purple-600"></i>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600">Low Stock Items</p>
+                    <p class="text-2xl font-bold text-red-600">{{ low_stock_products.count }}</p>
+                </div>
+                <i class="fas fa-exclamation-triangle text-3xl text-red-600"></i>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quick Actions -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <a href="{% url 'products:add_product' %}" class="admin-card">
+            <i class="fas fa-plus-circle text-3xl text-red-600 mb-4"></i>
+            <h3 class="text-xl font-bold mb-2">Add Product</h3>
+            <p class="text-gray-600">Add new products to your catalog</p>
+        </a>
+        
+        <a href="{% url 'products:admin_products' %}" class="admin-card">
+            <i class="fas fa-list text-3xl text-red-600 mb-4"></i>
+            <h3 class="text-xl font-bold mb-2">Manage Products</h3>
+            <p class="text-gray-600">Edit, update, or remove products</p>
+        </a>
+        
+        <a href="{% url 'orders:admin_orders' %}" class="admin-card">
+            <i class="fas fa-shopping-bag text-3xl text-red-600 mb-4"></i>
+            <h3 class="text-xl font-bold mb-2">Orders</h3>
+            <p class="text-gray-600">View and manage customer orders</p>
+        </a>
+        
+        <a href="{% url 'coupons:admin_coupons' %}" class="admin-card">
+            <i class="fas fa-ticket-alt text-3xl text-red-600 mb-4"></i>
+            <h3 class="text-xl font-bold mb-2">Coupons</h3>
+            <p class="text-gray-600">Create and manage discount coupons</p>
+        </a>
+        
+        <a href="{% url 'products:admin_customers' %}" class="admin-card">
+            <i class="fas fa-users text-3xl text-red-600 mb-4"></i>
+            <h3 class="text-xl font-bold mb-2">Customers</h3>
+            <p class="text-gray-600">View and manage customer accounts</p>
+        </a>
+        
+        <a href="{% url 'products:admin_analytics' %}" class="admin-card">
+            <i class="fas fa-chart-bar text-3xl text-red-600 mb-4"></i>
+            <h3 class="text-xl font-bold mb-2">Analytics</h3>
+            <p class="text-gray-600">View detailed sales analytics</p>
+        </a>
+    </div>
+    
+    <!-- Dashboard Content -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <!-- Recent Orders -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h3 class="text-xl font-bold mb-4">Recent Orders</h3>
+            {% if recent_orders_list %}
+            <div class="space-y-3">
+                {% for order in recent_orders_list %}
+                <div class="flex justify-between items-center p-3 border border-gray-200 rounded">
+                    <div>
+                        <p class="font-semibold">#{{ order.order_number }}</p>
+                        <p class="text-sm text-gray-600">{{ order.user.get_full_name|default:order.user.username }}</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="font-bold text-red-600">₹{{ order.final_amount }}</p>
+                        <span class="status-badge status-{{ order.status }}">{{ order.get_status_display }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="mt-4">
+                <a href="{% url 'orders:admin_orders' %}" class="text-red-600 hover:text-red-700 font-semibold">View All Orders →</a>
+            </div>
+            {% else %}
+            <p class="text-gray-500">No recent orders</p>
+            {% endif %}
+        </div>
+        
+        <!-- Top Selling Products -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h3 class="text-xl font-bold mb-4">Top Selling Products</h3>
+            {% if top_products %}
+            <div class="space-y-3">
+                {% for product in top_products %}
+                <div class="flex justify-between items-center p-3 border border-gray-200 rounded">
+                    <div class="flex items-center space-x-3">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-10 h-10 object-cover rounded">
+                        {% else %}
+                        <div class="w-10 h-10 bg-gray-200 flex items-center justify-center rounded">
+                            <i class="fas fa-image text-gray-400 text-xs"></i>
+                        </div>
+                        {% endif %}
+                        <div>
+                            <p class="font-semibold">{{ product.name }}</p>
+                            <p class="text-sm text-gray-600">₹{{ product.price }}</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="font-bold text-green-600">{{ product.total_sold }} sold</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-gray-500">No sales data available</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Recent Customers -->
+    <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+        <h3 class="text-xl font-bold mb-4">Recent Customers</h3>
+        {% if recent_customers %}
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">Name</th>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">Email</th>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">Joined</th>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    {% for customer in recent_customers %}
+                    <tr>
+                        <td class="px-4 py-2">{{ customer.get_full_name|default:customer.username }}</td>
+                        <td class="px-4 py-2">{{ customer.email }}</td>
+                        <td class="px-4 py-2">{{ customer.date_joined|date:"M d, Y" }}</td>
+                        <td class="px-4 py-2">
+                            <a href="{% url 'products:customer_detail' customer.id %}" class="text-red-600 hover:text-red-700">View Details</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="mt-4">
+            <a href="{% url 'products:admin_customers' %}" class="text-red-600 hover:text-red-700 font-semibold">View All Customers →</a>
+        </div>
+        {% else %}
+        <p class="text-gray-500">No customers yet</p>
+        {% endif %}
+    </div>
+    
+    <!-- Low Stock Alert -->
+    {% if low_stock_products %}
+    <div class="bg-orange-50 border border-orange-200 rounded-lg p-6">
+        <h3 class="text-lg font-bold text-orange-800 mb-4">
+            <i class="fas fa-exclamation-triangle mr-2"></i>
+            Low Stock Alert
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {% for product in low_stock_products %}
+            <div class="flex justify-between items-center p-3 bg-white rounded border">
+                <span class="font-semibold">{{ product.name }}</span>
+                <span class="text-orange-600 font-bold">{{ product.stock }} left</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

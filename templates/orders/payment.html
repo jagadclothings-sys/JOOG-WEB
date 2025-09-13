@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Payment - JOOG{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12">
+    <div class="max-w-2xl mx-auto">
+        <h1 class="text-3xl font-bold mb-8 text-gray-800">Payment</h1>
+        
+        <div class="bg-white rounded-lg shadow-lg p-8">
+            <div class="mb-8">
+                <h2 class="text-xl font-bold mb-4">Order Summary</h2>
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <div class="flex justify-between mb-2">
+                        <span>Order Number:</span>
+                        <span class="font-semibold">{{ order.order_number }}</span>
+                    </div>
+                    <div class="flex justify-between mb-2">
+                        <span>TEST DEBUG:</span>
+                        <span>Discount: {{ order.discount_amount }}</span>
+                    </div>
+                    <div class="flex justify-between mb-2">
+                        <span>Subtotal:</span>
+                        <span>₹{{ order.total_amount }}</span>
+                    </div>
+                    <div class="flex justify-between text-green-600 mb-2">
+                        <span>Discount Applied:</span>
+                        <span>-₹{{ order.discount_amount }}</span>
+                    </div>
+                    <div class="flex justify-between font-bold text-lg">
+                        <span>Total Amount:</span>
+                        <span class="text-red-600">₹{{ order.final_amount }}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <form method="POST" class="space-y-6">
+                {% csrf_token %}
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <h3 class="font-semibold text-blue-800 mb-2">
+                        <i class="fas fa-info-circle mr-2"></i>
+                        Demo Payment
+                    </h3>
+                    <p class="text-blue-700 text-sm">
+                        This is a demo payment system. In production, this would integrate with Stripe or another payment processor.
+                    </p>
+                </div>
+                
+                <div>
+                    <label class="form-label">Payment Method</label>
+                    <select name="payment_method" class="form-input">
+                        <option value="stripe">Credit Card (Stripe)</option>
+                        <option value="paypal">PayPal</option>
+                        <option value="bank_transfer">Bank Transfer</option>
+                    </select>
+                </div>
+                
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h4 class="font-semibold mb-2">Shipping Address</h4>
+                    <p class="text-gray-600">
+                        {{ order.shipping_address }}<br>
+                        {{ order.shipping_city }}, {{ order.shipping_postal_code }}<br>
+                        {{ order.shipping_country }}
+                    </p>
+                </div>
+                
+                <button type="submit" class="btn btn-primary w-full">
+                    Complete Payment <i class="fas fa-credit-card ml-2"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

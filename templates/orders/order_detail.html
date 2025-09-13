@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Order #{{ order.order_number }} - JOOG Admin{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12">
+    <div class="max-w-4xl mx-auto">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">Order #{{ order.order_number }}</h1>
+            <a href="{% url 'orders:admin_orders' %}" class="btn btn-outline">
+                <i class="fas fa-arrow-left mr-2"></i> Back to Orders
+            </a>
+        </div>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Order Details -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Customer Information -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="text-xl font-bold mb-4">Customer Information</h2>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-sm text-gray-600">Name</p>
+                            <p class="font-semibold">{{ order.user.get_full_name|default:order.user.username }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">Email</p>
+                            <p class="font-semibold">{{ order.user.email }}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Shipping Information -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="text-xl font-bold mb-4">Shipping Address</h2>
+                    <div class="text-gray-700">
+                        <p>{{ order.shipping_address }}</p>
+                        <p>{{ order.shipping_city }}, {{ order.shipping_postal_code }}</p>
+                        <p>{{ order.shipping_country }}</p>
+                    </div>
+                </div>
+                
+                <!-- Order Items -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="text-xl font-bold mb-4">Order Items</h2>
+                    <div class="space-y-4">
+                        {% for item in order.items.all %}
+                        <div class="flex items-center space-x-4 p-4 border border-gray-200 rounded-lg">
+                            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" 
+                                 class="w-16 h-16 object-cover rounded-lg">
+                            <div class="flex-1">
+                                <h3 class="font-semibold">{{ item.product.name }}</h3>
+                                <p class="text-gray-600">{{ item.product.category.name }}</p>
+                                <p class="text-sm text-gray-500">Quantity: {{ item.quantity }}</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-bold">₹{{ item.get_total_price }}</p>
+                                <p class="text-sm text-gray-500">₹{{ item.price }} each</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Order Status and Actions -->
+            <div class="space-y-6">
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="text-xl font-bold mb-4">Order Status</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <p class="text-sm text-gray-600">Current Status</p>
+                            <span class="status-badge status-{{ order.status }}">{{ order.get_status_display }}</span>
+                        </div>
+                        
+                        <div>
+                            <p class="text-sm text-gray-600">Payment Status</p>
+                            <span class="status-badge status-{{ order.payment_status }}">{{ order.payment_status|title }}</span>
+                        </div>
+                        
+                        <div>
+                            <p class="text-sm text-gray-600">Order Date</p>
+                            <p class="font-semibold">{{ order.created_at|date:"F d, Y g:i A" }}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Update Status -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="text-xl font-bold mb-4">Update Status</h2>
+                    <form method="POST" action="{% url 'orders:update_order_status' order.order_number %}">
+                        {% csrf_token %}
+                        <div class="space-y-4">
+                            <select name="status" class="form-input">
+                                {% for status_code, status_name in order.STATUS_CHOICES %}
+                                <option value="{{ status_code }}" {% if order.status == status_code %}selected{% endif %}>
+                                    {{ status_name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <button type="submit" class="btn btn-primary w-full">
+                                Update Status
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Order Summary -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="text-xl font-bold mb-4">Payment Summary</h2>
+                    <div class="space-y-2">
+                        <div class="flex justify-between">
+                            <span>Subtotal:</span>
+                            <span>₹{{ order.total_amount }}</span>
+                        </div>
+                        {% if order.discount_amount > 0 %}
+                        <div class="flex justify-between text-green-600">
+                            <span>Discount:</span>
+                            <span>-₹{{ order.discount_amount }}</span>
+                        </div>
+                        {% endif %}
+                        <div class="flex justify-between">
+                            <span>Shipping:</span>
+                            <span class="text-green-600">Free</span>
+                        </div>
+                        <div class="border-t pt-2 flex justify-between font-bold text-lg">
+                            <span>Total:</span>
+                            <span class="text-red-600">₹{{ order.final_amount }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

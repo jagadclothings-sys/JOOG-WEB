@@ -1,0 +1,218 @@
+{% extends 'base.html' %}
+
+{% block title %}Help Center - JOOG{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12">
+    <!-- Hero Section -->
+    <div class="text-center mb-16">
+        <h1 class="text-5xl font-bold text-gray-800 mb-6">Help Center</h1>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+            Find answers to common questions and get the support you need for your JOOG experience.
+        </p>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="max-w-2xl mx-auto mb-12">
+        <div class="relative">
+            <input type="text" placeholder="Search for help..." class="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+            <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+        </div>
+    </div>
+
+    <!-- Quick Help Categories -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+        <a href="{% url 'products:shipping_info' %}" class="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg transition-shadow">
+            <div class="bg-red-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-shipping-fast text-red-500 text-2xl"></i>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">Shipping</h3>
+            <p class="text-gray-600 text-sm">Delivery times, tracking, and shipping options</p>
+        </a>
+        
+        <a href="{% url 'products:returns' %}" class="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg transition-shadow">
+            <div class="bg-red-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-undo text-red-500 text-2xl"></i>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">Returns</h3>
+            <p class="text-gray-600 text-sm">Return policy, exchanges, and refunds</p>
+        </a>
+        
+        <a href="{% url 'products:size_guide' %}" class="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg transition-shadow">
+            <div class="bg-red-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-ruler text-red-500 text-2xl"></i>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">Size Guide</h3>
+            <p class="text-gray-600 text-sm">Find your perfect fit with our sizing charts</p>
+        </a>
+        
+        <a href="{% url 'products:contact' %}" class="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg transition-shadow">
+            <div class="bg-red-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-headset text-red-500 text-2xl"></i>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">Contact Us</h3>
+            <p class="text-gray-600 text-sm">Get in touch with our support team</p>
+        </a>
+    </div>
+
+    <!-- FAQ Sections -->
+    <div class="max-w-4xl mx-auto">
+        <!-- Order Management -->
+        <div class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Order Management</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-md">
+                    <button class="w-full text-left p-6 focus:outline-none" onclick="toggleFAQ(this)">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-lg font-semibold text-gray-800">How can I track my order?</h3>
+                            <i class="fas fa-chevron-down text-gray-400"></i>
+                        </div>
+                    </button>
+                    <div class="px-6 pb-6 hidden">
+                        <p class="text-gray-600">Once your order ships, you'll receive a tracking number via email. You can also check your order status by logging into your account and visiting the "Orders" section.</p>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-md">
+                    <button class="w-full text-left p-6 focus:outline-none" onclick="toggleFAQ(this)">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-lg font-semibold text-gray-800">Can I modify or cancel my order?</h3>
+                            <i class="fas fa-chevron-down text-gray-400"></i>
+                        </div>
+                    </button>
+                    <div class="px-6 pb-6 hidden">
+                        <p class="text-gray-600">You can modify or cancel your order if it hasn't shipped yet. Please contact our customer service team immediately. Once your order has shipped, you can return items following our return policy.</p>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-md">
+                    <button class="w-full text-left p-6 focus:outline-none" onclick="toggleFAQ(this)">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-lg font-semibold text-gray-800">What payment methods do you accept?</h3>
+                            <i class="fas fa-chevron-down text-gray-400"></i>
+                        </div>
+                    </button>
+                    <div class="px-6 pb-6 hidden">
+                        <p class="text-gray-600">We accept all major credit cards (Visa, MasterCard, American Express), PayPal, and Apple Pay. All payments are processed securely through Stripe.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Account & Profile -->
+        <div class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Account & Profile</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-md">
+                    <button class="w-full text-left p-6 focus:outline-none" onclick="toggleFAQ(this)">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-lg font-semibold text-gray-800">How do I create an account?</h3>
+                            <i class="fas fa-chevron-down text-gray-400"></i>
+                        </div>
+                    </button>
+                    <div class="px-6 pb-6 hidden">
+                        <p class="text-gray-600">Click the "Register" button in the top navigation, fill out the registration form with your details, and verify your email address. You'll then have access to your personal dashboard.</p>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-md">
+                    <button class="w-full text-left p-6 focus:outline-none" onclick="toggleFAQ(this)">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-lg font-semibold text-gray-800">How do I update my profile information?</h3>
+                            <i class="fas fa-chevron-down text-gray-400"></i>
+                        </div>
+                    </button>
+                    <div class="px-6 pb-6 hidden">
+                        <p class="text-gray-600">Log into your account, go to "Profile" in the navigation menu, and update your information. Don't forget to save your changes.</p>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-md">
+                    <button class="w-full text-left p-6 focus:outline-none" onclick="toggleFAQ(this)">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-lg font-semibold text-gray-800">I forgot my password. How can I reset it?</h3>
+                            <i class="fas fa-chevron-down text-gray-400"></i>
+                        </div>
+                    </button>
+                    <div class="px-6 pb-6 hidden">
+                        <p class="text-gray-600">On the login page, click "Forgot Password" and enter your email address. We'll send you a link to reset your password.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Information -->
+        <div class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Product Information</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-md">
+                    <button class="w-full text-left p-6 focus:outline-none" onclick="toggleFAQ(this)">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-lg font-semibold text-gray-800">How do I find the right size?</h3>
+                            <i class="fas fa-chevron-down text-gray-400"></i>
+                        </div>
+                    </button>
+                    <div class="px-6 pb-6 hidden">
+                        <p class="text-gray-600">Check our detailed size guide for each product. We provide measurements and fit information to help you choose the perfect size.</p>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-md">
+                    <button class="w-full text-left p-6 focus:outline-none" onclick="toggleFAQ(this)">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-lg font-semibold text-gray-800">Are your products authentic?</h3>
+                            <i class="fas fa-chevron-down text-gray-400"></i>
+                        </div>
+                    </button>
+                    <div class="px-6 pb-6 hidden">
+                        <p class="text-gray-600">Yes, all our products are 100% authentic. We work directly with brands and authorized retailers to ensure authenticity.</p>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-md">
+                    <button class="w-full text-left p-6 focus:outline-none" onclick="toggleFAQ(this)">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-lg font-semibold text-gray-800">Do you offer international shipping?</h3>
+                            <i class="fas fa-chevron-down text-gray-400"></i>
+                        </div>
+                    </button>
+                    <div class="px-6 pb-6 hidden">
+                        <p class="text-gray-600">Yes, we ship to most countries worldwide. Shipping costs and delivery times vary by location. Check our shipping information page for details.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Support -->
+    <div class="bg-gray-50 rounded-lg p-8 text-center">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Still Need Help?</h2>
+        <p class="text-gray-600 mb-6">Can't find what you're looking for? Our customer service team is here to help.</p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="{% url 'products:contact' %}" class="bg-red-500 text-white px-6 py-3 rounded-md hover:bg-red-600 transition-colors">
+                Contact Support
+            </a>
+            <a href="tel:+15551234567" class="bg-gray-800 text-white px-6 py-3 rounded-md hover:bg-gray-700 transition-colors">
+                Call Us: (555) 123-4567
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleFAQ(button) {
+    const content = button.nextElementSibling;
+    const icon = button.querySelector('i');
+    
+    if (content.classList.contains('hidden')) {
+        content.classList.remove('hidden');
+        icon.classList.remove('fa-chevron-down');
+        icon.classList.add('fa-chevron-up');
+    } else {
+        content.classList.add('hidden');
+        icon.classList.remove('fa-chevron-up');
+        icon.classList.add('fa-chevron-down');
+    }
+}
+</script>
+{% endblock %}
