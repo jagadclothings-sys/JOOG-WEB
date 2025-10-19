@@ -7,9 +7,14 @@
 <div class="container mx-auto px-4 py-12">
     <div class="flex justify-between items-center mb-8">
         <h1 class="text-3xl font-bold text-gray-800">Manage Customers</h1>
-        <a href="{% url 'products:admin_dashboard' %}" class="btn btn-outline">
-            <i class="fas fa-arrow-left mr-2"></i> Back to Dashboard
-        </a>
+        <div class="flex items-center space-x-4">
+            <a href="{% url 'products:admin_dashboard' %}" class="btn btn-outline">
+                <i class="fas fa-arrow-left mr-2"></i> Back to Dashboard
+            </a>
+            <a href="{% url 'accounts:logout' %}" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">
+                <i class="fas fa-sign-out-alt mr-2"></i>Logout
+            </a>
+        </div>
     </div>
     
     <!-- Search Bar -->
@@ -52,14 +57,14 @@
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="text-gray-800">{{ customer.email }}</div>
                             {% if customer.phone_number %}
-                            <div class="text-gray-500 text-sm">{{ customer.phone_number }}</div>
+                            <div class="text-gray-500 text-sm numeric-font">{{ customer.phone_number }}</div>
                             {% endif %}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="font-bold text-blue-600">{{ customer.total_orders }}</div>
+                            <div class="font-bold text-blue-600 numeric-font">{{ customer.total_orders }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="font-bold text-green-600">₹{{ customer.total_spent|floatformat:2 }}</div>
+                            <div class="font-bold text-green-600 price">₹{{ customer.total_spent|floatformat:2 }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-gray-500">
                             {{ customer.date_joined|date:"M d, Y" }}

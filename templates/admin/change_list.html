@@ -1,0 +1,301 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static admin_list %}
+
+{% block extrahead %}
+{{ block.super }}
+<style>
+/* Additional change list specific styles */
+.object-tools {
+    background: rgba(255, 255, 240, 0.95) !important;
+    backdrop-filter: blur(10px);
+    border-radius: 12px !important;
+    padding: 1rem !important;
+    margin-bottom: 1rem !important;
+    border: 1px solid rgba(139, 0, 0, 0.1) !important;
+    box-shadow: var(--admin-shadow-light);
+}
+
+.object-tools li {
+    list-style: none !important;
+    margin: 0 !important;
+}
+
+.object-tools a {
+    background: var(--admin-gradient-red) !important;
+    color: var(--admin-ivory) !important;
+    padding: 0.75rem 1.5rem !important;
+    border-radius: 8px !important;
+    text-decoration: none !important;
+    font-weight: 600 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    transition: all 0.3s ease !important;
+    box-shadow: var(--admin-shadow-light);
+}
+
+.object-tools a:hover {
+    background: var(--admin-gradient-luxury) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: var(--admin-shadow-medium);
+}
+
+.object-tools a::before {
+    content: '\002B';
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+/* Enhanced table styling */
+.results table {
+    width: 100% !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+}
+
+.results table th.action-checkbox-column {
+    width: 40px !important;
+    text-align: center !important;
+}
+
+.results table td.action-checkbox {
+    text-align: center !important;
+    vertical-align: middle !important;
+}
+
+.results table td.action-checkbox input[type="checkbox"] {
+    transform: scale(1.2) !important;
+    accent-color: var(--admin-red-primary) !important;
+}
+
+/* Custom styling for specific columns */
+.results table .field-name {
+    font-weight: 600 !important;
+    color: var(--admin-red-primary) !important;
+}
+
+.results table .field-email {
+    color: var(--admin-text-secondary) !important;
+    font-style: italic !important;
+}
+
+.results table .field-date_joined,
+.results table .field-created_at,
+.results table .field-updated_at {
+    color: var(--admin-text-secondary) !important;
+    font-size: 0.9rem !important;
+}
+
+/* Status indicators */
+.field-is_active,
+.field-is_staff,
+.field-is_superuser {
+    text-align: center !important;
+}
+
+.field-is_active img,
+.field-is_staff img,
+.field-is_superuser img {
+    filter: hue-rotate(330deg) saturate(1.5) !important;
+}
+
+/* Admin actions styling */
+.admin-actions {
+    background: var(--admin-champagne) !important;
+    border-radius: 8px !important;
+    padding: 1rem !important;
+    margin: 1rem 0 !important;
+    border: 1px solid rgba(139, 0, 0, 0.1) !important;
+}
+
+.admin-actions select {
+    background: white !important;
+    border: 2px solid var(--admin-ivory-linen) !important;
+    border-radius: 6px !important;
+    padding: 0.5rem !important;
+    margin-right: 0.5rem !important;
+}
+
+.admin-actions button {
+    background: var(--admin-gradient-red) !important;
+    color: var(--admin-ivory) !important;
+    border: none !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 6px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+}
+
+.admin-actions button:hover {
+    background: var(--admin-gradient-luxury) !important;
+    transform: translateY(-1px) !important;
+}
+</style>
+{% endblock %}
+
+{% block content_title %}
+<div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+    <div style="
+        width: 50px; 
+        height: 50px; 
+        background: var(--admin-gradient-luxury); 
+        border-radius: 50%; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center;
+        box-shadow: var(--admin-shadow-light);
+    ">
+        <i class="fas fa-list" style="color: var(--admin-ivory); font-size: 1.2rem;"></i>
+    </div>
+    <div>
+        <h1 style="
+            color: var(--admin-red-primary); 
+            font-family: 'Playfair Display', serif; 
+            font-size: 2rem; 
+            margin: 0; 
+            font-weight: 700;
+        ">{{ cl.opts.verbose_name_plural|capfirst }}</h1>
+        <p style="
+            color: var(--admin-text-secondary); 
+            margin: 0; 
+            font-style: italic;
+        ">Manage and view all {{ cl.opts.verbose_name_plural|lower }}</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="changelist" class="{% if cl.formset %}filtered{% endif %}">
+    {% if cl.formset.errors %}
+        <p class="errornote">
+            {% if cl.formset.total_error_count == 1 %}
+                {% trans "Please correct the error below." %}
+            {% else %}
+                {% trans "Please correct the errors below." %}
+            {% endif %}
+        </p>
+        {{ cl.formset.non_form_errors }}
+    {% endif %}
+    
+    <div class="module{% if cl.has_filters %} filtered{% endif %}" id="changelist">
+        {% block object-tools %}
+            {% if has_add_permission %}
+                <ul class="object-tools">
+                    {% block object-tools-items %}
+                        <li>
+                            <a href="{% url cl.opts|admin_urlname:'add' %}{% if is_popup %}?{{ popup_var }}=1{% endif %}" class="addlink">
+                                {% blocktrans with cl.opts.verbose_name as name %}Add {{ name }}{% endblocktrans %}
+                            </a>
+                        </li>
+                    {% endblock %}
+                </ul>
+            {% endif %}
+        {% endblock %}
+
+        {% if cl.formset %}
+            <form action="" method="post" novalidate>{% csrf_token %}
+        {% endif %}
+        
+        {% if cl.has_filters %}
+            <div id="changelist-filter">
+                <h2>{% trans 'Filter' %}</h2>
+                {% for spec in cl.filter_specs %}{% admin_list_filter cl spec %}{% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="results">
+            <div class="actions">
+                {% if action_form and actions_on_top and cl.show_admin_actions %}
+                    {% admin_actions %}
+                {% endif %}
+            </div>
+
+            {% if cl.search_fields %}
+                <div id="changelist-search">
+                    <form method="get">
+                        <div>
+                            <label for="searchbar">
+                                <img src="{% static "admin/img/search.svg" %}" alt="Search" style="width: 16px; height: 16px; margin-right: 0.5rem;">
+                            </label>
+                            {% for key, value in cl.preserved_filters.items %}
+                                <input type="hidden" name="{{ key }}" value="{{ value }}">
+                            {% endfor %}
+                            <input type="text" size="40" name="{{ search_var }}" value="{{ cl.query }}" id="searchbar" autofocus placeholder="Search {{ cl.opts.verbose_name_plural|lower }}...">
+                            <input type="submit" value="Search">
+                            {% if cl.query %}
+                                <a href="?{% if cl.preserved_filters %}{{ cl.preserved_filters.urlencode }}&{% endif %}" style="
+                                    color: var(--admin-red-primary); 
+                                    text-decoration: none; 
+                                    margin-left: 0.5rem;
+                                    padding: 0.5rem;
+                                    border-radius: 6px;
+                                    background: rgba(139, 0, 0, 0.1);
+                                ">Clear</a>
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+            {% endif %}
+
+            {% if cl.has_results %}
+                <div class="results">
+                    {% result_list cl %}
+                </div>
+                {% if cl.result_count %}
+                    <p class="paginator">
+                        {{ cl.result_count }} {% if cl.result_count == 1 %}{{ cl.opts.verbose_name }}{% else %}{{ cl.opts.verbose_name_plural }}{% endif %}
+                        {% if cl.full_result_count and cl.can_show_all %}
+                            <a href="?{% if cl.preserved_filters %}{{ cl.preserved_filters.urlencode }}&{% endif %}all=" class="showall">
+                                {% trans 'Show all' %}
+                            </a>
+                        {% endif %}
+                    </p>
+                {% endif %}
+                {% if cl.formset and cl.result_count %}{% admin_actions %}{% endif %}
+            {% else %}
+                <div style="
+                    text-align: center; 
+                    padding: 3rem; 
+                    background: rgba(255, 255, 240, 0.5); 
+                    border-radius: 12px; 
+                    margin: 2rem 0;
+                ">
+                    <i class="fas fa-inbox" style="
+                        font-size: 3rem; 
+                        color: var(--admin-text-secondary); 
+                        margin-bottom: 1rem;
+                    "></i>
+                    <h3 style="color: var(--admin-text-primary);">No {{ cl.opts.verbose_name_plural|lower }} found</h3>
+                    <p style="color: var(--admin-text-secondary);">
+                        {% if cl.query %}
+                            No results match your search criteria.
+                        {% else %}
+                            There are no {{ cl.opts.verbose_name_plural|lower }} to display.
+                        {% endif %}
+                    </p>
+                    {% if has_add_permission and not cl.query %}
+                        <a href="{% url cl.opts|admin_urlname:'add' %}" style="
+                            background: var(--admin-gradient-red);
+                            color: var(--admin-ivory);
+                            padding: 0.75rem 1.5rem;
+                            border-radius: 8px;
+                            text-decoration: none;
+                            font-weight: 600;
+                            display: inline-block;
+                            margin-top: 1rem;
+                            transition: all 0.3s ease;
+                        " onmouseover="this.style.background='var(--admin-gradient-luxury)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.background='var(--admin-gradient-red)'; this.style.transform='translateY(0)'">
+                            Add the first {{ cl.opts.verbose_name|lower }}
+                        </a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+        
+        {% if cl.formset %}
+            </form>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

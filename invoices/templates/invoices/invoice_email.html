@@ -1,0 +1,287 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tax Invoice {{ invoice.invoice_number }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        
+        .email-container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .email-header {
+            background: #E53E3E;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .email-logo {
+            height: 50px;
+            width: auto;
+            margin-bottom: 15px;
+            filter: brightness(0) invert(1);
+        }
+        
+        .email-header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .email-header .company-name {
+            font-size: 18px;
+            margin-top: 10px;
+            opacity: 0.9;
+        }
+        
+        .email-content {
+            padding: 30px;
+        }
+        
+        .greeting {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .invoice-summary {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 6px;
+            margin: 20px 0;
+            border-left: 4px solid #E53E3E;
+        }
+        
+        .invoice-summary h3 {
+            margin: 0 0 15px 0;
+            color: #E53E3E;
+            font-size: 18px;
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 5px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .summary-row:last-child {
+            border-bottom: none;
+            font-weight: bold;
+            font-size: 16px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 2px solid #2874f0;
+        }
+        
+        .summary-label {
+            color: #666;
+        }
+        
+        .summary-value {
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .message-body {
+            font-size: 15px;
+            line-height: 1.6;
+            margin: 20px 0;
+        }
+        
+        .attachment-notice {
+            background: #e8f5e8;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+            border-left: 4px solid #28a745;
+        }
+        
+        .attachment-notice h4 {
+            margin: 0 0 5px 0;
+            color: #155724;
+        }
+        
+        .attachment-notice p {
+            margin: 0;
+            color: #155724;
+            font-size: 14px;
+        }
+        
+        .email-footer {
+            background: #f8f9fa;
+            padding: 20px 30px;
+            border-top: 1px solid #dee2e6;
+            text-align: center;
+        }
+        
+        .footer-content {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .footer-content a {
+            color: #E53E3E;
+            text-decoration: none;
+        }
+        
+        .footer-content a:hover {
+            text-decoration: underline;
+        }
+        
+        .contact-info {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #dee2e6;
+            font-size: 13px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #E53E3E;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 500;
+            margin: 10px 0;
+        }
+        
+        @media (max-width: 600px) {
+            .email-container {
+                margin: 10px;
+                border-radius: 4px;
+            }
+            
+            .email-header, .email-content, .email-footer {
+                padding: 20px;
+            }
+            
+            .summary-row {
+                flex-direction: column;
+                gap: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- Header -->
+        <div class="email-header">
+            <img src="{% static 'img/joog-logo.png' %}?v=4" alt="JOOG" class="email-logo">
+            <h1>Tax Invoice</h1>
+        </div>
+        
+        <!-- Content -->
+        <div class="email-content">
+            <div class="greeting">
+                Dear {{ customer_name }},
+            </div>
+            
+            <div class="message-body">
+                <p>Thank you for your recent order with {{ invoice.company_name }}. Please find your tax invoice attached to this email.</p>
+                
+                <p>Here's a summary of your invoice:</p>
+            </div>
+            
+            <!-- Invoice Summary -->
+            <div class="invoice-summary">
+                <h3>Invoice Details</h3>
+                
+                <div class="summary-row">
+                    <span class="summary-label">Invoice Number:</span>
+                    <span class="summary-value">{{ invoice.invoice_number }}</span>
+                </div>
+                
+                <div class="summary-row">
+                    <span class="summary-label">Invoice Date:</span>
+                    <span class="summary-value">{{ invoice.invoice_date|date:"d M, Y" }}</span>
+                </div>
+                
+                <div class="summary-row">
+                    <span class="summary-label">Order Number:</span>
+                    <span class="summary-value">{{ invoice.order.order_number }}</span>
+                </div>
+                
+                <div class="summary-row">
+                    <span class="summary-label">Subtotal:</span>
+                    <span class="summary-value">₹{{ invoice.subtotal|floatformat:2 }}</span>
+                </div>
+                
+                {% if invoice.total_tax > 0 %}
+                <div class="summary-row">
+                    <span class="summary-label">Tax (GST):</span>
+                    <span class="summary-value">₹{{ invoice.total_tax|floatformat:2 }}</span>
+                </div>
+                {% endif %}
+                
+                {% if invoice.discount_amount > 0 %}
+                <div class="summary-row">
+                    <span class="summary-label">Discount:</span>
+                    <span class="summary-value">-₹{{ invoice.discount_amount|floatformat:2 }}</span>
+                </div>
+                {% endif %}
+                
+                <div class="summary-row">
+                    <span class="summary-label">Total Amount:</span>
+                    <span class="summary-value">₹{{ invoice.final_amount|floatformat:2 }}</span>
+                </div>
+            </div>
+            
+            <!-- Attachment Notice -->
+            <div class="attachment-notice">
+                <h4>📎 Invoice Attachment</h4>
+                <p>Your complete tax invoice is attached as a PDF file to this email. Please save it for your records.</p>
+            </div>
+            
+            <div class="message-body">
+                <p>If you have any questions about this invoice or need assistance, please don't hesitate to contact our customer support team.</p>
+                
+                <p>Thank you for choosing {{ invoice.company_name }}!</p>
+                
+                <p>Best regards,<br>
+                <strong>{{ invoice.company_name }} Team</strong></p>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="email-footer">
+            <div class="footer-content">
+                <p>This is an automated email. Please do not reply to this message.</p>
+                
+                {% if invoice.company_website %}
+                <p><a href="{{ invoice.company_website }}" target="_blank">Visit our website</a> | 
+                {% endif %}
+                
+                {% if invoice.company_email %}
+                <a href="mailto:{{ invoice.company_email }}">Contact Support</a>
+                {% endif %}
+                </p>
+                
+                <div class="contact-info">
+                    <strong>{{ invoice.company_name }}</strong><br>
+                    {% if invoice.company_gstin %}GSTIN: {{ invoice.company_gstin }}<br>{% endif %}
+                    {% if invoice.company_phone %}Phone: {{ invoice.company_phone }}<br>{% endif %}
+                    {% if invoice.company_email %}Email: {{ invoice.company_email }}{% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

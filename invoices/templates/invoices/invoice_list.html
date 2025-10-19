@@ -1,0 +1,146 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tax Invoices - JOOG Admin</title>
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+    <link href="{% static 'css/theme.css' %}" rel="stylesheet">
+</head>
+<body>
+<div class="header brand-stripes">
+        <div class="header-content">
+            <h1>📋 All Tax Invoices</h1>
+            <div class="nav-buttons">
+                <a href="{% url 'invoices:admin_dashboard' %}" class="btn btn-primary">🏠 Back to Dashboard</a>
+                <a href="{% url 'invoices:reports_dashboard' %}" class="btn btn-success">📈 Reports</a>
+                <a href="{% url 'admin:index' %}" class="btn btn-secondary">⚙️ Django Admin</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <!-- Filters -->
+        <div class="filters">
+            <form method="get">
+                <div class="filters-row">
+                    <div class="filter-group">
+                        <label for="start_date">Start Date</label>
+                        <input type="date" id="start_date" name="start_date" value="{{ start_date|date:'Y-m-d' }}">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="end_date">End Date</label>
+                        <input type="date" id="end_date" name="end_date" value="{{ end_date|date:'Y-m-d' }}">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="search">Search</label>
+                        <input type="text" id="search" name="search" placeholder="Invoice number, customer name..." value="{{ search }}">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <button type="submit" class="btn btn-primary">Filter</button>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <a href="{% url 'invoices:export_excel' %}{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}" class="btn btn-success">
+                            Export Excel
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Stats -->
+        <div class="stats">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">{{ total_count }}</div>
+                    <div class="stat-label">Total Invoices</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ invoices.paginator.count }}</div>
+                    <div class="stat-label">Filtered Results</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Invoices Table -->
+        <div class="invoices-table">
+            <div class="table-header">
+                <h3>Invoices</h3>
+            </div>
+            
+            {% if invoices %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Invoice #</th>
+                        <th>Order #</th>
+                        <th>Customer</th>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for invoice in invoices %}
+                    <tr>
+                        <td>
+                            <span class="invoice-number">{{ invoice.invoice_number }}</span>
+                        </td>
+                        <td>{{ invoice.order.order_number }}</td>
+                        <td>
+                            <strong>{{ invoice.customer_name }}</strong><br>
+                            <small>{{ invoice.customer_email }}</small>
+                        </td>
+                        <td>{{ invoice.invoice_date|date:"d M, Y" }}</td>
+                        <td>₹{{ invoice.final_amount|floatformat:2 }}</td>
+                        <td>
+                            <span class="status {% if invoice.is_generated %}generated{% else %}pending{% endif %}">
+                                {% if invoice.is_generated %}Generated{% else %}Pending{% endif %}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="actions">
+                                <a href="{% url 'invoices:admin_invoice_detail' invoice.id %}" class="btn btn-primary btn-sm">View</a>
+                                {% if invoice.invoice_pdf %}
+                                    <a href="{% url 'invoices:admin_invoice_pdf' invoice.id %}" class="btn btn-success btn-sm" target="_blank">PDF</a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            <!-- Pagination -->
+            {% if invoices.has_other_pages %}
+            <div class="pagination">
+                {% if invoices.has_previous %}
+                    <a href="?{% if request.GET.urlencode %}{{ request.GET.urlencode }}&{% endif %}page={{ invoices.previous_page_number }}">&laquo; Previous</a>
+                {% endif %}
+                
+                <span class="current">
+                    Page {{ invoices.number }} of {{ invoices.paginator.num_pages }}
+                </span>
+                
+                {% if invoices.has_next %}
+                    <a href="?{% if request.GET.urlencode %}{{ request.GET.urlencode }}&{% endif %}page={{ invoices.next_page_number }}">Next &raquo;</a>
+                {% endif %}
+            </div>
+            {% endif %}
+            
+            {% else %}
+            <div class="no-invoices">
+                <h3>No invoices found</h3>
+                <p>Try adjusting your filters or create some invoices from orders.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

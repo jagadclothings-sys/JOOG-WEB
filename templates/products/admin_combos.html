@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Manage Combos - JOOG Admin{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12">
+    <div class="flex justify-between items-center mb-8">
+        <h1 class="text-3xl font-bold text-gray-800">Manage Combos</h1>
+        <div class="flex space-x-4">
+            <a href="{% url 'products:add_combo' %}" class="btn btn-primary">
+                <i class="fas fa-plus mr-2"></i> Add Combo
+            </a>
+            <a href="{% url 'products:admin_products' %}" class="btn btn-outline">
+                <i class="fas fa-arrow-left mr-2"></i> Back to Products
+            </a>
+        </div>
+    </div>
+
+    {% if combos %}
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Combo</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Items</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    {% for combo in combos %}
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                {% if combo.image %}
+                                <img src="{{ combo.image.url }}" alt="{{ combo.name }}" 
+                                     class="w-12 h-12 object-cover rounded-lg mr-4">
+                                {% else %}
+                                <div class="w-12 h-12 bg-gray-200 flex items-center justify-center rounded-lg mr-4">
+                                    <i class="fas fa-layer-group text-gray-400 text-sm"></i>
+                                </div>
+                                {% endif %}
+                                <div>
+                                    <div class="font-semibold text-gray-800">{{ combo.name }}</div>
+                                    <div class="text-gray-500 text-sm">{{ combo.slug }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-700">
+                            {{ combo.total_items }} items
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="font-bold text-red-600">₹{{ combo.price }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            {% if combo.active %}
+                            <span class="status-badge bg-green-100 text-green-800">Active</span>
+                            {% else %}
+                            <span class="status-badge bg-gray-100 text-gray-800">Inactive</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                            <div class="flex space-x-2">
+                                <a href="{% url 'products:edit_combo' combo.slug %}" 
+                                   class="text-blue-600 hover:text-blue-700">Edit</a>
+                                <a href="{% url 'products:delete_combo' combo.slug %}" 
+                                   class="text-red-600 hover:text-red-700">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    {% if combos.has_other_pages %}
+    <div class="flex justify-center mt-8">
+        <nav class="flex space-x-2">
+            {% if combos.has_previous %}
+            <a href="?page={{ combos.previous_page_number }}" class="pagination-btn">Previous</a>
+            {% endif %}
+            {% for num in combos.paginator.page_range %}
+            {% if combos.number == num %}
+            <span class="pagination-btn pagination-current">{{ num }}</span>
+            {% elif num > combos.number|add:'-3' and num < combos.number|add:'3' %}
+            <a href="?page={{ num }}" class="pagination-btn">{{ num }}</a>
+            {% endif %}
+            {% endfor %}
+            {% if combos.has_next %}
+            <a href="?page={{ combos.next_page_number }}" class="pagination-btn">Next</a>
+            {% endif %}
+        </nav>
+    </div>
+    {% endif %}
+
+    {% else %}
+    <div class="text-center py-16">
+        <i class="fas fa-layer-group text-6xl text-gray-300 mb-6"></i>
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">No combos found</h2>
+        <p class="text-gray-600 mb-8">Create your first combo bundle</p>
+        <a href="{% url 'products:add_combo' %}" class="btn btn-primary">
+            Add Combo
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Influencer System Access - JOOG</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700 min-h-screen">
+    <div class="container mx-auto px-4 py-16">
+        <div class="max-w-4xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-12">
+                <h1 class="text-5xl font-bold text-white mb-4">🚀 JOOG Influencer System</h1>
+                <p class="text-xl text-purple-100">Direct Access Portal</p>
+            </div>
+
+            <!-- Status Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                <!-- Available Influencers -->
+                <div class="bg-white rounded-xl shadow-2xl p-8">
+                    <div class="text-center mb-6">
+                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-users text-green-600 text-2xl"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800">Available Influencers</h2>
+                    </div>
+                    
+                    <!-- Influencer 1 -->
+                    <div class="bg-gray-50 rounded-lg p-6 mb-4">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-800">John Doe</h3>
+                                <p class="text-sm text-gray-600">@johndoe</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">Active</span>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-2 text-sm text-gray-600 mb-4">
+                            <div><strong>Email:</strong> john.doe@example.com</div>
+                            <div><strong>Commission:</strong> 7.50%</div>
+                            <div><strong>Coupons:</strong> JOHNDOE20</div>
+                        </div>
+                        
+                        <div class="space-y-2">
+                            <a href="http://127.0.0.1:8000/influencers/login/?username=johndoe&api_key=mXBsCGJHqsFo7ChNFffFihOrhjtGgPmpadp2bMZ81TSkD2KyAVj1hedVcw3hkNaR" 
+                               class="block w-full bg-purple-600 text-white text-center py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors font-semibold"
+                               target="_blank">
+                                🚀 Auto Login as johndoe
+                            </a>
+                            <button onclick="copyCredentials('johndoe', 'mXBsCGJHqsFo7ChNFffFihOrhjtGgPmpadp2bMZ81TSkD2KyAVj1hedVcw3hkNaR')"
+                                    class="block w-full bg-gray-600 text-white text-center py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors">
+                                📋 Copy Credentials
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Influencer 2 -->
+                    <div class="bg-gray-50 rounded-lg p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-800">Fashion Influencer</h3>
+                                <p class="text-sm text-gray-600">@fashionista</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">Active</span>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-2 text-sm text-gray-600 mb-4">
+                            <div><strong>Email:</strong> fashion@example.com</div>
+                            <div><strong>Commission:</strong> 5.00%</div>
+                            <div><strong>Coupons:</strong> None assigned</div>
+                        </div>
+                        
+                        <div class="space-y-2">
+                            <a href="http://127.0.0.1:8000/influencers/login/?username=fashionista&api_key=2Sqg1o4gnR50dKFCcVsxJYOZilGJDSmfCNuCuDSfCwwuwCORn0vdet3MNb6yL6cD" 
+                               class="block w-full bg-purple-600 text-white text-center py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors font-semibold"
+                               target="_blank">
+                                🚀 Auto Login as fashionista
+                            </a>
+                            <button onclick="copyCredentials('fashionista', '2Sqg1o4gnR50dKFCcVsxJYOZilGJDSmfCNuCuDSfCwwuwCORn0vdet3MNb6yL6cD')"
+                                    class="block w-full bg-gray-600 text-white text-center py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors">
+                                📋 Copy Credentials
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Manual Login -->
+                <div class="bg-white rounded-xl shadow-2xl p-8">
+                    <div class="text-center mb-6">
+                        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-sign-in-alt text-blue-600 text-2xl"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800">Manual Login</h2>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div class="bg-blue-50 rounded-lg p-4">
+                            <h3 class="font-semibold text-blue-800 mb-2">Login Instructions:</h3>
+                            <ol class="text-sm text-blue-700 space-y-1">
+                                <li>1. Click "Go to Login Page" below</li>
+                                <li>2. Enter Username and API Key</li>
+                                <li>3. Click "Login" button</li>
+                                <li>4. Access your dashboard</li>
+                            </ol>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <a href="http://127.0.0.1:8000/influencers/login/" 
+                               class="block w-full bg-blue-600 text-white text-center py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors font-semibold"
+                               target="_blank">
+                                🔐 Go to Login Page
+                            </a>
+                            
+                            <a href="http://127.0.0.1:8000/influencers/" 
+                               class="block w-full bg-indigo-600 text-white text-center py-3 px-6 rounded-lg hover:bg-indigo-700 transition-colors font-semibold"
+                               target="_blank">
+                                ℹ️ System Info Page
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick URLs -->
+            <div class="bg-white rounded-xl shadow-2xl p-8">
+                <h2 class="text-2xl font-bold text-gray-800 text-center mb-6">🔗 Quick Access URLs</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <a href="http://127.0.0.1:8000/influencers/" target="_blank"
+                       class="block bg-purple-100 text-purple-800 p-4 rounded-lg text-center hover:bg-purple-200 transition-colors">
+                        <i class="fas fa-home text-2xl mb-2"></i>
+                        <div class="font-semibold">Info Page</div>
+                        <div class="text-sm">/influencers/</div>
+                    </a>
+                    
+                    <a href="http://127.0.0.1:8000/influencers/login/" target="_blank"
+                       class="block bg-blue-100 text-blue-800 p-4 rounded-lg text-center hover:bg-blue-200 transition-colors">
+                        <i class="fas fa-sign-in-alt text-2xl mb-2"></i>
+                        <div class="font-semibold">Login Page</div>
+                        <div class="text-sm">/influencers/login/</div>
+                    </a>
+                    
+                    <a href="http://127.0.0.1:8000/admin/" target="_blank"
+                       class="block bg-green-100 text-green-800 p-4 rounded-lg text-center hover:bg-green-200 transition-colors">
+                        <i class="fas fa-cog text-2xl mb-2"></i>
+                        <div class="font-semibold">Admin Panel</div>
+                        <div class="text-sm">/admin/</div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="text-center mt-12">
+                <p class="text-purple-100">JOOG Influencer Management System - Ready to Use!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg transform translate-x-full transition-transform duration-300">
+        Credentials copied to clipboard!
+    </div>
+
+    <script>
+        function copyCredentials(username, apiKey) {
+            const text = `Username: ${username}\nAPI Key: ${apiKey}`;
+            
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showNotification();
+                });
+            } else {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showNotification();
+            }
+        }
+        
+        function showNotification() {
+            const notification = document.getElementById('notification');
+            notification.classList.remove('translate-x-full');
+            setTimeout(() => {
+                notification.classList.add('translate-x-full');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

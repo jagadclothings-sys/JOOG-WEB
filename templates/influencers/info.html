@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Influencer System - JOOG{% endblock %}
+
+{% block content %}
+<div class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-purple-600 to-blue-600 text-white py-12">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-4xl font-bold mb-4">JOOG Influencer System</h1>
+            <p class="text-xl text-purple-100">Complete influencer management and tracking platform</p>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-12">
+        <!-- For Influencers -->
+        <div class="max-w-2xl mx-auto">
+            <div class="bg-white rounded-lg shadow-lg p-8">
+                <div class="text-center mb-8">
+                    <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-users text-purple-600 text-2xl"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-900 mb-2">Influencer Dashboard</h2>
+                    <p class="text-gray-600">Access your dashboard to track performance and earnings</p>
+                </div>
+
+                <div class="space-y-6">
+                    <div class="border-l-4 border-purple-500 pl-4">
+                        <h3 class="font-semibold text-gray-900 mb-2">How to Access Your Dashboard:</h3>
+                        <ol class="text-sm text-gray-600 space-y-1">
+                            <li>1. Use the direct link provided by JOOG admin</li>
+                            <li>2. Or login manually with your username and API key</li>
+                        </ol>
+                    </div>
+
+                    <div class="bg-purple-50 rounded-lg p-4">
+                        <h4 class="font-semibold text-purple-900 mb-2">What You Can Do:</h4>
+                        <ul class="text-sm text-purple-700 space-y-1">
+                            <li>• View your performance statistics</li>
+                            <li>• Track orders using your coupons</li>
+                            <li>• Monitor commission earnings</li>
+                            <li>• Update your profile information</li>
+                            <li>• Access your coupon codes</li>
+                        </ul>
+                    </div>
+
+                    <div class="text-center space-y-3">
+                        <a href="{% url 'influencers:login' %}" class="block bg-purple-600 text-white py-3 px-6 rounded-lg hover:bg-purple-700 transition-colors font-semibold">
+                            <i class="fas fa-sign-in-alt mr-2"></i>Login to Dashboard
+                        </a>
+                        
+                        <div class="text-xs text-gray-500">
+                            Don't have access credentials? Contact JOOG admin.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Features -->
+        <div class="bg-white rounded-lg shadow-lg p-8 mt-12">
+            <h2 class="text-2xl font-bold text-gray-900 text-center mb-8">System Features</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-shield-alt text-green-600"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 mb-2">Secure Authentication</h3>
+                    <p class="text-sm text-gray-600">API key-based secure access system</p>
+                </div>
+
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-chart-line text-yellow-600"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 mb-2">Performance Tracking</h3>
+                    <p class="text-sm text-gray-600">Real-time statistics and commission tracking</p>
+                </div>
+
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-mobile-alt text-red-600"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 mb-2">Mobile Responsive</h3>
+                    <p class="text-sm text-gray-600">Works perfectly on all devices</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Test -->
+        <div class="bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-200 rounded-lg p-8 mt-12">
+            <h2 class="text-xl font-bold text-indigo-900 mb-4">Quick Test</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="font-semibold text-indigo-800 mb-2">Test Influencer Login:</h3>
+                    <div class="text-sm text-indigo-700">
+                        <div class="bg-indigo-100 rounded p-3 font-mono">
+                            <div>Username: <span class="font-bold">johndoe</span></div>
+                            <div>API Key: <span class="font-bold">mXBsC...1hcw</span></div>
+                        </div>
+                        <div class="mt-2">
+                            <a href="{% url 'influencers:login' %}?username=johndoe&api_key=mXBsCGJHqsFo7ChNFffFihOrhjtGgPmpadp2bMZ81TSkD2KyAVj1hedVcw3hkNaR" 
+                               class="text-indigo-600 hover:text-indigo-800 underline">
+                                Test Login Link →
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="font-semibold text-indigo-800 mb-2">System URLs:</h3>
+                    <div class="text-sm text-indigo-700 space-y-1">
+                        <div><a href="{% url 'influencers:login' %}" class="underline hover:text-indigo-900">Login Page</a></div>
+                        <div><a href="/admin/" class="underline hover:text-indigo-900">Admin Panel</a></div>
+                        <div><a href="/" class="underline hover:text-indigo-900">Main Website</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center mt-12 text-gray-500">
+            <p class="text-sm">JOOG Influencer Management System - Integrated with Django E-commerce Platform</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

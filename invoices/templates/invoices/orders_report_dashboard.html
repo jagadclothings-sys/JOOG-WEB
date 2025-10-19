@@ -1,0 +1,289 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders Reports & Analytics - JOOG Admin</title>
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+    <link href="{% static 'css/theme.css' %}" rel="stylesheet">
+</head>
+<body>
+<div class="header brand-stripes">
+        <div class="header-content">
+            <h1>📦 Orders Reports & Analytics</h1>
+            
+            <div class="nav-buttons">
+                <a href="{% url 'invoices:admin_dashboard' %}" class="btn btn-primary">🏠 Back to Dashboard</a>
+                <a href="{% url 'invoices:admin_invoice_list' %}" class="btn btn-secondary">📋 Invoices</a>
+                <a href="{% url 'invoices:reports_dashboard' %}" class="btn btn-outline">📈 Invoice Reports</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <!-- Filters -->
+        <div class="filters">
+            <form method="get">
+                <div class="filters-row">
+                    <div class="filter-group">
+                        <label for="start_date">Start Date</label>
+                        <input type="date" id="start_date" name="start_date" value="{{ start_date|date:'Y-m-d' }}">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="end_date">End Date</label>
+                        <input type="date" id="end_date" name="end_date" value="{{ end_date|date:'Y-m-d' }}">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="status">Order Status</label>
+                        <select id="status" name="status">
+                            <option value="all" {% if status_filter == 'all' %}selected{% endif %}>All Statuses</option>
+                            {% for status_key, status_label in order_status_choices %}
+                                <option value="{{ status_key }}" {% if status_filter == status_key %}selected{% endif %}>
+                                    {{ status_label }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <button type="submit" class="btn btn-primary">Apply Filters</button>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <a href="{% url 'invoices:orders_report_dashboard' %}" class="btn btn-secondary">Clear</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Export Actions -->
+        <div class="export-actions">
+            <a href="{% url 'invoices:export_orders_excel' %}{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}" class="export-btn">
+                📊 Export Detailed Orders Report
+                <small style="font-size: 11px; opacity: 0.8;">(4 Sheets: Summary, Items, Customers, Analytics)</small>
+            </a>
+            <a href="{% url 'invoices:export_sales_report_excel' %}{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}" class="export-btn">
+                📈 Export Sales Analysis Report
+                <small style="font-size: 11px; opacity: 0.8;">(4 Sheets: Sales, Products, Customers, Dashboard)</small>
+            </a>
+        </div>
+        
+        <!-- Statistics Overview -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">{{ total_orders }}</div>
+                <div class="stat-label">Total Orders</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-number">₹{{ total_revenue|floatformat:0 }}</div>
+                <div class="stat-label">Total Revenue</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-number">₹{{ total_discount|floatformat:0 }}</div>
+                <div class="stat-label">Total Discounts</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-number">₹{{ avg_order_value|floatformat:0 }}</div>
+                <div class="stat-label">Average Order Value</div>
+            </div>
+        </div>
+        
+        <!-- Reports Grid -->
+        <div class="reports-grid">
+            <!-- Order Status Breakdown -->
+            <div class="report-card">
+                <div class="report-header">
+                    <h3>📊 Order Status Breakdown</h3>
+                </div>
+                <div class="report-content">
+                    {% if status_stats %}
+                        {% for status in status_stats %}
+                        <div class="report-item">
+                            <div class="item-info">
+                                <div class="item-name">
+                                    <span class="status-badge status-{{ status.status }}">{{ status.status|title }}</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: {% widthratio status.count total_orders 100 %}%"></div>
+                                </div>
+                            </div>
+                            <div class="item-stats">
+                                <div class="item-value">{{ status.count }}</div>
+                                <div class="item-secondary">₹{{ status.revenue|floatformat:0 }}</div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="no-data">No order status data available</div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Top Customers -->
+            <div class="report-card">
+                <div class="report-header">
+                    <h3>🏆 Top Customers by Revenue</h3>
+                </div>
+                <div class="report-content">
+                    {% if top_customers %}
+                        {% for customer in top_customers %}
+                        <div class="report-item">
+                            <div class="item-info">
+                                <div class="item-name">{{ customer.user__first_name }} {{ customer.user__last_name }}</div>
+                                <div class="item-details">{{ customer.user__email }}</div>
+                            </div>
+                            <div class="item-stats">
+                                <div class="item-value">₹{{ customer.total_spent|floatformat:0 }}</div>
+                                <div class="item-secondary">{{ customer.total_orders }} order{{ customer.total_orders|pluralize }}</div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="no-data">No customer data available</div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Payment Methods -->
+            <div class="report-card">
+                <div class="report-header">
+                    <h3>💳 Payment Method Breakdown</h3>
+                </div>
+                <div class="report-content">
+                    {% if payment_stats %}
+                        {% for payment in payment_stats %}
+                        <div class="report-item">
+                            <div class="item-info">
+                                <div class="item-name">{{ payment.payment_method|title }}</div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: {% widthratio payment.count total_orders 100 %}%"></div>
+                                </div>
+                            </div>
+                            <div class="item-stats">
+                                <div class="item-value">{{ payment.count }}</div>
+                                <div class="item-secondary">₹{{ payment.revenue|floatformat:0 }}</div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="no-data">No payment method data available</div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Monthly Performance -->
+            <div class="report-card">
+                <div class="report-header">
+                    <h3>📅 Monthly Performance</h3>
+                </div>
+                <div class="report-content">
+                    {% if monthly_data %}
+                        {% for month in monthly_data %}
+                        <div class="report-item">
+                            <div class="item-info">
+                                <div class="item-name">
+                                    {% if month.month == 1 %}Jan{% elif month.month == 2 %}Feb{% elif month.month == 3 %}Mar{% elif month.month == 4 %}Apr{% elif month.month == 5 %}May{% elif month.month == 6 %}Jun{% elif month.month == 7 %}Jul{% elif month.month == 8 %}Aug{% elif month.month == 9 %}Sep{% elif month.month == 10 %}Oct{% elif month.month == 11 %}Nov{% else %}Dec{% endif %} {{ month.year }}
+                                </div>
+                                <div class="item-details">Avg: ₹{{ month.avg_order_value|floatformat:0 }} per order</div>
+                            </div>
+                            <div class="item-stats">
+                                <div class="item-value">{{ month.order_count }}</div>
+                                <div class="item-secondary">₹{{ month.revenue|floatformat:0 }}</div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="no-data">No monthly data available</div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Top Products -->
+            <div class="report-card">
+                <div class="report-header">
+                    <h3>🛍️ Top Selling Products</h3>
+                </div>
+                <div class="report-content">
+                    {% if top_products %}
+                        {% for product in top_products %}
+                        <div class="report-item">
+                            <div class="item-info">
+                                <div class="item-name">{{ product.product__name }}</div>
+                                <div class="item-details">{{ product.total_quantity }} units sold in {{ product.order_count }} order{{ product.order_count|pluralize }}</div>
+                            </div>
+                            <div class="item-stats">
+                                <div class="item-value">₹{{ product.total_revenue|floatformat:0 }}</div>
+                                <div class="item-secondary">{{ product.total_quantity }} units</div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="no-data">No product sales data available</div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Geographic Breakdown -->
+            <div class="report-card">
+                <div class="report-header">
+                    <h3>🗺️ Orders by State</h3>
+                </div>
+                <div class="report-content">
+                    {% if geographic_data %}
+                        {% for geo in geographic_data %}
+                        <div class="report-item">
+                            <div class="item-info">
+                                <div class="item-name">{{ geo.shipping_state|default:"Unknown State" }}</div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: {% widthratio geo.order_count total_orders 100 %}%"></div>
+                                </div>
+                            </div>
+                            <div class="item-stats">
+                                <div class="item-value">{{ geo.order_count }}</div>
+                                <div class="item-secondary">₹{{ geo.revenue|floatformat:0 }}</div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="no-data">No geographic data available</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Orders -->
+        <div class="report-card">
+            <div class="report-header">
+                <h3>🕒 Recent Orders</h3>
+            </div>
+            <div class="report-content">
+                {% if recent_orders %}
+                    {% for order in recent_orders %}
+                    <div class="report-item">
+                        <div class="item-info">
+                            <div class="item-name">{{ order.order_number }}</div>
+                            <div class="item-details">
+                                {{ order.user.first_name }} {{ order.user.last_name }} • {{ order.created_at|date:"M d, Y H:i" }}
+                                <span class="status-badge status-{{ order.status }}">{{ order.status|title }}</span>
+                            </div>
+                        </div>
+                        <div class="item-stats">
+                            <div class="item-value">₹{{ order.final_amount|floatformat:2 }}</div>
+                            <div class="item-secondary">{{ order.items.count }} item{{ order.items.count|pluralize }}</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="no-data">No recent orders found</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

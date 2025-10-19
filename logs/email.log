@@ -1,0 +1,161 @@
+INFO 2025-10-08 14:42:10,801 email_utils 15236 32320 Order confirmation email sent successfully for order JOOG-20251008-0001 to asdf@gmail.com
+INFO 2025-10-08 14:42:10,806 signals 15236 32320 Confirmation email sent successfully for order JOOG-20251008-0001
+INFO 2025-10-08 14:42:10,808 signals 15236 32320 Scheduled confirmation email for new order JOOG-20251008-0001
+ERROR 2025-10-08 14:42:14,957 signals 15236 32320 Exception in send_status_update_delayed for order JOOG-20251008-0001: 'EmailService' object has no attribute 'send_order_status_update_email'
+INFO 2025-10-08 14:42:14,959 signals 15236 32320 Scheduled status update email for order JOOG-20251008-0001: pending -> confirmed
+INFO 2025-10-08 14:42:15,020 email_utils 15236 32320 Order confirmation email sent successfully to asdf@gmail.com for order #57
+INFO 2025-10-08 14:42:15,041 email_utils 15236 32320 Admin order notification email sent successfully for order #57
+INFO 2025-10-09 00:21:39,837 email_utils 27800 18760 Order confirmation email sent successfully for order JOOG-20251008-0002 to devi@gmail.com
+INFO 2025-10-09 00:21:39,837 signals 27800 18760 Confirmation email sent successfully for order JOOG-20251008-0002
+INFO 2025-10-09 00:21:39,841 signals 27800 18760 Scheduled confirmation email for new order JOOG-20251008-0002
+INFO 2025-10-09 12:11:37,995 email_utils 13700 16700 Order confirmation email sent successfully for order JOOG-20251009-0001 to rock@gmail.com
+INFO 2025-10-09 12:11:37,995 signals 13700 16700 Confirmation email sent successfully for order JOOG-20251009-0001
+INFO 2025-10-09 12:11:37,995 signals 13700 16700 Scheduled confirmation email for new order JOOG-20251009-0001
+INFO 2025-10-09 14:25:44,428 email_utils 28304 6872 Order confirmation email sent successfully for order JOOG-20251009-0002 to rock@gmail.com
+INFO 2025-10-09 14:25:44,428 signals 28304 6872 Confirmation email sent successfully for order JOOG-20251009-0002
+INFO 2025-10-09 14:25:44,428 signals 28304 6872 Scheduled confirmation email for new order JOOG-20251009-0002
+ERROR 2025-10-09 14:25:59,674 signals 28304 6872 Exception in send_status_update_delayed for order JOOG-20251009-0002: 'EmailService' object has no attribute 'send_order_status_update_email'
+INFO 2025-10-09 14:25:59,675 signals 28304 6872 Scheduled status update email for order JOOG-20251009-0002: pending -> confirmed
+INFO 2025-10-09 14:25:59,738 email_utils 28304 6872 Order confirmation email sent successfully to rock@gmail.com for order #60
+INFO 2025-10-09 14:25:59,742 email_utils 28304 6872 Admin order notification email sent successfully for order #60
+INFO 2025-10-09 14:28:32,670 email_utils 28304 16444 Tax invoice attached to order confirmation email for order #60
+INFO 2025-10-09 14:28:32,671 email_utils 28304 16444 Order confirmation email sent successfully to rock@gmail.com for order #60
+INFO 2025-10-09 14:28:42,219 email_utils 28304 16444 Admin order notification email sent successfully for order #60
+INFO 2025-10-09 15:02:37,313 email_utils 22088 17368 Order confirmation email sent successfully for order JOOG-20251009-0003 to rock@gmail.com
+INFO 2025-10-09 15:02:37,313 signals 22088 17368 Confirmation email sent successfully for order JOOG-20251009-0003
+INFO 2025-10-09 15:02:37,313 signals 22088 17368 Scheduled confirmation email for new order JOOG-20251009-0003
+ERROR 2025-10-09 15:02:47,203 signals 22088 17368 Exception in send_status_update_delayed for order JOOG-20251009-0003: 'EmailService' object has no attribute 'send_order_status_update_email'
+INFO 2025-10-09 15:02:47,203 signals 22088 17368 Scheduled status update email for order JOOG-20251009-0003: pending -> confirmed
+INFO 2025-10-09 15:02:47,260 email_utils 22088 17368 Order confirmation email sent successfully to rock@gmail.com for order #61
+INFO 2025-10-09 15:02:47,265 email_utils 22088 17368 Admin order notification email sent successfully for order #61
+ERROR 2025-10-09 15:05:01,395 signals 22088 1156 Exception in send_status_update_delayed for order JOOG-20251007-0003: 'EmailService' object has no attribute 'send_order_status_update_email'
+INFO 2025-10-09 15:05:01,395 signals 22088 1156 Scheduled status update email for order JOOG-20251007-0003: pending -> cancelled
+ERROR 2025-10-09 15:05:01,414 email_utils 22088 1156 Failed to send order status update email for order #54: name 'send_mail' is not defined
+INFO 2025-10-09 15:29:29,382 email_utils 28164 368 Order confirmation email sent successfully for order JOOG-20251009-0004 to rock@gmail.com
+INFO 2025-10-09 15:29:29,382 signals 28164 368 Confirmation email sent successfully for order JOOG-20251009-0004
+INFO 2025-10-09 15:29:29,382 signals 28164 368 Scheduled confirmation email for new order JOOG-20251009-0004
+ERROR 2025-10-09 15:29:31,853 signals 28164 368 Exception in send_status_update_delayed for order JOOG-20251009-0004: 'EmailService' object has no attribute 'send_order_status_update_email'
+INFO 2025-10-09 15:29:31,853 signals 28164 368 Scheduled status update email for order JOOG-20251009-0004: pending -> confirmed
+INFO 2025-10-09 15:29:31,920 email_utils 28164 368 Order confirmation email sent successfully to rock@gmail.com for order #62
+INFO 2025-10-09 15:29:31,932 email_utils 28164 368 Admin order notification email sent successfully for order #62
+INFO 2025-10-09 15:42:21,733 email_utils 20680 34620 Order confirmation email sent successfully for order JOOG-20251009-0005 to rohi@gmail.com
+INFO 2025-10-09 15:42:21,735 signals 20680 34620 Confirmation email sent successfully for order JOOG-20251009-0005
+INFO 2025-10-09 15:42:21,735 signals 20680 34620 Scheduled confirmation email for new order JOOG-20251009-0005
+INFO 2025-10-09 15:42:22,604 email_utils 20680 20920 Order confirmation email sent successfully for order JOOG-20251009-0006 to rohi@gmail.com
+INFO 2025-10-09 15:42:22,604 signals 20680 20920 Confirmation email sent successfully for order JOOG-20251009-0006
+INFO 2025-10-09 15:42:22,604 signals 20680 20920 Scheduled confirmation email for new order JOOG-20251009-0006
+INFO 2025-10-09 15:42:53,350 email_utils 20680 20920 Order confirmation email sent successfully for order JOOG-20251009-0007 to rohi@gmail.com
+INFO 2025-10-09 15:42:53,350 signals 20680 20920 Confirmation email sent successfully for order JOOG-20251009-0007
+INFO 2025-10-09 15:42:53,350 signals 20680 20920 Scheduled confirmation email for new order JOOG-20251009-0007
+ERROR 2025-10-09 15:42:56,602 signals 20680 27788 Exception in send_status_update_delayed for order JOOG-20251009-0007: 'EmailService' object has no attribute 'send_order_status_update_email'
+INFO 2025-10-09 15:42:56,602 signals 20680 27788 Scheduled status update email for order JOOG-20251009-0007: pending -> confirmed
+INFO 2025-10-09 15:42:56,660 email_utils 20680 27788 Order confirmation email sent successfully to rohi@gmail.com for order #65
+INFO 2025-10-09 15:42:56,667 email_utils 20680 27788 Admin order notification email sent successfully for order #65
+ERROR 2025-10-09 15:44:18,798 signals 20680 33872 Exception in send_status_update_delayed for order JOOG-20251009-0007: 'EmailService' object has no attribute 'send_order_status_update_email'
+INFO 2025-10-09 15:44:18,798 signals 20680 33872 Scheduled status update email for order JOOG-20251009-0007: confirmed -> delivered
+ERROR 2025-10-09 15:44:18,808 email_utils 20680 33872 Failed to send order status update email for order #65: name 'send_mail' is not defined
+ERROR 2025-10-09 15:44:46,365 signals 20680 33872 Exception in send_status_update_delayed for order JOOG-20250925-0002: 'EmailService' object has no attribute 'send_order_status_update_email'
+INFO 2025-10-09 15:44:46,365 signals 20680 33872 Scheduled status update email for order JOOG-20250925-0002: confirmed -> delivered
+INFO 2025-10-09 15:44:46,397 email_utils 20680 33872 Order confirmation email sent successfully for order JOOG-20250925-0002 to rock@gmail.com
+INFO 2025-10-09 15:44:46,397 signals 20680 33872 Retry successful - confirmation email sent for order JOOG-20250925-0002
+ERROR 2025-10-09 15:44:46,399 email_utils 20680 33872 Failed to send order status update email for order #46: name 'send_mail' is not defined
+INFO 2025-10-09 22:27:42,342 email_utils 18932 4676 Order confirmation email sent successfully for order JOOG-20251009-0008 to rohithcs7889@gmail.com
+INFO 2025-10-09 22:27:42,346 signals 18932 4676 Confirmation email sent successfully for order JOOG-20251009-0008
+INFO 2025-10-09 22:27:42,346 signals 18932 4676 Scheduled confirmation email for new order JOOG-20251009-0008
+ERROR 2025-10-09 22:27:50,684 signals 18932 4676 Exception in send_status_update_delayed for order JOOG-20251009-0008: 'EmailService' object has no attribute 'send_order_status_update_email'
+INFO 2025-10-09 22:27:50,687 signals 18932 4676 Scheduled status update email for order JOOG-20251009-0008: pending -> confirmed
+INFO 2025-10-09 22:27:59,010 email_utils 18932 4676 Order confirmation email sent successfully to rohithcs7889@gmail.com for order #66
+INFO 2025-10-09 22:28:06,273 email_utils 18932 4676 Admin order notification email sent successfully for order #66
+ERROR 2025-10-09 22:29:36,384 signals 18932 18844 Exception in send_status_update_delayed for order JOOG-20251009-0008: 'EmailService' object has no attribute 'send_order_status_update_email'
+INFO 2025-10-09 22:29:36,384 signals 18932 18844 Scheduled status update email for order JOOG-20251009-0008: confirmed -> shipped
+ERROR 2025-10-09 22:29:36,414 email_utils 18932 18844 Failed to send order status update email for order #66: name 'send_mail' is not defined
+ERROR 2025-10-09 22:30:11,655 signals 18932 18844 Exception in send_status_update_delayed for order JOOG-20251009-0008: 'EmailService' object has no attribute 'send_order_status_update_email'
+INFO 2025-10-09 22:30:11,655 signals 18932 18844 Scheduled status update email for order JOOG-20251009-0008: shipped -> delivered
+ERROR 2025-10-09 22:30:11,675 email_utils 18932 18844 Failed to send order status update email for order #66: name 'send_mail' is not defined
+INFO 2025-10-09 22:31:14,086 email_utils 18932 18844 Order confirmation email sent successfully to rohithcs7889@gmail.com for order #66
+INFO 2025-10-09 22:31:39,602 email_utils 18932 18844 Admin order notification email sent successfully for order #66
+INFO 2025-10-09 22:44:13,365 email_utils 13432 7200 Order status update email sent successfully for order JOOG-20251009-0008 to rohithcs7889@gmail.com: pending -> confirmed
+INFO 2025-10-09 22:44:20,946 email_utils 13432 7200 Order status update email sent successfully for order JOOG-20251009-0008 to rohithcs7889@gmail.com: confirmed -> shipped
+INFO 2025-10-09 22:44:28,242 email_utils 13432 7200 Order status update email sent successfully for order JOOG-20251009-0008 to rohithcs7889@gmail.com: shipped -> delivered
+INFO 2025-10-09 22:44:35,646 email_utils 13432 7200 Order status update email sent successfully for order JOOG-20251009-0008 to rohithcs7889@gmail.com: delivered -> confirmed
+INFO 2025-10-09 22:44:35,653 signals 13432 7200 Status update email sent for order JOOG-20251009-0008: delivered -> confirmed
+INFO 2025-10-09 22:44:52,783 email_utils 13432 7200 Order status update email sent successfully for order JOOG-20251009-0008 to rohithcs7889@gmail.com: delivered -> confirmed
+INFO 2025-10-09 22:44:52,794 signals 13432 7200 Status update email sent for order JOOG-20251009-0008: delivered -> confirmed
+INFO 2025-10-09 22:44:52,794 signals 13432 7200 Scheduled status update email for order JOOG-20251009-0008: delivered -> confirmed
+INFO 2025-10-09 22:44:52,817 email_utils 13432 7200 Tax invoice email sent successfully for order JOOG-20251009-0008 to rohithcs7889@gmail.com
+INFO 2025-10-09 22:44:52,822 signals 13432 7200 Invoice email sent for order JOOG-20251009-0008
+INFO 2025-10-09 22:44:52,822 signals 13432 7200 Scheduled status update email for order JOOG-20251009-0008: delivered -> confirmed
+INFO 2025-10-09 22:45:03,020 email_utils 13432 7200 Order status update email sent successfully for order JOOG-20251009-0008 to rohithcs7889@gmail.com: confirmed -> delivered
+INFO 2025-10-09 22:45:03,034 signals 13432 7200 Status update email sent for order JOOG-20251009-0008: confirmed -> delivered
+INFO 2025-10-09 22:45:03,034 signals 13432 7200 Scheduled status update email for order JOOG-20251009-0008: confirmed -> delivered
+INFO 2025-10-09 22:50:34,612 email_utils 12908 26544 Order status update email sent successfully for order JOOG-20251009-0008 to rohithcs7889@gmail.com: pending -> confirmed
+INFO 2025-10-09 22:51:31,262 email_utils 6424 17412 Order status update email sent successfully for order JOOG-20251009-0008 to rohithcs7889@gmail.com: pending -> confirmed
+INFO 2025-10-10 11:57:00,010 email_utils 10552 11528 Order confirmation email sent successfully for order TEST_000067 to test@test.com
+INFO 2025-10-10 11:57:00,014 signals 10552 11528 Confirmation email sent successfully for order TEST_000067
+INFO 2025-10-10 11:57:00,014 signals 10552 11528 Scheduled confirmation email for new order TEST_000067
+INFO 2025-10-10 11:58:22,884 email_utils 3548 23908 Order confirmation email sent successfully for order TEST_000068 to test@test.com
+INFO 2025-10-10 11:58:22,888 signals 3548 23908 Confirmation email sent successfully for order TEST_000068
+INFO 2025-10-10 11:58:22,888 signals 3548 23908 Scheduled confirmation email for new order TEST_000068
+INFO 2025-10-10 12:26:47,898 email_utils 29412 19316 Order confirmation email sent successfully for order JOOG-20251010-0001 to rohithcs7889@gmail.com
+INFO 2025-10-10 12:26:47,902 signals 29412 19316 Confirmation email sent successfully for order JOOG-20251010-0001
+INFO 2025-10-10 12:26:47,902 signals 29412 19316 Scheduled confirmation email for new order JOOG-20251010-0001
+INFO 2025-10-10 12:26:53,422 email_utils 29412 9668 Order confirmation email sent successfully for order JOOG-20251010-0002 to rohithcs7889@gmail.com
+INFO 2025-10-10 12:26:53,427 signals 29412 9668 Confirmation email sent successfully for order JOOG-20251010-0002
+INFO 2025-10-10 12:26:53,427 signals 29412 9668 Scheduled confirmation email for new order JOOG-20251010-0002
+INFO 2025-10-10 12:27:15,500 email_utils 29412 9668 Order status update email sent successfully for order JOOG-20251010-0002 to rohithcs7889@gmail.com: pending -> confirmed
+INFO 2025-10-10 12:27:15,503 signals 29412 9668 Status update email sent for order JOOG-20251010-0002: pending -> confirmed
+INFO 2025-10-10 12:27:35,902 email_utils 29412 9668 Order status update email sent successfully for order JOOG-20251010-0002 to rohithcs7889@gmail.com: pending -> confirmed
+INFO 2025-10-10 12:27:35,902 signals 29412 9668 Status update email sent for order JOOG-20251010-0002: pending -> confirmed
+INFO 2025-10-10 12:27:35,910 signals 29412 9668 Scheduled status update email for order JOOG-20251010-0002: pending -> confirmed
+INFO 2025-10-10 12:27:35,930 email_utils 29412 9668 Tax invoice email sent successfully for order JOOG-20251010-0002 to rohithcs7889@gmail.com
+INFO 2025-10-10 12:27:35,933 signals 29412 9668 Invoice email sent for order JOOG-20251010-0002
+INFO 2025-10-10 12:27:35,933 signals 29412 9668 Scheduled status update email for order JOOG-20251010-0002: pending -> confirmed
+INFO 2025-10-10 12:27:35,979 email_utils 29412 9668 Tax invoice attached to order confirmation email for order #70
+INFO 2025-10-10 12:27:45,607 email_utils 29412 9668 Order confirmation email sent successfully to rohithcs7889@gmail.com for order #70
+INFO 2025-10-10 12:27:54,288 email_utils 29412 9668 Admin order notification email sent successfully for order #70
+INFO 2025-10-11 11:14:37,567 email_utils 10448 10460 Order confirmation email sent successfully for order JOOG-20251011-0001 to rohi@gmail.com
+INFO 2025-10-11 11:14:37,572 signals 10448 10460 Confirmation email sent successfully for order JOOG-20251011-0001
+INFO 2025-10-11 11:14:37,572 signals 10448 10460 Scheduled confirmation email for new order JOOG-20251011-0001
+INFO 2025-10-11 11:14:52,315 email_utils 10448 10460 Order status update email sent successfully for order JOOG-20251011-0001 to rohi@gmail.com: pending -> confirmed
+INFO 2025-10-11 11:14:52,318 signals 10448 10460 Status update email sent for order JOOG-20251011-0001: pending -> confirmed
+INFO 2025-10-11 11:15:07,696 email_utils 10448 10460 Order status update email sent successfully for order JOOG-20251011-0001 to rohi@gmail.com: pending -> confirmed
+INFO 2025-10-11 11:15:07,697 signals 10448 10460 Status update email sent for order JOOG-20251011-0001: pending -> confirmed
+INFO 2025-10-11 11:15:07,697 signals 10448 10460 Scheduled status update email for order JOOG-20251011-0001: pending -> confirmed
+INFO 2025-10-11 11:15:07,712 email_utils 10448 10460 Tax invoice email sent successfully for order JOOG-20251011-0001 to rohi@gmail.com
+INFO 2025-10-11 11:15:07,712 signals 10448 10460 Invoice email sent for order JOOG-20251011-0001
+INFO 2025-10-11 11:15:07,712 signals 10448 10460 Scheduled status update email for order JOOG-20251011-0001: pending -> confirmed
+INFO 2025-10-11 11:15:07,811 email_utils 10448 10460 Tax invoice attached to order confirmation email for order #71
+INFO 2025-10-11 11:15:15,600 email_utils 10448 10460 Order confirmation email sent successfully to rohi@gmail.com for order #71
+INFO 2025-10-11 11:15:23,697 email_utils 10448 10460 Admin order notification email sent successfully for order #71
+INFO 2025-10-14 12:07:10,699 email_utils 30480 18768 Order confirmation email sent successfully for order JOOG-20251014-0001 to rohithcs7889@gmail.com
+INFO 2025-10-14 12:07:10,701 signals 30480 18768 Confirmation email sent successfully for order JOOG-20251014-0001
+INFO 2025-10-14 12:07:10,701 signals 30480 18768 Scheduled confirmation email for new order JOOG-20251014-0001
+INFO 2025-10-14 12:08:04,453 email_utils 30480 18768 Order confirmation email sent successfully for order JOOG-20251014-0002 to rohithcs7889@gmail.com
+INFO 2025-10-14 12:08:04,456 signals 30480 18768 Confirmation email sent successfully for order JOOG-20251014-0002
+INFO 2025-10-14 12:08:04,456 signals 30480 18768 Scheduled confirmation email for new order JOOG-20251014-0002
+INFO 2025-10-14 12:09:57,487 email_utils 30480 18768 Order status update email sent successfully for order JOOG-20251014-0002 to rohithcs7889@gmail.com: pending -> confirmed
+INFO 2025-10-14 12:09:57,487 signals 30480 18768 Status update email sent for order JOOG-20251014-0002: pending -> confirmed
+INFO 2025-10-14 12:10:12,193 email_utils 30480 18768 Order status update email sent successfully for order JOOG-20251014-0002 to rohithcs7889@gmail.com: pending -> confirmed
+INFO 2025-10-14 12:10:12,195 signals 30480 18768 Status update email sent for order JOOG-20251014-0002: pending -> confirmed
+INFO 2025-10-14 12:10:12,195 signals 30480 18768 Scheduled status update email for order JOOG-20251014-0002: pending -> confirmed
+INFO 2025-10-14 12:10:12,215 email_utils 30480 18768 Tax invoice email sent successfully for order JOOG-20251014-0002 to rohithcs7889@gmail.com
+INFO 2025-10-14 12:10:12,218 signals 30480 18768 Invoice email sent for order JOOG-20251014-0002
+INFO 2025-10-14 12:10:12,218 signals 30480 18768 Scheduled status update email for order JOOG-20251014-0002: pending -> confirmed
+INFO 2025-10-14 12:10:12,281 email_utils 30480 18768 Tax invoice attached to order confirmation email for order #73
+INFO 2025-10-14 12:10:19,362 email_utils 30480 18768 Order confirmation email sent successfully to rohithcs7889@gmail.com for order #73
+INFO 2025-10-14 12:10:26,468 email_utils 30480 18768 Admin order notification email sent successfully for order #73
+INFO 2025-10-14 13:00:02,156 email_utils 30480 30848 Admin order notification email sent successfully for order #73
+INFO 2025-10-15 22:02:22,471 email_utils 25028 26824 Order confirmation email sent successfully for order JOOG-20251015-0001 to rock@gmail.com
+INFO 2025-10-15 22:02:22,473 signals 25028 26824 Confirmation email sent successfully for order JOOG-20251015-0001
+INFO 2025-10-15 22:02:22,473 signals 25028 26824 Scheduled confirmation email for new order JOOG-20251015-0001
+INFO 2025-10-15 22:02:34,695 email_utils 25028 26824 Order status update email sent successfully for order JOOG-20251015-0001 to rock@gmail.com: pending -> confirmed
+INFO 2025-10-15 22:02:34,697 signals 25028 26824 Status update email sent for order JOOG-20251015-0001: pending -> confirmed
+INFO 2025-10-15 22:02:51,097 email_utils 25028 26824 Order status update email sent successfully for order JOOG-20251015-0001 to rock@gmail.com: pending -> confirmed
+INFO 2025-10-15 22:02:51,099 signals 25028 26824 Status update email sent for order JOOG-20251015-0001: pending -> confirmed
+INFO 2025-10-15 22:02:51,099 signals 25028 26824 Scheduled status update email for order JOOG-20251015-0001: pending -> confirmed
+INFO 2025-10-15 22:02:51,111 email_utils 25028 26824 Tax invoice email sent successfully for order JOOG-20251015-0001 to rock@gmail.com
+INFO 2025-10-15 22:02:51,113 signals 25028 26824 Invoice email sent for order JOOG-20251015-0001
+INFO 2025-10-15 22:02:51,113 signals 25028 26824 Scheduled status update email for order JOOG-20251015-0001: pending -> confirmed
+INFO 2025-10-15 22:02:51,175 email_utils 25028 26824 Tax invoice attached to order confirmation email for order #74
+INFO 2025-10-15 22:02:59,947 email_utils 25028 26824 Order confirmation email sent successfully to rock@gmail.com for order #74
+INFO 2025-10-15 22:03:08,024 email_utils 25028 26824 Admin order notification email sent successfully for order #74

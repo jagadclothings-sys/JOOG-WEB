@@ -1,0 +1,70 @@
+TAX INVOICE - {{ site_name|upper }}
+========================================
+
+Dear {{ customer_name }},
+
+Please find your tax invoice for order {{ order.order_number }} attached to this email.
+
+INVOICE INFORMATION
+-------------------
+Invoice Number: {{ invoice.invoice_number }}
+Invoice Date: {{ invoice.invoice_date|date:"F d, Y" }}
+Order Number: {{ order.order_number }}
+Order Date: {{ order.created_at|date:"F d, Y" }}
+
+FROM: {{ invoice.company_name|upper }}
+---------------------------------
+{% if invoice.company_gstin %}GSTIN: {{ invoice.company_gstin }}{% endif %}
+{% if invoice.company_address %}Address: {{ invoice.company_address|striptags }}{% endif %}
+{% if invoice.company_email %}Email: {{ invoice.company_email }}{% endif %}
+
+BILL TO:
+--------
+{{ invoice.customer_name }}
+Email: {{ invoice.customer_email }}
+{% if invoice.customer_phone %}Phone: {{ invoice.customer_phone }}{% endif %}
+
+SHIPPING ADDRESS:
+-----------------
+{{ invoice.shipping_address }}
+{{ invoice.shipping_city }}, {{ invoice.shipping_state }} {{ invoice.shipping_postal_code }}
+{{ invoice.shipping_country }}
+
+INVOICE ITEMS:
+--------------
+{% for item in invoice.items.all %}
+{{ item.product_name }}{% if item.size %} (Size: {{ item.size }}){% endif %}
+HSN: {{ item.hsn_code|default:"N/A" }}
+Quantity: {{ item.quantity }} | Rate: ₹{{ item.unit_price }} | Tax: {{ item.tax_percentage }}%
+Amount: ₹{{ item.total_price }}
+---
+{% endfor %}
+
+TAX CALCULATION:
+----------------
+Taxable Amount: ₹{{ invoice.subtotal }}
+{% if invoice.cgst_amount > 0 %}CGST ({{ invoice.cgst_rate }}%): ₹{{ invoice.cgst_amount }}
+SGST ({{ invoice.sgst_rate }}%): ₹{{ invoice.sgst_amount }}{% endif %}
+{% if invoice.igst_amount > 0 %}IGST ({{ invoice.igst_rate }}%): ₹{{ invoice.igst_amount }}{% endif %}
+Total Tax: ₹{{ invoice.total_tax }}
+{% if invoice.discount_amount > 0 %}Discount: -₹{{ invoice.discount_amount }}{% endif %}
+FINAL AMOUNT: ₹{{ invoice.final_amount }}
+
+GST INFORMATION:
+----------------
+This invoice is generated in compliance with GST regulations.
+{% if invoice.cgst_amount > 0 %}CGST and SGST are applicable as this is an intra-state supply.{% else %}IGST is applicable as this is an inter-state supply.{% endif %}
+
+IMPORTANT NOTES:
+----------------
+- This is a computer-generated invoice and is valid without signature
+- Please retain this invoice for warranty claims and tax purposes
+- For any queries regarding this invoice, contact our support team
+- View order details at: {{ site_url }}/accounts/dashboard/
+
+{{ site_name|upper }}
+{% if company_address %}{{ company_address|striptags }}{% endif %}
+Email: {{ support_email }}
+Website: {{ site_url }}
+
+This invoice was sent to {{ invoice.customer_email }}

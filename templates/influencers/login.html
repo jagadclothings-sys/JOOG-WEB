@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Influencer Login - JOOG{% endblock %}
+
+{% block extra_head %}
+<style>
+    .login-container {
+        background: linear-gradient(135deg, var(--red-primary) 0%, var(--red-accent) 100%);
+        min-height: 100vh;
+    }
+    .login-card {
+        background: white;
+        border-radius: 1rem;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    .form-input {
+        @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200;
+    }
+    .form-input:focus {
+        box-shadow: 0 0 0 3px rgba(220, 38, 127, 0.1);
+    }
+    .brand-logo {
+        background: linear-gradient(45deg, var(--red-primary), var(--red-accent));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    /* Hide login/register options for influencer pages */
+    .nav-header .btn-primary,
+    .nav-header .btn-outline,
+    footer .btn-white,
+    footer .btn-outline {
+        display: none !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="login-container flex items-center justify-center p-4">
+    <div class="login-card max-w-md w-full p-8">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold brand-logo mb-2">JOOG Influencer</h1>
+            <p class="text-gray-600">Access your performance dashboard</p>
+        </div>
+
+        <!-- Messages -->
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} mb-4 p-4 rounded-lg {% if message.tags == 'error' %}bg-red-50 text-red-700 border border-red-200{% else %}bg-green-50 text-green-700 border border-green-200{% endif %}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- Login Form -->
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            
+            <!-- Username Field -->
+            <div>
+                <label for="{{ form.username.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                    <i class="fas fa-user mr-1"></i>Username
+                </label>
+                {{ form.username }}
+                {% if form.username.help_text %}
+                <p class="mt-1 text-sm text-gray-500">{{ form.username.help_text }}</p>
+                {% endif %}
+                {% if form.username.errors %}
+                <div class="mt-1 text-sm text-red-600">
+                    {% for error in form.username.errors %}
+                    <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- API Key Field -->
+            <div>
+                <label for="{{ form.api_key.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                    <i class="fas fa-key mr-1"></i>API Key
+                </label>
+                {{ form.api_key }}
+                {% if form.api_key.help_text %}
+                <p class="mt-1 text-sm text-gray-500">{{ form.api_key.help_text }}</p>
+                {% endif %}
+                {% if form.api_key.errors %}
+                <div class="mt-1 text-sm text-red-600">
+                    {% for error in form.api_key.errors %}
+                    <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="w-full bg-gradient-to-r from-red-600 to-red-500 text-white font-semibold py-3 px-4 rounded-lg hover:from-red-700 hover:to-red-600 transition-all duration-200 transform hover:scale-105">
+                <i class="fas fa-sign-in-alt mr-2"></i>Login to Dashboard
+            </button>
+        </form>
+
+        <!-- Help Section -->
+        <div class="mt-8 p-4 bg-gray-50 rounded-lg">
+            <h3 class="text-sm font-medium text-gray-900 mb-2">
+                <i class="fas fa-question-circle mr-1"></i>Need Help?
+            </h3>
+            <div class="text-sm text-gray-600 space-y-1">
+                <p>• If you received a dashboard link, simply click it to login automatically</p>
+                <p>• Your username and API key were provided by the JOOG team</p>
+                <p>• Contact support if you need assistance accessing your account</p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-8 text-center text-sm text-gray-500">
+            <p>&copy; {{ "now"|date:"Y" }} JOOG. Influencer Partnership Program</p>
+            <p class="mt-1">
+                <a href="mailto:support@joog.com" class="text-blue-600 hover:text-blue-800">
+                    <i class="fas fa-envelope mr-1"></i>support@joog.com
+                </a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Show/hide API key
+    const apiKeyField = document.getElementById('{{ form.api_key.id_for_label }}');
+    const toggleButton = document.createElement('button');
+    toggleButton.type = 'button';
+    toggleButton.innerHTML = '<i class="fas fa-eye"></i>';
+    toggleButton.className = 'absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600';
+    
+    // Make parent relative
+    const parent = apiKeyField.parentNode;
+    parent.style.position = 'relative';
+    
+    toggleButton.addEventListener('click', function() {
+        if (apiKeyField.type === 'password') {
+            apiKeyField.type = 'text';
+            toggleButton.innerHTML = '<i class="fas fa-eye-slash"></i>';
+        } else {
+            apiKeyField.type = 'password';
+            toggleButton.innerHTML = '<i class="fas fa-eye"></i>';
+        }
+    });
+    
+    parent.appendChild(toggleButton);
+});
+</script>
+{% endblock %}

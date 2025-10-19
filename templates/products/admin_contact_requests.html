@@ -1,0 +1,424 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact Requests Management - JOOG Admin{% endblock %}
+
+{% block extra_head %}
+<style>
+    .admin-container {
+        background-color: #f8fafc;
+        min-height: 100vh;
+        padding: 2rem 0;
+    }
+    
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+    
+    .contact-card {
+        background: white;
+        border-radius: 0.5rem;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+        transition: all 0.2s;
+    }
+    
+    .contact-card:hover {
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    
+    .stat-card {
+        background: white;
+        border-radius: 0.5rem;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+        border-left: 4px solid var(--red-primary);
+    }
+    
+    .admin-btn {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.375rem 0.75rem;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.2s;
+        border: 1px solid transparent;
+    }
+    
+    .admin-btn-primary {
+        background-color: var(--red-primary);
+        color: white;
+    }
+    
+    .admin-btn-primary:hover {
+        background-color: var(--red-secondary);
+        color: white;
+    }
+    
+    .admin-btn-secondary {
+        background-color: #6b7280;
+        color: white;
+    }
+    
+    .admin-btn-secondary:hover {
+        background-color: #4b5563;
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+    <div class="container mx-auto px-4">
+        <!-- Page Header -->
+        <div class="mb-8">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900">Contact Requests Management</h1>
+                    <p class="text-gray-600 mt-2">Manage and respond to customer inquiries</p>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="{% url 'products:admin_dashboard' %}" class="admin-btn admin-btn-secondary">
+                        <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+            <div class="stat-card p-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-envelope text-2xl text-red-600"></i>
+                    </div>
+                    <div class="ml-4">
+                        <div class="text-sm font-medium text-gray-500">Total Requests</div>
+                        <div class="text-2xl font-bold text-gray-900">{{ stats.total }}</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stat-card p-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-clock text-2xl text-yellow-600"></i>
+                    </div>
+                    <div class="ml-4">
+                        <div class="text-sm font-medium text-gray-500">Pending</div>
+                        <div class="text-2xl font-bold text-gray-900">{{ stats.pending }}</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stat-card p-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-spinner text-2xl text-blue-600"></i>
+                    </div>
+                    <div class="ml-4">
+                        <div class="text-sm font-medium text-gray-500">In Progress</div>
+                        <div class="text-2xl font-bold text-gray-900">{{ stats.in_progress }}</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stat-card p-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-check text-2xl text-green-600"></i>
+                    </div>
+                    <div class="ml-4">
+                        <div class="text-sm font-medium text-gray-500">Resolved</div>
+                        <div class="text-2xl font-bold text-gray-900">{{ stats.resolved }}</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stat-card p-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-archive text-2xl text-gray-600"></i>
+                    </div>
+                    <div class="ml-4">
+                        <div class="text-sm font-medium text-gray-500">Closed</div>
+                        <div class="text-2xl font-bold text-gray-900">{{ stats.closed }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters and Search -->
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <form method="get" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                    <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Filter by Status</label>
+                    <select name="status" id="status" class="form-select w-full">
+                        <option value="">All Statuses</option>
+                        {% for status_key, status_label in status_choices %}
+                        <option value="{{ status_key }}" {% if status_key == current_status_filter %}selected{% endif %}>
+                            {{ status_label }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="subject" class="block text-sm font-medium text-gray-700 mb-1">Filter by Subject</label>
+                    <select name="subject" id="subject" class="form-select w-full">
+                        <option value="">All Subjects</option>
+                        {% for subject_key, subject_label in subject_choices %}
+                        <option value="{{ subject_key }}" {% if subject_key == current_subject_filter %}selected{% endif %}>
+                            {{ subject_label }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="q" class="block text-sm font-medium text-gray-700 mb-1">Search</label>
+                    <input type="text" name="q" id="q" value="{{ search_query|default:'' }}" placeholder="Search by name, email, or message..." class="form-input w-full">
+                </div>
+                
+                <div class="flex items-end">
+                    <button type="submit" class="admin-btn admin-btn-primary w-full">
+                        <i class="fas fa-search mr-2"></i>Filter & Search
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Contact Requests List -->
+        <div class="space-y-4">
+            {% for contact in contact_requests %}
+            <div class="contact-card p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900">
+                            {{ contact.full_name }}
+                        </h3>
+                        <p class="text-gray-600">{{ contact.email }}</p>
+                        <p class="text-sm text-gray-500">{{ contact.created_at|date:"M d, Y g:i A" }}</p>
+                    </div>
+                    
+                    <div class="flex items-center space-x-3">
+                        <span class="status-badge {{ contact.get_status_badge_class }}">
+                            {{ contact.get_status_display }}
+                        </span>
+                        <span class="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                            {{ contact.get_subject_display }}
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <h4 class="text-sm font-medium text-gray-700 mb-2">Message:</h4>
+                    <p class="text-gray-900 bg-gray-50 p-3 rounded-lg">{{ contact.message }}</p>
+                </div>
+                
+                {% if contact.admin_notes %}
+                <div class="mb-4">
+                    <h4 class="text-sm font-medium text-gray-700 mb-2">Admin Notes:</h4>
+                    <p class="text-gray-700 bg-blue-50 p-3 rounded-lg border-l-4 border-blue-400">{{ contact.admin_notes }}</p>
+                </div>
+                {% endif %}
+                
+                <!-- Actions -->
+                <div class="flex flex-wrap gap-2 pt-4 border-t border-gray-200">
+                    <!-- Status Update Buttons -->
+                    <form method="post" class="inline">
+                        {% csrf_token %}
+                        <input type="hidden" name="request_id" value="{{ contact.id }}">
+                        {% if contact.status == 'pending' %}
+                        <button type="submit" name="action" value="update_status_in_progress" class="admin-btn admin-btn-primary text-xs">
+                            <i class="fas fa-play mr-1"></i>Start Progress
+                        </button>
+                        {% endif %}
+                        {% if contact.status == 'in_progress' %}
+                        <button type="submit" name="action" value="update_status_resolved" class="admin-btn text-xs" style="background-color: #10b981; color: white;">
+                            <i class="fas fa-check mr-1"></i>Mark Resolved
+                        </button>
+                        {% endif %}
+                        {% if contact.status == 'resolved' %}
+                        <button type="submit" name="action" value="update_status_closed" class="admin-btn admin-btn-secondary text-xs">
+                            <i class="fas fa-archive mr-1"></i>Close
+                        </button>
+                        {% endif %}
+                        {% if contact.status != 'pending' %}
+                        <button type="submit" name="action" value="update_status_pending" class="admin-btn text-xs" style="background-color: #f59e0b; color: white;">
+                            <i class="fas fa-undo mr-1"></i>Back to Pending
+                        </button>
+                        {% endif %}
+                    </form>
+                    
+                    <!-- Email Reply -->
+                    <button onclick="toggleReplyForm('{{ contact.id }}')" class="admin-btn text-xs" style="background-color: #10b981; color: white;">
+                        <i class="fas fa-reply mr-1"></i>Send Email Reply
+                    </button>
+                    
+                    <!-- Quick Email Contact (fallback) -->
+                    <a href="mailto:{{ contact.email }}" class="admin-btn admin-btn-secondary text-xs">
+                        <i class="fas fa-envelope mr-1"></i>Open Email Client
+                    </a>
+                    
+                    <!-- Add/Edit Notes -->
+                    <button onclick="toggleNotesForm('{{ contact.id }}')" class="admin-btn admin-btn-secondary text-xs">
+                        <i class="fas fa-note-sticky mr-1"></i>{% if contact.admin_notes %}Edit Notes{% else %}Add Notes{% endif %}
+                    </button>
+                </div>
+                
+                <!-- Email Reply Form (Hidden by default) -->
+                <div id="reply-form-{{ contact.id }}" class="hidden mt-4 pt-4 border-t border-gray-200">
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="request_id" value="{{ contact.id }}">
+                        <div class="mb-3">
+                            <label for="reply_subject_{{ contact.id }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-envelope mr-1"></i>Email Subject:
+                            </label>
+                            <input type="text" name="reply_subject" id="reply_subject_{{ contact.id }}" 
+                                   value="Re: {{ contact.get_subject_display }} - Your inquiry" 
+                                   class="form-input w-full" 
+                                   placeholder="Enter email subject..." required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="reply_message_{{ contact.id }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-edit mr-1"></i>Email Message:
+                            </label>
+                            <textarea name="reply_message" id="reply_message_{{ contact.id }}" rows="8" class="form-input w-full" placeholder="Type your reply message here..." required>Dear {{ contact.first_name|default:"Valued Customer" }},
+
+Thank you for contacting JOOG Wear. We have received your inquiry regarding "{{ contact.get_subject_display }}".
+
+[Please provide your response here]
+
+If you have any further questions, please don't hesitate to contact us.
+
+Best regards,
+JOOG Wear Customer Service Team
+
+---
+Original Message:
+"{{ contact.message }}"
+
+From: {{ contact.full_name }} ({{ contact.email }})
+Date: {{ contact.created_at|date:"F d, Y \a\t g:i A" }}</textarea>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button type="submit" name="action" value="send_reply" class="admin-btn text-xs" style="background-color: #10b981; color: white;">
+                                <i class="fas fa-paper-plane mr-1"></i>Send Email Reply
+                            </button>
+                            <button type="button" onclick="toggleReplyForm('{{ contact.id }}')" class="admin-btn admin-btn-secondary text-xs">
+                                <i class="fas fa-times mr-1"></i>Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Notes Form (Hidden by default) -->
+                <div id="notes-form-{{ contact.id }}" class="hidden mt-4 pt-4 border-t border-gray-200">
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="request_id" value="{{ contact.id }}">
+                        <div class="mb-3">
+                            <label for="admin_notes_{{ contact.id }}" class="block text-sm font-medium text-gray-700 mb-2">Admin Notes:</label>
+                            <textarea name="admin_notes" id="admin_notes_{{ contact.id }}" rows="3" class="form-input w-full" placeholder="Add internal notes about this request...">{{ contact.admin_notes }}</textarea>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button type="submit" name="action" value="add_notes" class="admin-btn admin-btn-primary text-xs">
+                                <i class="fas fa-save mr-1"></i>Save Notes
+                            </button>
+                            <button type="button" onclick="toggleNotesForm('{{ contact.id }}')" class="admin-btn admin-btn-secondary text-xs">
+                                <i class="fas fa-times mr-1"></i>Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {% empty %}
+            <div class="contact-card p-8 text-center">
+                <i class="fas fa-inbox text-4xl text-gray-400 mb-4"></i>
+                <h3 class="text-lg font-medium text-gray-900 mb-2">No contact requests found</h3>
+                <p class="text-gray-600">{% if search_query or current_status_filter or current_subject_filter %}Try adjusting your filters or search terms.{% else %}Customer inquiries will appear here when submitted.{% endif %}</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if contact_requests.has_other_pages %}
+        <div class="mt-8 flex justify-center">
+            <nav class="flex items-center space-x-2">
+                {% if contact_requests.has_previous %}
+                    <a href="?page=1{% if search_query %}&q={{ search_query }}{% endif %}{% if current_status_filter %}&status={{ current_status_filter }}{% endif %}{% if current_subject_filter %}&subject={{ current_subject_filter }}{% endif %}" class="admin-btn admin-btn-secondary">First</a>
+                    <a href="?page={{ contact_requests.previous_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if current_status_filter %}&status={{ current_status_filter }}{% endif %}{% if current_subject_filter %}&subject={{ current_subject_filter }}{% endif %}" class="admin-btn admin-btn-secondary">Previous</a>
+                {% endif %}
+                
+                <span class="px-4 py-2 text-sm text-gray-700">
+                    Page {{ contact_requests.number }} of {{ contact_requests.paginator.num_pages }}
+                </span>
+                
+                {% if contact_requests.has_next %}
+                    <a href="?page={{ contact_requests.next_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if current_status_filter %}&status={{ current_status_filter }}{% endif %}{% if current_subject_filter %}&subject={{ current_subject_filter }}{% endif %}" class="admin-btn admin-btn-secondary">Next</a>
+                    <a href="?page={{ contact_requests.paginator.num_pages }}{% if search_query %}&q={{ search_query }}{% endif %}{% if current_status_filter %}&status={{ current_status_filter }}{% endif %}{% if current_subject_filter %}&subject={{ current_subject_filter }}{% endif %}" class="admin-btn admin-btn-secondary">Last</a>
+                {% endif %}
+            </nav>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+function toggleNotesForm(contactId) {
+    const form = document.getElementById('notes-form-' + contactId);
+    const replyForm = document.getElementById('reply-form-' + contactId);
+    
+    // Hide reply form if it's open
+    if (replyForm && !replyForm.classList.contains('hidden')) {
+        replyForm.classList.add('hidden');
+    }
+    
+    // Toggle notes form
+    if (form.classList.contains('hidden')) {
+        form.classList.remove('hidden');
+    } else {
+        form.classList.add('hidden');
+    }
+}
+
+function toggleReplyForm(contactId) {
+    const form = document.getElementById('reply-form-' + contactId);
+    const notesForm = document.getElementById('notes-form-' + contactId);
+    
+    // Hide notes form if it's open
+    if (notesForm && !notesForm.classList.contains('hidden')) {
+        notesForm.classList.add('hidden');
+    }
+    
+    // Toggle reply form
+    if (form.classList.contains('hidden')) {
+        form.classList.remove('hidden');
+        // Focus on the message textarea for better UX
+        setTimeout(() => {
+            const messageTextarea = document.getElementById('reply_message_' + contactId);
+            if (messageTextarea) {
+                // Place cursor after the placeholder text
+                const text = messageTextarea.value;
+                const insertPos = text.indexOf('[Please provide your response here]');
+                if (insertPos > -1) {
+                    messageTextarea.focus();
+                    messageTextarea.setSelectionRange(insertPos, insertPos + '[Please provide your response here]'.length);
+                } else {
+                    messageTextarea.focus();
+                }
+            }
+        }, 100);
+    } else {
+        form.classList.add('hidden');
+    }
+}
+</script>
+{% endblock %}

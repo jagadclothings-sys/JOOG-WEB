@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ action }} Combo - JOOG Admin{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12">
+    <div class="flex justify-between items-center mb-8">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-800">{{ action }} Combo</h1>
+            <p class="text-gray-600">Create a bundle by selecting products and quantities</p>
+        </div>
+        <div class="flex space-x-4">
+            <a href="{% url 'products:admin_combos' %}" class="btn btn-outline">
+                <i class="fas fa-arrow-left mr-2"></i> Back to Combos
+            </a>
+        </div>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" class="bg-white rounded-lg shadow-lg p-6">
+        {% csrf_token %}
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div>
+                <h2 class="text-xl font-semibold mb-4">Combo Details</h2>
+                <div class="space-y-4">
+                    <div>
+                        <label class="form-label">{{ form.name.label }}</label>
+                        {{ form.name }}
+                        {% if form.name.errors %}
+                        <div class="form-error">{{ form.name.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label class="form-label">{{ form.slug.label }}</label>
+                        {{ form.slug }}
+                        {% if form.slug.errors %}
+                        <div class="form-error">{{ form.slug.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label class="form-label">{{ form.description.label }}</label>
+                        {{ form.description }}
+                    </div>
+                    <div>
+                        <label class="form-label">{{ form.image.label }}</label>
+                        {{ form.image }}
+                    </div>
+                    <div>
+                        <label class="form-label">{{ form.price.label }}</label>
+                        {{ form.price }}
+                        {% if form.price.errors %}
+                        <div class="form-error">{{ form.price.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        {{ form.active }}
+                        <label class="form-label">Active</label>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h2 class="text-xl font-semibold mb-4">Combo Items</h2>
+                <div id="combo-items" class="space-y-4">
+                    {{ items_formset.management_form }}
+                    {% for item_form in items_formset %}
+                    <div class="p-4 border rounded-lg">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                            <div>
+                                <label class="form-label">Product</label>
+                                {{ item_form.product }}
+                            </div>
+                            <div>
+                                <label class="form-label">Quantity</label>
+                                {{ item_form.quantity }}
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                {% if item_form.DELETE %}
+                                <label class="flex items-center space-x-2">
+                                    {{ item_form.DELETE }}
+                                    <span class="text-sm text-gray-600">Remove</span>
+                                </label>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% if item_form.non_field_errors %}
+                        <div class="form-error mt-2">{{ item_form.non_field_errors }}</div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="mt-4">
+                    <button type="button" id="add-item-row" class="btn btn-outline">+ Add another product</button>
+                </div>
+                <div class="mt-2 text-sm text-gray-500">
+                    Tip: Use the "Remove" checkbox to delete an item row; unfilled rows will be ignored.
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-8">
+            <h2 class="text-xl font-semibold mb-4">Combo Images</h2>
+            <div id="combo-images" class="space-y-4">
+                {{ images_formset.management_form }}
+                {% for img_form in images_formset %}
+                <div class="p-4 border rounded-lg">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                        <div>
+                            <label class="form-label">Image</label>
+                            {{ img_form.image }}
+                        </div>
+                        <div>
+                            <label class="form-label">Alt text</label>
+                            {{ img_form.alt_text }}
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            {% if img_form.DELETE %}
+                            <label class="flex items-center space-x-2">
+                                {{ img_form.DELETE }}
+                                <span class="text-sm text-gray-600">Remove</span>
+                            </label>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="mt-4">
+                <button type="button" id="add-image-row" class="btn btn-outline">+ Add another image</button>
+            </div>
+        </div>
+
+        <div class="mt-8 flex justify-end space-x-4">
+            <a href="{% url 'products:admin_combos' %}" class="btn btn-outline">Cancel</a>
+            <button type="submit" class="btn btn-primary">Save Combo</button>
+        </div>
+    </form>
+</div>
+
+<script>
+// Dynamic formset rows for items and images
+(function() {
+  const addRow = (containerId, totalFormsId, emptyFormHtml) => {
+    const container = document.getElementById(containerId);
+    const totalFormsInput = document.querySelector(`[name="${totalFormsId}"]`);
+    let total = parseInt(totalFormsInput.value, 10);
+    const newHtml = emptyFormHtml.replace(/__prefix__/g, total);
+    const wrapper = document.createElement('div');
+    wrapper.className = 'p-4 border rounded-lg mt-4';
+    wrapper.innerHTML = newHtml;
+    container.appendChild(wrapper);
+    totalFormsInput.value = total + 1;
+  };
+
+  // Items
+  const addItemBtn = document.getElementById('add-item-row');
+  if (addItemBtn) {
+    const emptyItemForm = `{{ items_formset.empty_form.as_p|escapejs }}`;
+    addItemBtn.addEventListener('click', function() {
+      addRow('combo-items', '{{ items_formset.prefix }}-TOTAL_FORMS', emptyItemForm);
+    });
+  }
+
+  // Images
+  const addImageBtn = document.getElementById('add-image-row');
+  if (addImageBtn) {
+    const emptyImageForm = `{{ images_formset.empty_form.as_p|escapejs }}`;
+    addImageBtn.addEventListener('click', function() {
+      addRow('combo-images', '{{ images_formset.prefix }}-TOTAL_FORMS', emptyImageForm);
+    });
+  }
+})();
+</script>
+{% endblock %}

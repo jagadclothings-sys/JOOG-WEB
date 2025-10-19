@@ -1,0 +1,75 @@
+ORDER STATUS UPDATE - {{ site_name|upper }}
+========================================
+
+Hi {{ customer_name }},
+
+Great news! Your order status has been updated.
+
+ORDER INFORMATION:
+------------------
+Order Number: {{ order.order_number }}
+Order Date: {{ order.created_at|date:"F d, Y" }}
+Total Amount: ₹{{ order.final_amount }}
+New Status: {{ status_display|upper }}
+
+{% if new_status == 'confirmed' %}
+WHAT'S NEXT:
+------------
+Your order has been confirmed and is now being prepared for shipment. We'll notify you as soon as it's on its way!
+
+- Your items are being picked and packed
+- You'll receive tracking information once shipped  
+- Estimated delivery: 3-7 business days
+
+{% elif new_status == 'shipped' %}
+YOUR ORDER IS ON ITS WAY:
+------------------------
+Your package has been shipped and is now en route to you. Track your shipment for real-time updates.
+
+- Package is in transit
+- Tracking information is available
+- Expected delivery: 2-5 business days
+
+{% elif new_status == 'delivered' %}
+ORDER DELIVERED SUCCESSFULLY:
+-----------------------------
+Your order has been delivered! We hope you love your new items from {{ site_name }}.
+
+- Package has been delivered to your address
+- Thank you for shopping with us!
+- Rate your experience and leave a review
+
+{% elif new_status == 'cancelled' %}
+ORDER CANCELLED:
+----------------
+Your order has been cancelled. If you didn't request this cancellation, please contact our support team immediately.
+
+- Refund will be processed within 3-5 business days
+- You'll receive a refund confirmation email
+- Contact support if you have any questions
+
+{% endif %}
+
+TRACK YOUR ORDER:
+-----------------
+View your order details and track progress at: {{ site_url }}/accounts/dashboard/
+
+NEED HELP?
+----------
+If you have any questions about your order, please contact our support team at {{ support_email }}.
+
+{% if new_status == 'delivered' %}
+Thank you for choosing {{ site_name }}! We'd love to hear about your experience.
+{% else %}
+Thank you for your patience. We'll keep you updated on any further changes.
+{% endif %}
+
+Best regards,
+The {{ site_name }} Team
+
+{{ site_name }}
+{% if company_address %}{{ company_address }}{% endif %}
+Email: {{ support_email }}
+Website: {{ site_url }}
+
+This email was sent to {{ order.user.email }}

@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Delete Address - JOOG{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12">
+    <!-- Hero -->
+    <div class="text-center mb-10 bg-gradient-to-r from-red-600 via-red-500 to-red-600 text-white rounded-2xl p-8 shadow-lg animate-fade-in-up">
+        <h1 class="text-3xl md:text-4xl font-extrabold mb-1 tracking-tight">Delete Address</h1>
+        <p class="text-red-100">Confirm deletion of your address</p>
+    </div>
+
+    <div class="max-w-2xl mx-auto">
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+            
+            <!-- Warning Header -->
+            <div class="p-6 border-b border-red-200 bg-red-50">
+                <div class="flex items-center">
+                    <i class="fas fa-exclamation-triangle text-red-600 text-2xl mr-4"></i>
+                    <div>
+                        <h2 class="text-xl font-bold text-red-800">Confirm Deletion</h2>
+                        <p class="text-red-600 text-sm">This action cannot be undone</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="p-6">
+                <p class="text-gray-700 mb-6">
+                    Are you sure you want to delete the following address? This action cannot be undone.
+                </p>
+                
+                <!-- Address Preview -->
+                <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6">
+                    <div class="flex items-center mb-2">
+                        <i class="fas fa-{% if address.address_type == 'home' %}home{% elif address.address_type == 'work' %}building{% else %}map-marker-alt{% endif %} text-red-600 mr-2"></i>
+                        <h3 class="font-semibold text-lg text-gray-800">{{ address.get_address_type_display }}</h3>
+                        {% if address.is_default %}
+                        <span class="ml-2 bg-red-600 text-white px-2 py-1 rounded text-xs font-semibold">DEFAULT</span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="text-gray-700 space-y-1">
+                        <p>{{ address.address_line_1 }}</p>
+                        {% if address.address_line_2 %}
+                        <p>{{ address.address_line_2 }}</p>
+                        {% endif %}
+                        <p>{{ address.city }}, {{ address.state }}</p>
+                        <p class="numeric-font">{{ address.postal_code }}, {{ address.country }}</p>
+                    </div>
+                </div>
+                
+                {% if address.is_default %}
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+                    <div class="flex items-center">
+                        <i class="fas fa-info-circle text-yellow-600 mr-2"></i>
+                        <p class="text-yellow-800 text-sm">
+                            <strong>Note:</strong> This is your default address. If you delete it, you'll need to set another address as default or add a new one.
+                        </p>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <form method="post" class="flex flex-col sm:flex-row gap-4">
+                    {% csrf_token %}
+                    <button type="submit" 
+                            class="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors shadow-md">
+                        <i class="fas fa-trash mr-2"></i>Yes, Delete Address
+                    </button>
+                    <a href="{% url 'accounts:addresses' %}" 
+                       class="bg-gray-500 hover:bg-gray-600 text-white px-8 py-3 rounded-lg font-semibold transition-colors text-center">
+                        <i class="fas fa-arrow-left mr-2"></i>Cancel
+                    </a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,337 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Tax Invoices - JOOG{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Force global red ivaro theme on this page */
+.page-header { background: linear-gradient(135deg, var(--red-primary, #E53E3E), var(--red-secondary, #C53030)) !important; }
+.nav-breadcrumb a { color: var(--red-primary, #E53E3E) !important; }
+.invoice-number { color: var(--red-primary, #E53E3E) !important; }
+.detail-value.amount { color: var(--red-primary, #E53E3E) !important; }
+.invoice-card { border-left: 4px solid var(--red-primary, #E53E3E) !important; }
+.btn-primary { background: var(--red-primary, #E53E3E) !important; border-color: var(--red-primary, #E53E3E) !important; color: #fff !important; }
+    .invoice-page {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    
+    .page-header {
+        background: linear-gradient(135deg, #2874f0, #1e5bb7);
+        color: white;
+        padding: 30px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+    
+    .page-header h1 {
+        margin: 0;
+        font-size: 28px;
+        font-weight: 600;
+    }
+    
+    .page-header p {
+        margin: 10px 0 0 0;
+        opacity: 0.9;
+        font-size: 16px;
+    }
+    
+    .nav-breadcrumb {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 6px;
+        margin-bottom: 20px;
+        font-size: 14px;
+    }
+    
+    .nav-breadcrumb a {
+        color: #2874f0;
+        text-decoration: none;
+    }
+    
+    .nav-breadcrumb a:hover {
+        text-decoration: underline;
+    }
+    
+    .invoices-container {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+    
+    .container-header {
+        background: #f8f9fa;
+        padding: 20px;
+        border-bottom: 1px solid #dee2e6;
+    }
+    
+    .container-header h2 {
+        margin: 0;
+        color: #333;
+        font-size: 20px;
+    }
+    
+    .invoice-grid {
+        display: grid;
+        gap: 1px;
+        background: #dee2e6;
+    }
+    
+    .invoice-card {
+        background: white;
+        padding: 20px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border-left: 4px solid #2874f0;
+    }
+    
+    .invoice-card:hover {
+        background: #f8f9fa;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    .invoice-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    
+    .invoice-number {
+        font-size: 18px;
+        font-weight: 600;
+        color: #2874f0;
+    }
+    
+    .invoice-date {
+        color: #666;
+        font-size: 14px;
+    }
+    
+    .invoice-details {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .detail-item {
+        text-align: center;
+    }
+    
+    .detail-label {
+        font-size: 12px;
+        color: #666;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 5px;
+    }
+    
+    .detail-value {
+        font-weight: 600;
+        color: #333;
+    }
+    
+    .detail-value.amount {
+        color: #28a745;
+        font-size: 18px;
+    }
+    
+    .invoice-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+    }
+    
+    .btn {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-primary { background: #2874f0; color: white; }
+    .btn-success { background: #28a745; color: white; }
+    .btn-secondary { background: #6c757d; color: white; }
+    
+    .btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .status-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 500;
+        text-transform: uppercase;
+    }
+    
+    .status-badge.generated {
+        background: #d4edda;
+        color: #155724;
+    }
+    
+    .status-badge.pending {
+        background: #fff3cd;
+        color: #856404;
+    }
+    
+    .pagination {
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+    }
+    
+    .pagination a, .pagination span {
+        padding: 8px 12px;
+        border: 1px solid #dee2e6;
+        text-decoration: none;
+        color: #495057;
+        border-radius: 4px;
+    }
+    
+    .pagination .current {
+        background: #2874f0;
+        color: white;
+        border-color: #2874f0;
+    }
+    
+    .no-invoices {
+        text-align: center;
+        padding: 60px 20px;
+        color: #666;
+    }
+    
+    .no-invoices h3 {
+        margin-bottom: 10px;
+        color: #999;
+    }
+    
+    @media (max-width: 768px) {
+        .invoice-page {
+            padding: 10px;
+        }
+        
+        .page-header {
+            padding: 20px;
+        }
+        
+        .page-header h1 {
+            font-size: 24px;
+        }
+        
+        .invoice-details {
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+        
+        .invoice-actions {
+            flex-direction: column;
+        }
+        
+        .invoice-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="invoice-page">
+    <div class="page-header">
+        <h1>📄 My Tax Invoices</h1>
+        <p>View and download your GST invoices</p>
+    </div>
+    
+    <div class="nav-breadcrumb">
+        <a href="/">Home</a> &gt; 
+        <a href="/accounts/profile/">My Account</a> &gt; 
+        <span>Tax Invoices</span>
+    </div>
+    
+    <div class="invoices-container">
+        <div class="container-header">
+            <h2>Your Invoices ({{ invoices.paginator.count }})</h2>
+        </div>
+        
+        {% if invoices %}
+            <div class="invoice-grid">
+                {% for invoice in invoices %}
+                <div class="invoice-card" onclick="window.location.href='{% url 'invoices:customer_invoice_detail' invoice.id %}'">
+                    <div class="invoice-header">
+                        <div class="invoice-number">{{ invoice.invoice_number }}</div>
+                        <div class="invoice-date">{{ invoice.invoice_date|date:"M d, Y" }}</div>
+                    </div>
+                    
+                    <div class="invoice-details">
+                        <div class="detail-item">
+                            <div class="detail-label">Order Number</div>
+                            <div class="detail-value">{{ invoice.order.order_number }}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Status</div>
+                            <div class="detail-value">
+                                <span class="status-badge {% if invoice.is_generated %}generated{% else %}pending{% endif %}">
+                                    {% if invoice.is_generated %}Generated{% else %}Pending{% endif %}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Amount</div>
+                            <div class="detail-value amount">₹{{ invoice.final_amount|floatformat:2 }}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="invoice-actions" onclick="event.stopPropagation()">
+                        <a href="{% url 'invoices:customer_invoice_detail' invoice.id %}" class="btn btn-primary">View Details</a>
+                        {% if invoice.invoice_pdf %}
+                            <a href="{% url 'invoices:customer_invoice_pdf' invoice.id %}" class="btn btn-success">Download PDF</a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Pagination -->
+            {% if invoices.has_other_pages %}
+            <div class="pagination">
+                {% if invoices.has_previous %}
+                    <a href="?page={{ invoices.previous_page_number }}">&laquo; Previous</a>
+                {% endif %}
+                
+                <span class="current">
+                    Page {{ invoices.number }} of {{ invoices.paginator.num_pages }}
+                </span>
+                
+                {% if invoices.has_next %}
+                    <a href="?page={{ invoices.next_page_number }}">Next &raquo;</a>
+                {% endif %}
+            </div>
+            {% endif %}
+        
+        {% else %}
+            <div class="no-invoices">
+                <h3>No invoices found</h3>
+                <p>You don't have any tax invoices yet. Your invoices will appear here after your orders are processed.</p>
+                <br>
+                <a href="/" class="btn btn-primary">Continue Shopping</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -3,250 +3,652 @@
 
 {% block title %}Admin Dashboard - JOOG{% endblock %}
 
+{% block extra_css %}
+<style>
+/* ADMIN DASHBOARD - VIBRANT RED THEME */
+:root {
+    --admin-red: #E11D48;
+    --admin-deep-red: #BE123C;
+    --admin-fire-red: #FF4500;
+    --admin-ivory: #FFFEF7;
+    --admin-ivory-warm: #FEFCF4;
+    --admin-text-primary: #0F172A;
+    --admin-text-secondary: #334155;
+    --admin-text-on-red: #FFFFFF;
+}
+
+.admin-header {
+    background: linear-gradient(135deg, var(--admin-red) 0%, var(--admin-deep-red) 50%, var(--admin-fire-red) 100%) !important;
+    color: var(--admin-text-on-red) !important;
+    padding: 2rem !important;
+    border-radius: 16px !important;
+    margin-bottom: 2rem !important;
+    box-shadow: 0 8px 32px rgba(225, 29, 72, 0.25) !important;
+    text-align: center !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+.admin-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+    z-index: 1;
+}
+
+.admin-header > * {
+    position: relative;
+    z-index: 2;
+}
+
+.admin-section {
+    background: white !important;
+    border: 2px solid rgba(225, 29, 72, 0.1) !important;
+    border-radius: 16px !important;
+    padding: 1.5rem !important;
+    margin-bottom: 2rem !important;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.06) !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+.admin-section-header {
+    background: linear-gradient(135deg, var(--admin-red), var(--admin-deep-red)) !important;
+    color: var(--admin-text-on-red) !important;
+    padding: 1rem 1.5rem !important;
+    margin: -1.5rem -1.5rem 1.5rem !important;
+    border-radius: 16px 16px 0 0 !important;
+    box-shadow: 0 3px 12px rgba(225, 29, 72, 0.15) !important;
+}
+
+.admin-section-title {
+    font-size: 1.25rem !important;
+    font-weight: 700 !important;
+    color: var(--admin-text-on-red) !important;
+    margin-bottom: 0.25rem !important;
+}
+
+.admin-section-subtitle {
+    font-size: 0.875rem !important;
+    color: var(--admin-text-on-red) !important;
+    opacity: 0.9 !important;
+    margin-bottom: 0 !important;
+}
+
+.stat-card-xyxx {
+    background: linear-gradient(135deg, var(--admin-ivory) 0%, var(--admin-ivory-warm) 100%) !important;
+    border: 2px solid rgba(225, 29, 72, 0.1) !important;
+    border-radius: 12px !important;
+    padding: 1.25rem !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05) !important;
+    text-align: center !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+.stat-card-xyxx:hover {
+    transform: translateY(-6px) scale(1.03) !important;
+    box-shadow: 0 15px 40px rgba(225, 29, 72, 0.15) !important;
+    border-color: rgba(225, 29, 72, 0.3) !important;
+}
+
+.stat-card-xyxx::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--admin-red), var(--admin-fire-red));
+    border-radius: 16px 16px 0 0;
+}
+
+.dashboard-card-xyxx {
+    background: linear-gradient(135deg, var(--admin-ivory) 0%, var(--admin-ivory-warm) 100%) !important;
+    border: 2px solid rgba(225, 29, 72, 0.1) !important;
+    border-radius: 12px !important;
+    padding: 1.5rem !important;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    text-decoration: none !important;
+    display: block !important;
+    text-align: center !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+.dashboard-card-xyxx:hover {
+    transform: translateY(-8px) scale(1.05) !important;
+    box-shadow: 0 20px 50px rgba(225, 29, 72, 0.2) !important;
+    border-color: var(--admin-red) !important;
+    text-decoration: none !important;
+}
+
+.dashboard-card-xyxx::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, var(--admin-red), var(--admin-fire-red));
+    border-radius: 20px 20px 0 0;
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.dashboard-card-xyxx:hover::before {
+    transform: scaleX(1);
+}
+
+.card-icon {
+    font-size: 1.75rem !important;
+    color: var(--admin-red) !important;
+    margin-bottom: 1rem !important;
+    display: block !important;
+    transition: all 0.3s ease !important;
+}
+
+.dashboard-card-xyxx:hover .card-icon {
+    color: var(--admin-fire-red) !important;
+    transform: scale(1.1) !important;
+}
+
+.card-title {
+    font-size: 1.125rem !important;
+    font-weight: 700 !important;
+    color: var(--admin-text-primary) !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.card-description {
+    font-size: 0.95rem !important;
+    color: var(--admin-text-secondary) !important;
+    line-height: 1.5 !important;
+}
+
+.stat-icon {
+    font-size: 1.75rem !important;
+    margin-bottom: 0.75rem !important;
+    display: block !important;
+}
+
+.stat-number {
+    font-size: 1.75rem !important;
+    font-weight: 800 !important;
+    margin-bottom: 0.25rem !important;
+    font-family: 'SF Mono', monospace !important;
+}
+
+.stat-label {
+    font-size: 0.875rem !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
+/* Feature Cards */
+.feature-card {
+    background: linear-gradient(135deg, var(--admin-ivory) 0%, var(--admin-ivory-warm) 100%) !important;
+    border: 2px solid rgba(225, 29, 72, 0.1) !important;
+    border-radius: 12px !important;
+    padding: 1.25rem !important;
+    text-align: center !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+.feature-card:hover {
+    transform: translateY(-6px) !important;
+    box-shadow: 0 15px 40px rgba(225, 29, 72, 0.15) !important;
+    border-color: rgba(225, 29, 72, 0.3) !important;
+}
+
+.feature-card-icon {
+    width: 3rem !important;
+    height: 3rem !important;
+    background: linear-gradient(135deg, var(--admin-red), var(--admin-fire-red)) !important;
+    color: white !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 auto 1rem !important;
+    font-size: 1.25rem !important;
+    box-shadow: 0 4px 16px rgba(225, 29, 72, 0.25) !important;
+}
+
+.feature-card-title {
+    font-size: 1.5rem !important;
+    font-weight: 800 !important;
+    margin-bottom: 0.25rem !important;
+    font-family: 'SF Mono', monospace !important;
+}
+
+.feature-card-description {
+    font-size: 0.875rem !important;
+    font-weight: 600 !important;
+    color: var(--admin-text-secondary) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
+/* Grid Layouts */
+.dashboard-grid-enhanced {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important;
+    gap: 1.5rem !important;
+    margin-top: 1.5rem !important;
+}
+
+.dashboard-grid-large {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important;
+    gap: 1.5rem !important;
+    margin-top: 1.5rem !important;
+}
+
+/* Admin Cards for bottom actions */
+.admin-card {
+    background: linear-gradient(135deg, var(--admin-ivory) 0%, var(--admin-ivory-warm) 100%) !important;
+    border: 2px solid rgba(225, 29, 72, 0.1) !important;
+    border-radius: 12px !important;
+    padding: 1.5rem !important;
+    margin-bottom: 1.5rem !important;
+    text-decoration: none !important;
+    display: block !important;
+    text-align: center !important;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+.admin-card:hover {
+    transform: translateY(-8px) scale(1.03) !important;
+    box-shadow: 0 20px 50px rgba(225, 29, 72, 0.2) !important;
+    border-color: var(--admin-red) !important;
+    text-decoration: none !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .admin-header {
+        padding: 1.5rem !important;
+    }
+    
+    .admin-section {
+        padding: 1rem !important;
+    }
+    
+    .admin-section-header {
+        padding: 0.75rem 1rem !important;
+        margin: -1rem -1rem 1rem !important;
+    }
+    
+    .dashboard-card-xyxx {
+        padding: 1rem !important;
+    }
+    
+    .dashboard-grid-enhanced,
+    .dashboard-grid-large {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+    }
+}
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="container mx-auto px-4 py-12">
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-800 mb-2">Admin Dashboard</h1>
-        <p class="text-gray-600">Manage your JOOG store</p>
-    </div>
+<div class="page-main">
+    <div class="content-container" style="max-width: 1400px;">
+<div class="admin-header brand-stripes" style="background: var(--gradient-hero);">
+            <h1 class="text-2xl font-bold mb-1" style="color: var(--text-on-red);">Admin Dashboard</h1>
+            <p style="color: var(--text-on-red); opacity: 0.9; font-size: 0.875rem;">Manage your JOOG store</p>
+            <div class="flex items-center justify-center space-x-4 mt-4">
+                <a href="{% url 'products:home' %}" class="btn btn-white btn-sm" style="background: rgba(255,255,255,0.2); color: var(--text-on-red); border-color: rgba(255,255,255,0.3);" onmouseover="this.style.backgroundColor='rgba(255,255,255,0.3)';" onmouseout="this.style.backgroundColor='rgba(255,255,255,0.2)';">
+                    <i class="fas fa-home mr-2"></i>View Store
+                </a>
+                <a href="{% url 'accounts:logout' %}" class="btn btn-white btn-sm">
+                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                </a>
+            </div>
+        </div>
     
-    <!-- Stats Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div class="stat-card">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm text-gray-600">Total Products</p>
-                    <p class="text-2xl font-bold text-gray-800">{{ total_products }}</p>
+        <!-- Enhanced Stats Cards -->
+        <div class="admin-section" style="border-color: var(--red-200);">
+<div class="admin-header">
+    <img src="{% static 'img/joog-logo.png' %}?v=4" alt="JOOG" style="height:36px; width:auto; display:block; margin:0 auto 8px; filter: brightness(0) saturate(100%) invert(18%) sepia(93%) saturate(7093%) hue-rotate(356deg) brightness(91%) contrast(118%);"/>
+                <h2 class="admin-section-title">Dashboard Overview</h2>
+                <p class="admin-section-subtitle">Key metrics and performance indicators</p>
+            </div>
+            <div class="dashboard-grid-enhanced">
+                <div class="stat-card-xyxx">
+                    <i class="stat-icon fas fa-tshirt" style="color: var(--red-600);"></i>
+                    <div class="stat-number" style="color: var(--text-primary);">{{ total_products }}</div>
+                    <div class="stat-label" style="color: var(--text-secondary);">Total Products</div>
                 </div>
-                <i class="fas fa-tshirt text-3xl text-red-600"></i>
+            
+                <div class="stat-card-xyxx">
+                    <i class="stat-icon fas fa-shopping-bag" style="color: var(--red-600);"></i>
+                    <div class="stat-number" style="color: var(--text-primary);">{{ total_orders }}</div>
+                    <div class="stat-label" style="color: var(--text-secondary);">Total Orders</div>
+                </div>
+                
+                <div class="stat-card-xyxx">
+                    <i class="stat-icon fas fa-dollar-sign" style="color: var(--success-green);"></i>
+                    <div class="stat-number" style="color: var(--success-green);">₹{{ total_revenue|floatformat:2 }}</div>
+                    <div class="stat-label" style="color: var(--text-secondary);">Total Revenue</div>
+                </div>
+                
+                <div class="stat-card-xyxx">
+                    <i class="stat-icon fas fa-users" style="color: var(--red-600);"></i>
+                    <div class="stat-number" style="color: var(--text-primary);">{{ total_customers }}</div>
+                    <div class="stat-label" style="color: var(--text-secondary);">Total Customers</div>
+                </div>
             </div>
         </div>
-        
-        <div class="stat-card">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm text-gray-600">Total Orders</p>
-                    <p class="text-2xl font-bold text-gray-800">{{ total_orders }}</p>
-                </div>
-                <i class="fas fa-shopping-bag text-3xl text-red-600"></i>
-            </div>
-        </div>
-        
-        <div class="stat-card">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm text-gray-600">Total Revenue</p>
-                    <p class="text-2xl font-bold text-green-600">₹{{ total_revenue|floatformat:2 }}</p>
-                </div>
-                <i class="fas fa-dollar-sign text-3xl text-green-600"></i>
-            </div>
-        </div>
-        
-        <div class="stat-card">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm text-gray-600">Total Customers</p>
-                    <p class="text-2xl font-bold text-gray-800">{{ total_customers }}</p>
-                </div>
-                <i class="fas fa-users text-3xl text-red-600"></i>
-            </div>
-        </div>
-    </div>
     
-    <!-- Additional Stats -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div class="stat-card">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm text-gray-600">Pending Orders</p>
-                    <p class="text-2xl font-bold text-orange-600">{{ pending_orders }}</p>
-                </div>
-                <i class="fas fa-clock text-3xl text-orange-600"></i>
+        <!-- Enhanced Additional Stats -->
+        <div class="admin-section" style="border-color: var(--red-200);">
+            <div class="admin-section-header">
+                <h2 class="admin-section-title">Detailed Analytics</h2>
+                <p class="admin-section-subtitle">Monthly insights and alerts</p>
             </div>
-        </div>
-        
-        <div class="stat-card">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm text-gray-600">Monthly Revenue</p>
-                    <p class="text-2xl font-bold text-blue-600">₹{{ monthly_revenue|floatformat:2 }}</p>
-                </div>
-                <i class="fas fa-chart-line text-3xl text-blue-600"></i>
-            </div>
-        </div>
-        
-        <div class="stat-card">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm text-gray-600">New Customers</p>
-                    <p class="text-2xl font-bold text-purple-600">{{ new_customers }}</p>
-                </div>
-                <i class="fas fa-user-plus text-3xl text-purple-600"></i>
-            </div>
-        </div>
-        
-        <div class="stat-card">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm text-gray-600">Low Stock Items</p>
-                    <p class="text-2xl font-bold text-red-600">{{ low_stock_products.count }}</p>
-                </div>
-                <i class="fas fa-exclamation-triangle text-3xl text-red-600"></i>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Quick Actions -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <a href="{% url 'products:add_product' %}" class="admin-card">
-            <i class="fas fa-plus-circle text-3xl text-red-600 mb-4"></i>
-            <h3 class="text-xl font-bold mb-2">Add Product</h3>
-            <p class="text-gray-600">Add new products to your catalog</p>
-        </a>
-        
-        <a href="{% url 'products:admin_products' %}" class="admin-card">
-            <i class="fas fa-list text-3xl text-red-600 mb-4"></i>
-            <h3 class="text-xl font-bold mb-2">Manage Products</h3>
-            <p class="text-gray-600">Edit, update, or remove products</p>
-        </a>
-        
-        <a href="{% url 'orders:admin_orders' %}" class="admin-card">
-            <i class="fas fa-shopping-bag text-3xl text-red-600 mb-4"></i>
-            <h3 class="text-xl font-bold mb-2">Orders</h3>
-            <p class="text-gray-600">View and manage customer orders</p>
-        </a>
-        
-        <a href="{% url 'coupons:admin_coupons' %}" class="admin-card">
-            <i class="fas fa-ticket-alt text-3xl text-red-600 mb-4"></i>
-            <h3 class="text-xl font-bold mb-2">Coupons</h3>
-            <p class="text-gray-600">Create and manage discount coupons</p>
-        </a>
-        
-        <a href="{% url 'products:admin_customers' %}" class="admin-card">
-            <i class="fas fa-users text-3xl text-red-600 mb-4"></i>
-            <h3 class="text-xl font-bold mb-2">Customers</h3>
-            <p class="text-gray-600">View and manage customer accounts</p>
-        </a>
-        
-        <a href="{% url 'products:admin_analytics' %}" class="admin-card">
-            <i class="fas fa-chart-bar text-3xl text-red-600 mb-4"></i>
-            <h3 class="text-xl font-bold mb-2">Analytics</h3>
-            <p class="text-gray-600">View detailed sales analytics</p>
-        </a>
-    </div>
-    
-    <!-- Dashboard Content -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-        <!-- Recent Orders -->
-        <div class="bg-white rounded-lg shadow-lg p-6">
-            <h3 class="text-xl font-bold mb-4">Recent Orders</h3>
-            {% if recent_orders_list %}
-            <div class="space-y-3">
-                {% for order in recent_orders_list %}
-                <div class="flex justify-between items-center p-3 border border-gray-200 rounded">
-                    <div>
-                        <p class="font-semibold">#{{ order.order_number }}</p>
-                        <p class="text-sm text-gray-600">{{ order.user.get_full_name|default:order.user.username }}</p>
+            <div class="dashboard-grid-enhanced">
+                <div class="feature-card">
+                    <div class="feature-card-icon">
+                        <i class="fas fa-clock"></i>
                     </div>
-                    <div class="text-right">
-                        <p class="font-bold text-red-600">₹{{ order.final_amount }}</p>
-                        <span class="status-badge status-{{ order.status }}">{{ order.get_status_display }}</span>
-                    </div>
+                    <div class="feature-card-title" style="color: var(--warning-amber);">{{ pending_orders }}</div>
+                    <div class="feature-card-description">Pending Orders</div>
                 </div>
-                {% endfor %}
+                
+                <div class="feature-card">
+                    <div class="feature-card-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="feature-card-title" style="color: var(--info-blue);">₹{{ monthly_revenue|floatformat:2 }}</div>
+                    <div class="feature-card-description">Monthly Revenue</div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-card-icon">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <div class="feature-card-title" style="color: #7C3AED;">{{ new_customers }}</div>
+                    <div class="feature-card-description">New Customers</div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-card-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="feature-card-title" style="color: var(--red-600);">{{ low_stock_products.count }}</div>
+                    <div class="feature-card-description">Low Stock Items</div>
+                </div>
             </div>
-            <div class="mt-4">
-                <a href="{% url 'orders:admin_orders' %}" class="text-red-600 hover:text-red-700 font-semibold">View All Orders →</a>
+        </div>
+    
+        <!-- Enhanced Quick Actions -->
+        <div class="admin-section" style="border-color: var(--red-200);">
+            <div class="admin-section-header">
+                <h2 class="admin-section-title">Quick Actions</h2>
+                <p class="admin-section-subtitle">Common administrative tasks</p>
             </div>
-            {% else %}
-            <p class="text-gray-500">No recent orders</p>
-            {% endif %}
+            <div class="dashboard-grid-large">
+                <a href="{% url 'products:add_product' %}" class="dashboard-card-xyxx">
+                    <i class="card-icon fas fa-plus-circle"></i>
+                    <h3 class="card-title">Add Product</h3>
+                    <p class="card-description">Add new products to your catalog</p>
+                </a>
+            
+                <a href="{% url 'products:admin_products' %}" class="dashboard-card-xyxx">
+                    <i class="card-icon fas fa-list"></i>
+                    <h3 class="card-title">Manage Products</h3>
+                    <p class="card-description">Edit, update, or remove products</p>
+                </a>
+                
+                <a href="{% url 'products:admin_categories' %}" class="dashboard-card-xyxx">
+                    <i class="card-icon fas fa-tags"></i>
+                    <h3 class="card-title">Manage Categories</h3>
+                    <p class="card-description">Create and organize product categories</p>
+                </a>
+                
+                <a href="{% url 'orders:admin_orders' %}" class="dashboard-card-xyxx">
+                    <i class="card-icon fas fa-shopping-bag"></i>
+                    <h3 class="card-title">Orders</h3>
+                    <p class="card-description">View and manage customer orders</p>
+                </a>
+                
+                <a href="{% url 'coupons:admin_coupons' %}" class="dashboard-card-xyxx">
+                    <i class="card-icon fas fa-ticket-alt"></i>
+                    <h3 class="card-title">Coupons</h3>
+                    <p class="card-description">Create and manage discount coupons</p>
+                </a>
+                
+                <a href="{% url 'products:admin_customers' %}" class="dashboard-card-xyxx">
+                    <i class="card-icon fas fa-users"></i>
+                    <h3 class="card-title">Customers</h3>
+                    <p class="card-description">View and manage customer accounts</p>
+                </a>
+            </div>
         </div>
         
-        <!-- Top Selling Products -->
-        <div class="bg-white rounded-lg shadow-lg p-6">
-            <h3 class="text-xl font-bold mb-4">Top Selling Products</h3>
-            {% if top_products %}
-            <div class="space-y-3">
-                {% for product in top_products %}
-                <div class="flex justify-between items-center p-3 border border-gray-200 rounded">
-                    <div class="flex items-center space-x-3">
-                        {% if product.image %}
-                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-10 h-10 object-cover rounded">
-                        {% else %}
-                        <div class="w-10 h-10 bg-gray-200 flex items-center justify-center rounded">
-                            <i class="fas fa-image text-gray-400 text-xs"></i>
-                        </div>
-                        {% endif %}
+        <!-- ADVANCED MANAGEMENT SECTION -->
+        <div class="admin-section" style="border-color: var(--red-200);">
+            <div class="admin-section-header">
+                <h2 class="admin-section-title">Advanced Management</h2>
+                <p class="admin-section-subtitle">Analytics, reporting, and advanced features</p>
+            </div>
+            <div class="dashboard-grid-large">
+                <a href="{% url 'products:admin_analytics' %}" class="dashboard-card-xyxx">
+                    <i class="card-icon fas fa-chart-bar" style="color: var(--admin-red);"></i>
+                    <h3 class="card-title">Analytics</h3>
+                    <p class="card-description">View detailed sales analytics and performance metrics</p>
+                </a>
+                
+                <a href="{% url 'products:admin_reviews' %}" class="dashboard-card-xyxx">
+                    <i class="card-icon fas fa-star" style="color: var(--admin-fire-red);"></i>
+                    <h3 class="card-title">Check Reviews</h3>
+                    <p class="card-description">Manage and monitor customer reviews</p>
+                </a>
+                
+                <a href="{% url 'products:admin_email_management' %}" class="dashboard-card-xyxx">
+                    <i class="card-icon fas fa-envelope" style="color: var(--admin-red);"></i>
+                    <h3 class="card-title">Email Management</h3>
+                    <p class="card-description">Send order confirmations and manage emails</p>
+                </a>
+            </div>
+        </div>
+        
+        <!-- CUSTOMER & SUPPORT SECTION -->
+        <div class="admin-section" style="border-color: var(--red-200);">
+            <div class="admin-section-header">
+                <h2 class="admin-section-title">Customer & Support</h2>
+                <p class="admin-section-subtitle">Customer service and communication tools</p>
+            </div>
+            <div class="dashboard-grid-large">
+                <a href="{% url 'products:admin_contact_requests' %}" class="dashboard-card-xyxx">
+                    <i class="card-icon fas fa-envelope-open-text" style="color: #2563EB;"></i>
+                    <h3 class="card-title">Contact Requests</h3>
+                    <p class="card-description">Manage customer inquiries and support requests</p>
+                </a>
+                
+                <a href="{% url 'accounts:admin_invoices' %}" class="dashboard-card-xyxx">
+                    <i class="card-icon fas fa-file-invoice-dollar" style="color: var(--admin-red);"></i>
+                    <h3 class="card-title">Tax Invoices</h3>
+                    <p class="card-description">View and manage GST invoices from orders</p>
+                </a>
+                
+                <a href="{% url 'invoices:sales_reports' %}" class="dashboard-card-xyxx">
+                    <i class="card-icon fas fa-chart-line" style="color: #16A34A;"></i>
+                    <h3 class="card-title">Sales Reports</h3>
+                    <p class="card-description">Comprehensive sales analytics and export</p>
+                </a>
+            </div>
+        </div>
+        
+        <!-- SYSTEM MANAGEMENT SECTION -->
+        <div class="admin-section" style="border-color: var(--red-200);">
+            <div class="admin-section-header">
+                <h2 class="admin-section-title">System Management</h2>
+                <p class="admin-section-subtitle">Content management and system tools</p>
+            </div>
+            <div class="dashboard-grid-large">
+                <a href="{% url 'influencers:admin_dashboard' %}" class="dashboard-card-xyxx">
+                    <i class="card-icon fas fa-users-cog" style="color: #7C3AED;"></i>
+                    <h3 class="card-title">Influencer Management</h3>
+                    <p class="card-description">Manage influencers, assign coupons, and track performance</p>
+                </a>
+                
+                <a href="{% url 'products:admin_banners' %}" class="dashboard-card-xyxx">
+                    <i class="card-icon fas fa-images" style="color: var(--admin-red);"></i>
+                    <h3 class="card-title">Manage Banners</h3>
+                    <p class="card-description">Reorder, activate, deactivate, and manage banner images</p>
+                </a>
+                
+                <a href="{% url 'custom_admin:products_bannerimage_add' %}" class="dashboard-card-xyxx">
+                    <i class="card-icon fas fa-plus-square" style="color: #16A34A;"></i>
+                    <h3 class="card-title">Add Banner</h3>
+                    <p class="card-description">Upload and configure new banner slides</p>
+                </a>
+            </div>
+        </div>
+        
+        <!-- RECENT ACTIVITY SECTION -->
+        <div class="admin-section" style="border-color: var(--red-200);">
+            <div class="admin-section-header">
+                <h2 class="admin-section-title">Recent Activity</h2>
+                <p class="admin-section-subtitle">Latest orders and product performance</p>
+            </div>
+            <div class="dashboard-grid-enhanced">
+                <!-- Recent Orders -->
+                <div class="card-xyxx" style="padding: var(--space-6);">
+                    <h3 class="text-xl font-bold mb-4" style="color: var(--text-primary); border-bottom: 2px solid var(--red-200); padding-bottom: var(--space-2);">Recent Orders</h3>
+                {% if recent_orders_list %}
+                <div class="space-y-3">
+                    {% for order in recent_orders_list %}
+                    <div class="flex justify-between items-center p-3 border border-gray-200 rounded">
                         <div>
-                            <p class="font-semibold">{{ product.name }}</p>
-                            <p class="text-sm text-gray-600">₹{{ product.price }}</p>
+                            <p class="font-semibold">#{{ order.order_number }}</p>
+                            <p class="text-sm text-gray-600">{{ order.user.get_full_name|default:order.user.username }}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-bold text-red-600 price">₹{{ order.final_amount }}</p>
+                            <span class="status-badge status-{{ order.status }}">{{ order.get_status_display }}</span>
                         </div>
                     </div>
-                    <div class="text-right">
-                        <p class="font-bold text-green-600">{{ product.total_sold }} sold</p>
+                    {% endfor %}
+                </div>
+                <div class="mt-4">
+                    <a href="{% url 'orders:admin_orders' %}" class="text-red-600 hover:text-red-700 font-semibold">View All Orders →</a>
+                </div>
+                {% else %}
+                <p class="text-gray-500">No recent orders</p>
+                {% endif %}
+            </div>
+            
+                <!-- Top Selling Products -->
+                <div class="card-xyxx" style="padding: var(--space-6);">
+                    <h3 class="text-xl font-bold mb-4" style="color: var(--text-primary); border-bottom: 2px solid var(--red-200); padding-bottom: var(--space-2);">Top Selling Products</h3>
+                {% if top_products %}
+                <div class="space-y-3">
+                    {% for product in top_products %}
+                    <div class="flex justify-between items-center p-3 border border-gray-200 rounded">
+                        <div class="flex items-center space-x-3">
+                            {% if product.image %}
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-10 h-10 object-cover rounded">
+                            {% else %}
+                            <div class="w-10 h-10 bg-gray-200 flex items-center justify-center rounded">
+                                <i class="fas fa-image text-gray-400 text-xs"></i>
+                            </div>
+                            {% endif %}
+                            <div>
+                                <p class="font-semibold">{{ product.name }}</p>
+                                <p class="text-sm text-gray-600 price">₹{{ product.price }}</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-bold text-green-600"><span class="numeric-font">{{ product.total_sold }}</span> sold</p>
+                        </div>
                     </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-gray-500">No sales data available</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- RECENT CUSTOMERS SECTION -->
+        <div class="admin-section" style="border-color: var(--red-200);">
+            <div class="admin-section-header">
+                <h2 class="admin-section-title">Recent Customers</h2>
+                <p class="admin-section-subtitle">Newest registered users</p>
+            </div>
+            {% if recent_customers %}
+            <div class="overflow-x-auto">
+                <table class="table-enhanced">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Joined</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for customer in recent_customers %}
+                        <tr>
+                            <td>{{ customer.get_full_name|default:customer.username }}</td>
+                            <td>{{ customer.email }}</td>
+                            <td>{{ customer.date_joined|date:"M d, Y" }}</td>
+                            <td>
+                                <a href="{% url 'products:customer_detail' customer.id %}" class="btn btn-outline btn-xs" style="color: var(--red-600) !important; border-color: var(--red-600); font-weight: 600;">View Details</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div style="margin-top: var(--space-4); text-align: center;">
+                <a href="{% url 'products:admin_customers' %}" class="btn btn-primary" style="background: var(--red-600) !important; color: #FFFFFF !important; font-weight: 700;">View All Customers →</a>
+            </div>
+            {% else %}
+            <p style="color: var(--text-muted); text-align: center; padding: var(--space-8);">No customers yet</p>
+            {% endif %}
+        </div>
+        
+        <!-- LOW STOCK ALERT SECTION -->
+        {% if low_stock_products %}
+        <div class="admin-section" style="border-color: var(--red-600); background: var(--red-50);">
+            <div class="admin-section-header" style="background: var(--red-600); border-bottom-color: var(--red-700);">
+                <h2 class="admin-section-title">
+                    <i class="fas fa-exclamation-triangle mr-2"></i>
+                    Low Stock Alert
+                </h2>
+                <p class="admin-section-subtitle">Products running low on inventory</p>
+            </div>
+            <div class="dashboard-grid-enhanced">
+                {% for product in low_stock_products %}
+                <div class="feature-card" style="border-color: var(--red-300); background: white;">
+                    <div class="feature-card-icon" style="background: var(--red-600);">
+                        <i class="fas fa-box"></i>
+                    </div>
+                    <div class="feature-card-title" style="color: var(--text-primary);">{{ product.name }}</div>
+                    <div class="feature-card-description" style="color: var(--red-600); font-weight: 700; font-size: var(--text-lg);">{{ product.stock }} left</div>
                 </div>
                 {% endfor %}
             </div>
-            {% else %}
-            <p class="text-gray-500">No sales data available</p>
-            {% endif %}
         </div>
-    </div>
-    
-    <!-- Recent Customers -->
-    <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
-        <h3 class="text-xl font-bold mb-4">Recent Customers</h3>
-        {% if recent_customers %}
-        <div class="overflow-x-auto">
-            <table class="w-full">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">Name</th>
-                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">Email</th>
-                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">Joined</th>
-                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-200">
-                    {% for customer in recent_customers %}
-                    <tr>
-                        <td class="px-4 py-2">{{ customer.get_full_name|default:customer.username }}</td>
-                        <td class="px-4 py-2">{{ customer.email }}</td>
-                        <td class="px-4 py-2">{{ customer.date_joined|date:"M d, Y" }}</td>
-                        <td class="px-4 py-2">
-                            <a href="{% url 'products:customer_detail' customer.id %}" class="text-red-600 hover:text-red-700">View Details</a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        <div class="mt-4">
-            <a href="{% url 'products:admin_customers' %}" class="text-red-600 hover:text-red-700 font-semibold">View All Customers →</a>
-        </div>
-        {% else %}
-        <p class="text-gray-500">No customers yet</p>
         {% endif %}
-    </div>
-    
-    <!-- Low Stock Alert -->
-    {% if low_stock_products %}
-    <div class="bg-orange-50 border border-orange-200 rounded-lg p-6">
-        <h3 class="text-lg font-bold text-orange-800 mb-4">
-            <i class="fas fa-exclamation-triangle mr-2"></i>
-            Low Stock Alert
-        </h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {% for product in low_stock_products %}
-            <div class="flex justify-between items-center p-3 bg-white rounded border">
-                <span class="font-semibold">{{ product.name }}</span>
-                <span class="text-orange-600 font-bold">{{ product.stock }} left</span>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-    {% endif %}
+        
+    </div> <!-- Close content-container -->
+</div> <!-- Close page-main -->
 </div>
 {% endblock %}

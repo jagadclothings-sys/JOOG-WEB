@@ -1,121 +1,813 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block extra_css %}
+<style>
+/* Enhanced Banner Styling for Home Page */
+
+/* Enhanced Vibrant Color Variables */
+:root {
+    --vibrant-red: #E11D48;
+    --deep-red: #BE123C;
+    --fire-red: #FF4500;
+    --coral-accent: #FF6B6B;
+    --gold-accent: #FFD700;
+    --ivory: #FFFEF7;
+    --soft-ivory: #FDF2F8;
+}
+
+/* Body and Layout Resets */
+body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: linear-gradient(135deg, var(--ivory) 0%, var(--soft-ivory) 100%) !important;
+}
+
+.container-fluid {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* Navigation Header Adjustments */
+.navbar {
+    margin-bottom: 0 !important;
+    background: linear-gradient(135deg, var(--vibrant-red) 0%, var(--deep-red) 100%) !important;
+    box-shadow: 0 2px 10px rgba(225, 29, 72, 0.3) !important;
+}
+
+
+/* Enhanced Button Styling */
+.btn-primary {
+    background: linear-gradient(135deg, var(--vibrant-red) 0%, var(--deep-red) 50%, var(--fire-red) 100%) !important;
+    border: none !important;
+    color: white !important;
+    font-weight: 600 !important;
+    padding: 12px 24px !important;
+    border-radius: 8px !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 4px 15px rgba(225, 29, 72, 0.3) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px) scale(1.05) !important;
+    box-shadow: 0 8px 25px rgba(225, 29, 72, 0.5) !important;
+    background: linear-gradient(135deg, var(--fire-red) 0%, var(--vibrant-red) 50%, var(--deep-red) 100%) !important;
+}
+
+.btn-outline-primary {
+    border: 2px solid var(--vibrant-red) !important;
+    color: var(--vibrant-red) !important;
+    background: transparent !important;
+    font-weight: 600 !important;
+    padding: 10px 22px !important;
+    border-radius: 8px !important;
+    transition: all 0.3s ease !important;
+}
+
+.btn-outline-primary:hover {
+    background: linear-gradient(135deg, var(--vibrant-red) 0%, var(--deep-red) 100%) !important;
+    color: white !important;
+    transform: translateY(-2px) scale(1.05) !important;
+    box-shadow: 0 8px 25px rgba(225, 29, 72, 0.4) !important;
+}
+
+/* Section Styling */
+.section-red {
+    background: linear-gradient(135deg, var(--vibrant-red) 0%, var(--deep-red) 100%) !important;
+    color: white !important;
+    padding: 80px 0 !important;
+    position: relative !important;
+    box-shadow: inset 0 0 50px rgba(255, 255, 255, 0.1) !important;
+}
+
+.section-ivory {
+    background: linear-gradient(135deg, var(--ivory) 0%, var(--soft-ivory) 100%) !important;
+    color: var(--deep-red) !important;
+    padding: 80px 0 !important;
+    border-top: 3px solid var(--coral-accent) !important;
+    border-bottom: 3px solid var(--coral-accent) !important;
+}
+
+/* Card Enhancements */
+.card {
+    border-radius: 12px !important;
+    border: none !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1) !important;
+    transition: all 0.3s ease !important;
+    overflow: hidden !important;
+}
+
+.card:hover {
+    transform: translateY(-5px) !important;
+    box-shadow: 0 15px 40px rgba(225, 29, 72, 0.2) !important;
+    border: 2px solid var(--coral-accent) !important;
+}
+
+.card-header {
+    background: linear-gradient(135deg, var(--vibrant-red) 0%, var(--deep-red) 100%) !important;
+    color: white !important;
+    border: none !important;
+    font-weight: 600 !important;
+}
+
+/* Product Card Styling */
+.product-card {
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    transition: all 0.3s ease !important;
+    border: none !important;
+    background: white !important;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1) !important;
+}
+
+.product-card:hover {
+    transform: translateY(-8px) scale(1.02) !important;
+    box-shadow: 0 15px 35px rgba(225, 29, 72, 0.15) !important;
+    border: 2px solid var(--coral-accent) !important;
+}
+
+.product-card img {
+    transition: transform 0.3s ease !important;
+}
+
+.product-card:hover img {
+    transform: scale(1.1) !important;
+}
+
+/* Container Adjustments */
+.container {
+    max-width: 1200px !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+}
+
+/* Remove gaps around main content */
+.main-content {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* Text Enhancements */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--deep-red) !important;
+    font-weight: 700 !important;
+}
+
+.section-red h1, 
+.section-red h2, 
+.section-red h3, 
+.section-red h4, 
+.section-red h5, 
+.section-red h6 {
+    color: white !important;
+}
+
+/* Special accent elements */
+.accent-gold {
+    color: var(--gold-accent) !important;
+    font-weight: 600 !important;
+}
+
+.price {
+    color: var(--vibrant-red) !important;
+    font-weight: 700 !important;
+    font-size: 1.2em !important;
+}
+
+/* Responsive Banner Adjustments - Maintain Edge-to-Edge */
+@media (max-width: 768px) {
+    #banner-carousel {
+        height: 300px !important;
+    }
+    
+    .banner-slide {
+        height: 300px !important;
+        width: 100vw !important;
+    }
+    
+    .banner-slide img {
+        width: 100vw !important;
+        height: 300px !important;
+    }
+    
+    .btn-primary, .btn-outline-primary {
+        padding: 10px 20px !important;
+        font-size: 14px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    #banner-carousel {
+        height: 250px !important;
+    }
+    
+    .banner-slide {
+        height: 250px !important;
+        width: 100vw !important;
+    }
+    
+    .banner-slide img {
+        width: 100vw !important;
+        height: 250px !important;
+    }
+    
+    /* Smaller controls on mobile */
+    #banner-prev, #banner-next {
+        width: 32px !important;
+        height: 32px !important;
+    }
+    
+    .banner-dot {
+        width: 8px !important;
+        height: 8px !important;
+    }
+}
+
+.section-block-red {
+    background: linear-gradient(135deg, #DC2626 0%, #EA580C 80%, #F97316 100%) !important;
+    color: #FFFFFF !important;
+    padding: 4rem 1rem !important;
+}
+
+.section-block-ivory {
+    background: linear-gradient(180deg, #FEFDFB 0%, #FDFCF8 100%) !important;
+    color: #0F172A !important;
+    padding: 4rem 1rem !important;
+}
+
+/* Compact hero section override */
+.section-block-ivory[style*="padding: 2.5rem 0"] {
+    padding: 2.5rem 1rem !important;
+}
+
+.section-block-white {
+    background: #FFFFFF !important;
+    color: #0F172A !important;
+    padding: 4rem 1rem !important;
+}
+
+.section-block-pearl {
+    background: #F8F7F4 !important;
+    color: #0F172A !important;
+    padding: 4rem 1rem !important;
+}
+
+.product-card-xyxx {
+    background: linear-gradient(145deg, #FFFEF9 0%, #F8F7F4 100%) !important;
+    border: 1px solid #E5E4E0 !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    transition: all 0.3s ease !important;
+}
+
+.product-card-xyxx:hover {
+    border-color: #FECACA !important;
+    transform: translateY(-4px) !important;
+}
+
+.product-price {
+    color: #DC2626 !important;
+    font-weight: 700 !important;
+}
+
+.card-xyxx {
+    background: linear-gradient(145deg, #FFFEF9 0%, #F8F7F4 100%) !important;
+    border: 1px solid #E5E4E0 !important;
+    border-radius: 12px !important;
+    transition: all 0.3s ease !important;
+}
+
+/* Enhanced Category Card Styles */
+.category-card:hover {
+    border-color: var(--coral-accent) !important;
+    transform: translateY(-8px) scale(1.02) !important;
+    box-shadow: 0 20px 40px rgba(225, 29, 72, 0.15) !important;
+}
+
+/* Enhanced Product Card Styles */
+.product-card-xyxx:hover {
+    transform: translateY(-8px) scale(1.02) !important;
+    border-color: var(--coral-accent) !important;
+    box-shadow: 0 20px 40px rgba(225, 29, 72, 0.15) !important;
+}
+
+/* Button Hover Effects */
+.btn-icon {
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Premium Category Hover Effects */
+.category-showcase:hover {
+    transform: translateY(-12px) scale(1.02) !important;
+    box-shadow: 0 25px 50px rgba(225, 29, 72, 0.15) !important;
+    border-color: var(--coral-accent) !important;
+}
+
+.category-showcase:hover .category-showcase img {
+    transform: scale(1.1) !important;
+}
+
+.category-showcase:hover .category-showcase div[style*="background: linear-gradient(45deg, rgba(225, 29, 72, 0.85)"] {
+    opacity: 1 !important;
+}
+
+.category-showcase:hover .category-showcase div[style*="opacity: 0; transform: translateY(-10px)"] {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+}
+
+.category-showcase:hover .category-showcase div[style*="background: linear-gradient(135deg, var(--red-50), var(--red-100))"] {
+    background: linear-gradient(135deg, var(--vibrant-red), var(--fire-red)) !important;
+    color: white !important;
+}
+
+.category-showcase:hover .category-showcase i[class="fas fa-chevron-right"] {
+    transform: translateX(4px) !important;
+}
+
+/* Premium Product Card Hover Effects */
+.product-showcase:hover {
+    transform: translateY(-10px) scale(1.03) !important;
+    box-shadow: 0 20px 40px rgba(225, 29, 72, 0.2) !important;
+    border-color: var(--vibrant-red) !important;
+}
+
+.product-showcase:hover .product-showcase img {
+    transform: scale(1.05) !important;
+}
+
+.product-showcase:hover .product-showcase div[style*="background: linear-gradient(45deg, rgba(225, 29, 72, 0.9)"] {
+    opacity: 1 !important;
+}
+
+.product-showcase:hover .product-showcase div[style*="opacity: 0; transition: all 0.4s ease"] {
+    opacity: 1 !important;
+}
+
+.product-showcase:hover .product-showcase div[style*="transform: translateY(-10px)"] {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+}
+
+.product-showcase:hover .product-showcase button[style*="background: linear-gradient(135deg, var(--vibrant-red), var(--fire-red))"] {
+    background: linear-gradient(135deg, var(--fire-red), #FF3030) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(225, 29, 72, 0.4) !important;
+}
+
+/* Button Hover Effects */
+.product-showcase button:hover {
+    transform: scale(1.1) !important;
+}
+
+.category-showcase a[href]:hover {
+    transform: scale(1.05) !important;
+}
+
+/* CTA Section Hover Effects */
+a[style*="background: linear-gradient(135deg, var(--vibrant-red), var(--fire-red))"]:hover {
+    transform: translateY(-3px) scale(1.05) !important;
+    box-shadow: 0 12px 35px rgba(225, 29, 72, 0.5) !important;
+}
+
+a[style*="background: linear-gradient(135deg, var(--vibrant-red), var(--fire-red))"]:hover i {
+    transform: translateX(4px) !important;
+}
+
+/* Grid Responsive Improvements */
+@media (max-width: 1024px) {
+    .container {
+        padding-left: 2rem !important;
+        padding-right: 2rem !important;
+    }
+    
+    .category-showcase, .product-showcase {
+        border-radius: 16px !important;
+    }
+    
+    h2[style*="font-size: 3.5rem"] {
+        font-size: 3rem !important;
+    }
+    
+    /* Reduce grid gap on tablet */
+    .grid[style*="gap-6"] {
+        gap: 1rem !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+    
+    .grid {
+        gap: 1.5rem !important;
+    }
+    
+    h2[style*="font-size: 3.5rem"] {
+        font-size: 2.5rem !important;
+    }
+    
+    .category-showcase, .product-showcase {
+        border-radius: 12px !important;
+    }
+    
+    .category-showcase div[style*="height: 260px"], 
+    .product-showcase div[style*="height: 260px"] {
+        height: 220px !important;
+    }
+    
+    /* Adjust grid padding on tablet */
+    .grid[style*="padding: 0 1rem"] {
+        padding: 0 0.5rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    h2[style*="font-size: 3.5rem"] {
+        font-size: 2rem !important;
+    }
+    
+    .grid {
+        gap: 1rem !important;
+    }
+    
+    .category-showcase div[style*="padding: 1.5rem"],
+    .category-showcase div[style*="padding: 1.75rem"],
+    .category-showcase div[style*="padding: 2rem"] {
+        padding: 1rem !important;
+    }
+    
+    .product-showcase div[style*="padding: 1.5rem"],
+    .product-showcase div[style*="padding: 1.75rem"] {
+        padding: 1rem !important;
+    }
+}
+
+/* Responsive adjustments for compact hero section */
+@media (max-width: 768px) {
+    .section-title[style*="font-size: 2.5rem"] {
+        font-size: 2rem !important;
+    }
+    
+    .section-subtitle[style*="font-size: 1.1rem"] {
+        font-size: 1rem !important;
+    }
+    
+    .section-block-ivory[style*="padding: 2.5rem 0"] {
+        padding: 2rem 0 !important;
+    }
+    
+    /* Compact category section responsive */
+    section[style*="padding: 3rem 0"] {
+        padding: 2.5rem 0 !important;
+    }
+    
+    h2[style*="font-size: 2.5rem"] {
+        font-size: 2rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .section-title[style*="font-size: 2.5rem"] {
+        font-size: 1.75rem !important;
+    }
+    
+    .section-subtitle[style*="font-size: 1.1rem"] {
+        font-size: 0.95rem !important;
+    }
+    
+    .section-block-ivory[style*="padding: 2.5rem 0"] {
+        padding: 1.5rem 0 !important;
+    }
+    
+    .btn[style*="padding: 0.75rem 1.5rem"] {
+        padding: 0.6rem 1.25rem !important;
+        font-size: 0.9rem !important;
+    }
+    
+    /* Mobile adjustments for compact category section */
+    section[style*="padding: 3rem 0"] {
+        padding: 2rem 0 !important;
+    }
+    
+    h2[style*="font-size: 2.5rem"] {
+        font-size: 1.75rem !important;
+    }
+    
+    .text-center.mb-10 {
+        margin-bottom: 2rem !important;
+    }
+    
+    /* Mobile grid padding */
+    .grid[style*="padding: 0 1rem"] {
+        padding: 0 0.25rem !important;
+    }
+}
+</style>
+{% endblock %}
+
 {% block content %}
-<!-- Hero Banner -->
-<section class="relative bg-gradient-to-r from-red-600 to-red-700 text-white py-20">
-    <div class="container mx-auto px-4 text-center">
-        <div class="animate-fade-in-up">
-            <h1 class="text-5xl md:text-6xl font-bold mb-6">JOOG</h1>
-            <p class="text-xl md:text-2xl mb-8 text-red-100">Premium Fashion Collection</p>
-            <p class="text-lg mb-8 max-w-2xl mx-auto text-red-50">
-                Discover our exclusive range of premium clothing designed for those who appreciate quality, 
-                style, and sophistication. Each piece is carefully crafted to elevate your wardrobe.
-            </p>
-            <a href="{% url 'products:product_list' %}" class="btn btn-white inline-block">
-                Shop Collection <i class="fas fa-arrow-right ml-2"></i>
-            </a>
+
+
+<!-- Compact Hero Section -->
+<div class="section-block section-block-ivory" style="padding: 2.5rem 0 !important;">
+    <div class="content-container">
+        <div class="section-header" style="max-width: 700px;">
+            <h1 class="section-title" style="color: var(--text-primary); font-size: 2.5rem; margin-bottom: 1rem;">Premium Men's Undergarments</h1>
+            <p class="section-subtitle" style="color: var(--text-secondary); font-size: 1.1rem; margin-bottom: 1.5rem;">Comfort & Quality Essentials for the Modern Man</p>
+            <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                <a href="{% url 'products:product_list' %}" class="btn btn-primary" style="background: var(--red-600) !important; color: #FFFFFF !important; font-weight: 600; padding: 0.75rem 1.5rem; font-size: 0.95rem;">
+                    Shop Undergarments <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+                <a href="{% url 'products:about' %}" class="btn btn-outline" style="color: var(--red-600) !important; border-color: var(--red-600); font-weight: 600; padding: 0.75rem 1.5rem; font-size: 0.95rem;">
+                    Learn More
+                </a>
+            </div>
         </div>
     </div>
-    <div class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white to-transparent"></div>
-</section>
+</div>
 
-<!-- Featured Categories -->
-<section class="py-16">
-    <div class="container mx-auto px-4">
-        <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">Shop by Category</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- COMPACT SHOP BY CATEGORY SECTION -->
+<section style="background: linear-gradient(135deg, #FFFEF7 0%, #F8F7F4 50%, #FFFFFF 100%); padding: 3rem 0; position: relative;">
+    <!-- Background Pattern -->
+    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: radial-gradient(circle at 25px 25px, rgba(225, 29, 72, 0.03) 2px, transparent 0); background-size: 50px 50px; opacity: 0.5;"></div>
+    
+    <div class="container mx-auto px-4 relative z-10">
+        <!-- Compact Section Header -->
+        <div class="text-center mb-10">
+            <div style="display: inline-block; background: linear-gradient(135deg, var(--vibrant-red), var(--fire-red)); padding: 0.4rem 1.25rem; border-radius: 50px; margin-bottom: 1rem;">
+                <span style="color: white; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">CATEGORIES</span>
+            </div>
+            <h2 style="font-size: 2.5rem; font-weight: 800; color: #0F172A; margin-bottom: 0.75rem; text-shadow: 0 2px 4px rgba(15, 23, 42, 0.1);">Shop by Category</h2>
+            <p style="font-size: 1.1rem; color: var(--text-secondary); max-width: 550px; margin: 0 auto; line-height: 1.5;">Browse our premium undergarment categories</p>
+        </div>
+        
+        <!-- Category Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" style="padding: 0 1rem;">
             {% for category in categories %}
-            <div class="category-card group">
-                <a href="{% url 'products:category' category.slug %}">
-                    <div class="relative overflow-hidden rounded-lg bg-gray-200 h-64">
+            <div class="category-showcase group" style="position: relative; overflow: hidden; border-radius: 20px; background: white; box-shadow: 0 6px 24px rgba(0,0,0,0.08); transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid rgba(225, 29, 72, 0.1);">
+                <a href="{% url 'products:category' category.slug %}" class="block" style="text-decoration: none;">
+                    <!-- Image Container -->
+                    <div style="position: relative; height: 260px; overflow: hidden; background: linear-gradient(135deg, #F8F7F4, #FFFEF7);">
                         {% if category.image %}
                         <img src="{{ category.image.url }}" alt="{{ category.name }}" 
-                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                             style="width: 100%; height: 100%; object-fit: cover; transition: all 0.6s ease;">
                         {% else %}
-                        <div class="w-full h-full bg-gradient-to-br from-red-100 to-red-200 flex items-center justify-center">
-                            <i class="fas fa-tshirt text-4xl text-red-600"></i>
+                        <div style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                            <div style="background: linear-gradient(135deg, var(--vibrant-red), var(--fire-red)); width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; box-shadow: 0 6px 20px rgba(225, 29, 72, 0.3);">
+                                <i class="fas fa-tshirt" style="color: white; font-size: 1.75rem;"></i>
+                            </div>
+                            <p style="color: var(--text-muted); font-weight: 500; font-size: 0.9rem;">Category Image</p>
                         </div>
                         {% endif %}
-                        <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300"></div>
-                        <div class="absolute bottom-4 left-4 text-white">
-                            <h3 class="text-xl font-bold">{{ category.name }}</h3>
+                        
+                        <!-- Premium Gradient Overlay -->
+                        <div style="position: absolute; inset: 0; background: linear-gradient(45deg, rgba(225, 29, 72, 0.85) 0%, rgba(255, 69, 0, 0.7) 100%); opacity: 0; transition: all 0.4s ease;"></div>
+                        
+                        <!-- Floating Action Button -->
+                        <div style="position: absolute; top: 1rem; right: 1rem; opacity: 0; transform: translateY(-10px); transition: all 0.4s ease;">
+                            <div style="background: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(0,0,0,0.15);">
+                                <i class="fas fa-arrow-right" style="color: var(--vibrant-red); font-size: 1rem;"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Category Info Card -->
+                    <div style="padding: 1.5rem; text-align: center; position: relative;">
+                        <!-- Premium Accent Line -->
+                        <div style="position: absolute; top: 0; left: 1.5rem; right: 1.5rem; height: 3px; background: linear-gradient(135deg, var(--vibrant-red), var(--fire-red)); border-radius: 0 0 2px 2px;"></div>
+                        
+                        <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--text-primary); margin: 0 0 0.75rem; line-height: 1.4; text-transform: capitalize;">{{ category.name }}</h3>
+                        
+                        <!-- Category Badge -->
+                        <div style="margin-bottom: 1rem;">
+                            <span style="display: inline-block; background: linear-gradient(135deg, var(--red-50), var(--red-100)); color: var(--vibrant-red); padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Category</span>
+                        </div>
+                        
+                        <!-- Quick Browse Button -->
+                        <div style="width: 100%; background: linear-gradient(135deg, var(--vibrant-red), var(--fire-red)); color: white; border: none; padding: 0.875rem 1rem; border-radius: 12px; font-weight: 600; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(225, 29, 72, 0.3); display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-eye" style="margin-right: 0.5rem;"></i>Browse Category
                         </div>
                     </div>
                 </a>
+            </div>
+            {% empty %}
+            <div class="col-span-full" style="text-align: center; padding: 4rem 0;">
+                <div style="background: white; border: 2px dashed var(--ivory-border); border-radius: 20px; padding: 4rem; max-width: 500px; margin: 0 auto;">
+                    <div style="background: linear-gradient(135deg, var(--red-50), var(--red-100)); width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 2rem;">
+                        <i class="fas fa-tags" style="color: var(--vibrant-red); font-size: 2rem;"></i>
+                    </div>
+                    <h3 style="color: var(--text-primary); font-size: 1.5rem; margin-bottom: 1rem; font-weight: 600;">Categories Coming Soon</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 2rem;">We're preparing amazing product categories for you. Stay tuned!</p>
+                    <a href="{% url 'products:product_list' %}" style="display: inline-flex; align-items: center; gap: 0.5rem; background: linear-gradient(135deg, var(--vibrant-red), var(--fire-red)); color: white; padding: 0.75rem 2rem; border-radius: 50px; text-decoration: none; font-weight: 600; transition: transform 0.3s ease;">
+                        <span>Browse All Products</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
             </div>
             {% endfor %}
         </div>
     </div>
 </section>
 
-<!-- Featured Products -->
-<section class="py-16 bg-gray-50">
-    <div class="container mx-auto px-4">
-        <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">Featured Products</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+<!-- PREMIUM FEATURED PRODUCTS SECTION -->
+<section style="background: linear-gradient(180deg, #F8F7F4 0%, #FFFFFF 50%, #FFFEF7 100%); padding: 5rem 0; position: relative; overflow: hidden;">
+    <!-- Geometric Background Elements -->
+    <div style="position: absolute; top: -100px; right: -100px; width: 300px; height: 300px; background: linear-gradient(135deg, rgba(225, 29, 72, 0.05), rgba(255, 69, 0, 0.03)); border-radius: 50%; z-index: 1;"></div>
+    <div style="position: absolute; bottom: -150px; left: -150px; width: 400px; height: 400px; background: linear-gradient(135deg, rgba(255, 69, 0, 0.03), rgba(225, 29, 72, 0.05)); border-radius: 50%; z-index: 1;"></div>
+    
+    <div class="container mx-auto px-4 relative z-10">
+        <!-- Premium Section Header -->
+        <div class="text-center mb-16">
+            <div style="display: inline-block; background: linear-gradient(135deg, var(--fire-red), var(--coral-accent)); padding: 0.5rem 1.5rem; border-radius: 50px; margin-bottom: 1.5rem; box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);">
+                <span style="color: white; font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">FEATURED</span>
+            </div>
+            <h2 style="font-size: 3.5rem; font-weight: 800; color: #0F172A; margin-bottom: 1rem; text-shadow: 0 2px 4px rgba(15, 23, 42, 0.1);">Featured Products</h2>
+            <p style="font-size: 1.25rem; color: var(--text-secondary); max-width: 700px; margin: 0 auto; line-height: 1.6;">Handpicked premium undergarments that deliver unmatched comfort, support, and exceptional quality</p>
+        </div>
+        
+        <!-- Products Showcase Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" style="padding: 0 1rem;">
             {% for product in featured_products %}
-            <div class="product-card">
-                <div class="relative overflow-hidden rounded-lg group">
-                    <a href="{% url 'products:product_detail' product.slug %}">
+            <div class="product-showcase group" style="position: relative; background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 6px 24px rgba(0,0,0,0.08); transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid rgba(225, 29, 72, 0.1);">
+                <!-- Product Image Section -->
+                <div style="position: relative; height: 260px; overflow: hidden; background: linear-gradient(135deg, #F8F7F4, #FFFEF7);">
+                    <a href="{% url 'products:product_detail' product.slug %}" class="block h-full w-full" style="text-decoration: none;">
                         {% if product.image %}
                         <img src="{{ product.image.url }}" alt="{{ product.name }}" 
-                             class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300">
+                             style="width: 100%; height: 100%; object-fit: cover; transition: all 0.6s ease;">
                         {% else %}
-                        <div class="w-full h-64 bg-gray-200 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-                            <i class="fas fa-image text-gray-400 text-4xl"></i>
+                        <div style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                            <div style="background: linear-gradient(135deg, var(--vibrant-red), var(--fire-red)); width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; box-shadow: 0 6px 20px rgba(225, 29, 72, 0.3);">
+                                <i class="fas fa-tshirt" style="color: white; font-size: 1.75rem;"></i>
+                            </div>
+                            <p style="color: var(--text-muted); font-weight: 500; font-size: 0.9rem;">Product Image</p>
                         </div>
                         {% endif %}
                     </a>
-                    <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <form method="POST" action="{% url 'orders:add_to_cart' product.id %}">
-                            {% csrf_token %}
-                            <button type="submit" class="bg-red-600 text-white p-2 rounded-full hover:bg-red-700 transition-colors">
-                                <i class="fas fa-shopping-cart"></i>
-                            </button>
-                        </form>
+                    
+                    <!-- Premium Sale Badge -->
+                    {% if product.original_price and product.price < product.original_price %}
+                    <div style="position: absolute; top: 1rem; left: 1rem; z-index: 5;">
+                        <div style="background: linear-gradient(135deg, var(--fire-red), #FF3030); color: white; padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 4px 15px rgba(255, 69, 0, 0.4); backdrop-filter: blur(10px);">
+                            <i class="fas fa-fire" style="margin-right: 0.25rem;"></i>SALE
+                        </div>
                     </div>
+                    {% endif %}
                 </div>
-                <div class="p-4">
-                    <h3 class="font-semibold text-lg mb-2 text-gray-800">{{ product.name }}</h3>
-                    <p class="text-red-600 font-bold text-xl">₹{{ product.price }}</p>
+                
+                <!-- Product Information Card -->
+                <div style="padding: 1.5rem; position: relative;">
+                    <!-- Premium Accent Line -->
+                    <div style="position: absolute; top: 0; left: 1.5rem; right: 1.5rem; height: 3px; background: linear-gradient(135deg, var(--vibrant-red), var(--fire-red)); border-radius: 0 0 2px 2px;"></div>
+                    
+                    <!-- Product Title -->
+                    <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--text-primary); margin: 0 0 0.75rem; line-height: 1.4; min-height: 2.8rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                        <a href="{% url 'products:product_detail' product.slug %}" style="text-decoration: none; color: inherit; transition: color 0.3s ease;">
+                            {{ product.name }}
+                        </a>
+                    </h3>
+                    
+                    <!-- Category Badge -->
+                    {% if product.category %}
+                    <div style="margin-bottom: 1rem;">
+                        <a href="{% url 'products:category' product.category.slug %}" style="display: inline-block; background: linear-gradient(135deg, var(--red-50), var(--red-100)); color: var(--vibrant-red); padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; text-decoration: none; transition: all 0.3s ease;">
+                            {{ product.category.name }}
+                        </a>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Price Section -->
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            <span style="color: var(--vibrant-red); font-weight: 800; font-size: 1.4rem; font-family: 'SF Mono', monospace;">₹{{ product.price }}</span>
+                            {% if product.original_price and product.price < product.original_price %}
+                            <span style="color: var(--text-muted); text-decoration: line-through; font-size: 1rem; font-family: 'SF Mono', monospace;">₹{{ product.original_price }}</span>
+                            {% endif %}
+                        </div>
+                        
+                        {% if product.original_price and product.price < product.original_price %}
+                        <div style="background: linear-gradient(135deg, var(--fire-red), #FF3030); color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">
+                            SAVE
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Rating Stars -->
+                    {% if product.average_rating %}
+                    <div style="display: flex; align-items: center; gap: 0.25rem; margin-bottom: 1rem;">
+                        {% for i in "12345"|make_list %}
+                            {% if forloop.counter <= product.average_rating %}
+                            <i class="fas fa-star" style="color: var(--gold-accent); font-size: 0.8rem;"></i>
+                            {% else %}
+                            <i class="fas fa-star" style="color: #E5E4E0; font-size: 0.8rem;"></i>
+                            {% endif %}
+                        {% endfor %}
+                        <span style="color: var(--text-muted); font-size: 0.8rem; margin-left: 0.25rem; font-weight: 500;">({{ product.review_count|default:0 }})</span>
+                    </div>
+                    {% else %}
+                    <div style="margin-bottom: 1rem; height: 1.2rem;"></div>
+                    {% endif %}
+                    
+                    <!-- Quick Add Button -->
+                    <form method="POST" action="{% url 'orders:add_to_cart' product.id %}" style="width: 100%;">
+                        {% csrf_token %}
+                        <button type="submit" style="width: 100%; background: linear-gradient(135deg, var(--vibrant-red), var(--fire-red)); color: white; border: none; padding: 0.875rem 1rem; border-radius: 12px; font-weight: 600; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(225, 29, 72, 0.3);">
+                            <i class="fas fa-shopping-bag" style="margin-right: 0.5rem;"></i>Add to Cart
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% empty %}
+            <!-- Premium Empty State -->
+            <div class="col-span-full" style="text-align: center; padding: 5rem 0;">
+                <div style="background: white; border: 3px dashed var(--ivory-border); border-radius: 30px; padding: 5rem; max-width: 600px; margin: 0 auto; position: relative;">
+                    <!-- Decorative Background -->
+                    <div style="position: absolute; top: -20px; left: -20px; width: 100px; height: 100px; background: linear-gradient(135deg, var(--red-50), var(--red-100)); border-radius: 50%; opacity: 0.5;"></div>
+                    <div style="position: absolute; bottom: -30px; right: -30px; width: 120px; height: 120px; background: linear-gradient(135deg, var(--red-100), var(--red-200)); border-radius: 50%; opacity: 0.3;"></div>
+                    
+                    <div style="position: relative; z-index: 2;">
+                        <div style="background: linear-gradient(135deg, var(--vibrant-red), var(--fire-red)); width: 100px; height: 100px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 2rem; box-shadow: 0 10px 30px rgba(225, 29, 72, 0.3);">
+                            <i class="fas fa-star" style="color: white; font-size: 2.5rem;"></i>
+                        </div>
+                        <h3 style="color: var(--text-primary); font-size: 2rem; margin-bottom: 1rem; font-weight: 700;">Featured Products Coming Soon</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 2.5rem; font-size: 1.1rem; line-height: 1.6;">We're curating the most amazing products just for you. Get ready for something extraordinary!</p>
+                        <a href="{% url 'products:product_list' %}" style="display: inline-flex; align-items: center; gap: 0.75rem; background: linear-gradient(135deg, var(--vibrant-red), var(--fire-red)); color: white; padding: 1rem 2.5rem; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 1rem; transition: transform 0.3s ease; box-shadow: 0 6px 20px rgba(225, 29, 72, 0.4);">
+                            <i class="fas fa-rocket"></i>
+                            <span>Explore All Products</span>
+                        </a>
+                    </div>
                 </div>
             </div>
             {% endfor %}
         </div>
-        <div class="text-center mt-12">
-            <a href="{% url 'products:product_list' %}" class="btn btn-primary">
-                View All Products
-            </a>
+        
+        <!-- Premium CTA Section -->
+        {% if featured_products %}
+        <div style="text-align: center; margin-top: 4rem;">
+            <div style="display: inline-block; background: linear-gradient(135deg, white, #F8F7F4); padding: 2rem 3rem; border-radius: 25px; box-shadow: 0 8px 32px rgba(0,0,0,0.08); border: 1px solid rgba(225, 29, 72, 0.1);">
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 1.1rem;">Explore our complete undergarment range</p>
+                <a href="{% url 'products:product_list' %}" style="display: inline-flex; align-items: center; gap: 0.75rem; background: linear-gradient(135deg, var(--vibrant-red), var(--fire-red)); color: white; padding: 1.25rem 3rem; border-radius: 50px; text-decoration: none; font-weight: 700; font-size: 1.1rem; transition: all 0.3s ease; box-shadow: 0 8px 25px rgba(225, 29, 72, 0.4); text-transform: uppercase; letter-spacing: 1px;">
+                    <span>View All Products</span>
+                    <i class="fas fa-arrow-right" style="transition: transform 0.3s ease;"></i>
+                </a>
+            </div>
         </div>
+        {% endif %}
     </div>
 </section>
 
-<!-- About Section -->
-<section class="py-16">
-    <div class="container mx-auto px-4">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-                <h2 class="text-3xl font-bold mb-6 text-gray-800">About JOOG</h2>
-                <p class="text-lg text-gray-600 mb-6">
-                    At JOOG, we believe in creating clothing that doesn't just look good, but feels exceptional. 
-                    Our premium collection features carefully selected fabrics, expert craftsmanship, and timeless designs 
-                    that elevate your personal style.
-                </p>
-                <p class="text-lg text-gray-600 mb-8">
-                    From casual wear to formal attire, each piece is designed with attention to detail and quality 
-                    that lasts. Experience the difference that premium fashion makes in your everyday life.
-                </p>
-                <a href="{% url 'products:product_list' %}" class="btn btn-outline">
-                    Discover Our Story
-                </a>
-            </div>
-            <div class="relative">
-                <div class="bg-gradient-to-br from-red-100 to-red-200 rounded-lg p-8 h-96 flex items-center justify-center">
-                    <i class="fas fa-award text-6xl text-red-600"></i>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function(){
+  const slides = Array.from(document.querySelectorAll('#banner-carousel .banner-slide'));
+  const dots = Array.from(document.querySelectorAll('#banner-carousel .banner-dot'));
+  if (!slides.length) return;
+  let index = 0;
+  let timer = null;
+
+  function show(i){
+    slides.forEach((el, idx)=>{
+      el.classList.toggle('hidden', idx !== i);
+      el.classList.toggle('block', idx === i);
+    });
+    if (dots.length){
+      dots.forEach((d, idx)=>{
+        d.classList.toggle('!bg-white', idx === i);
+        d.classList.toggle('bg-white/60', idx !== i);
+      });
+    }
+    index = i;
+  }
+  function next(){ show((index + 1) % slides.length); }
+  function prev(){ show((index - 1 + slides.length) % slides.length); }
+
+  const prevBtn = document.getElementById('banner-prev');
+  const nextBtn = document.getElementById('banner-next');
+  if (prevBtn) prevBtn.addEventListener('click', ()=>{ prev(); restart(); });
+  if (nextBtn) nextBtn.addEventListener('click', ()=>{ next(); restart(); });
+  if (dots.length){
+    dots.forEach((d, i)=> d.addEventListener('click', ()=>{ show(i); restart(); }));
+  }
+
+  function start(){ timer = setInterval(next, 7000); }
+  function stop(){ if (timer) clearInterval(timer); }
+  function restart(){ stop(); start(); }
+
+  const carousel = document.getElementById('banner-carousel');
+  if (carousel){
+    carousel.addEventListener('mouseenter', stop);
+    carousel.addEventListener('mouseleave', start);
+  }
+
+  start();
+})();
+</script>
 {% endblock %}

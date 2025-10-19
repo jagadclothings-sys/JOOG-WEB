@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Order - JOOG Admin</title>
+    <style>
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background-color: #1f2937;
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        .alert {
+            background-color: #fbbf24;
+            color: #92400e;
+            padding: 15px 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+        .content {
+            padding: 30px 20px;
+        }
+        .order-info {
+            background-color: #f9fafb;
+            border-left: 4px solid #dc2626;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .customer-info {
+            background-color: #eff6ff;
+            border-left: 4px solid #2563eb;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .numeric-font {
+            font-family: 'SF Mono', 'Monaco', 'Cascadia Code', monospace;
+            font-variant-numeric: tabular-nums;
+        }
+        .cta-button {
+            display: inline-block;
+            background-color: #dc2626;
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            margin: 10px 0;
+        }
+        .order-summary {
+            background-color: #f9fafb;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+        }
+        .summary-row.total {
+            font-weight: 700;
+            font-size: 18px;
+            color: #dc2626;
+            border-top: 2px solid #e5e7eb;
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🔔 New Order Received</h1>
+        </div>
+
+        <!-- Alert -->
+        <div class="alert">
+            ⚡ Action Required - New customer order needs processing
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <h2 style="color: #1f2937;">Order Details</h2>
+
+            <!-- Order Info -->
+            <div class="order-info">
+                <h3 style="margin: 0 0 15px 0; color: #dc2626;">Order Information</h3>
+                <p><strong>Order Number:</strong> <span class="numeric-font">#{{ order.id }}</span></p>
+                <p><strong>Order Date:</strong> <span class="numeric-font">{{ order.created_at|date:"F d, Y g:i A" }}</span></p>
+                <p><strong>Status:</strong> {{ order.status|title }}</p>
+                <p><strong>Payment Status:</strong> {{ order.payment_status|title }}</p>
+                <p><strong>Total Amount:</strong> <span class="numeric-font" style="color: #dc2626; font-weight: bold;">₹{{ order.total_amount }}</span></p>
+            </div>
+
+            <!-- Customer Info -->
+            <div class="customer-info">
+                <h3 style="margin: 0 0 15px 0; color: #2563eb;">Customer Information</h3>
+                <p><strong>Name:</strong> {{ order.user.first_name }} {{ order.user.last_name }}</p>
+                <p><strong>Email:</strong> {{ order.user.email }}</p>
+                <p><strong>Phone:</strong> {{ order.user.phone_number|default:"Not provided" }}</p>
+                <p><strong>Customer Since:</strong> {{ order.user.date_joined|date:"F Y" }}</p>
+            </div>
+
+            <!-- Shipping Address -->
+            <div style="background-color: #f0fdf4; border-left: 4px solid #10b981; padding: 20px; margin: 20px 0; border-radius: 4px;">
+                <h3 style="margin: 0 0 15px 0; color: #10b981;">Shipping Address</h3>
+                <p>{{ order.shipping_address }}</p>
+                <p>{{ order.shipping_city }}, {{ order.shipping_state }} {{ order.shipping_postal_code }}</p>
+                <p>{{ order.shipping_country }}</p>
+            </div>
+
+            <!-- Order Items -->
+            <div style="margin: 30px 0;">
+                <h3 style="color: #1f2937; margin-bottom: 20px;">Items Ordered ({{ order.items.count }} item{{ order.items.count|pluralize }})</h3>
+                {% for item in order.items.all %}
+                <div style="padding: 15px 0; border-bottom: 1px solid #e5e7eb;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h4 style="margin: 0 0 5px 0; color: #1f2937;">{{ item.product.name }}</h4>
+                            <p style="margin: 0; color: #6b7280; font-size: 14px;">
+                                Quantity: <span class="numeric-font">{{ item.quantity }}</span> | 
+                                Unit Price: <span class="numeric-font">₹{{ item.price }}</span>
+                            </p>
+                        </div>
+                        <div style="font-weight: 600; color: #dc2626;">
+                            ₹<span class="numeric-font">{{ item.get_total_price }}</span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Order Summary -->
+            <div class="order-summary">
+                <h3 style="margin: 0 0 15px 0; color: #1f2937;">Order Summary</h3>
+                
+                <div class="summary-row">
+                    <span>Subtotal:</span>
+                    <span class="numeric-font">₹{{ order.total_amount|floatformat:2 }}</span>
+                </div>
+                
+                {% if order.discount_amount %}
+                <div class="summary-row" style="color: #10b981;">
+                    <span>Discount:</span>
+                    <span class="numeric-font">-₹{{ order.discount_amount }}</span>
+                </div>
+                {% endif %}
+                
+                <div class="summary-row total">
+                    <span>Total:</span>
+                    <span class="numeric-font">₹{{ order.final_amount|default:order.total_amount }}</span>
+                </div>
+            </div>
+
+            <!-- Admin Actions -->
+            <div style="text-align: center; margin: 30px 0; padding: 30px; background-color: #f9fafb; border-radius: 8px;">
+                <h3 style="color: #1f2937;">Quick Actions</h3>
+                <p>Manage this order from the admin dashboard:</p>
+                <a href="{{ site_url }}/admin-dashboard/" class="cta-button">View Admin Dashboard</a>
+                <br>
+                <a href="{{ site_url }}/manage/customers/{{ order.user.id }}/" class="cta-button" style="background-color: #2563eb;">View Customer Details</a>
+            </div>
+
+            <div style="background-color: #fef3c7; border: 1px solid #f59e0b; border-radius: 8px; padding: 20px; margin: 20px 0;">
+                <h4 style="color: #92400e; margin: 0 0 10px 0;">📋 Next Steps:</h4>
+                <ul style="color: #92400e; margin: 0; padding-left: 20px;">
+                    <li>Process payment if pending</li>
+                    <li>Update inventory levels</li>
+                    <li>Prepare items for shipping</li>
+                    <li>Update order status when ready</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

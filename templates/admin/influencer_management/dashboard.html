@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Influencer Management - JOOG{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12">
+    <div class="mb-8">
+        <div class="flex justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">Influencer Management</h1>
+                <p class="text-gray-600">Manage your influencer network and track performance</p>
+            </div>
+            <div class="flex items-center space-x-4">
+                <a href="{% url 'products:admin_dashboard' %}" class="text-gray-600 hover:text-red-600 transition-colors">
+                    <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
+                </a>
+                <a href="{% url 'influencers:admin_create' %}" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">
+                    <i class="fas fa-plus mr-2"></i>Add Influencer
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div class="stat-card">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600">Total Influencers</p>
+                    <p class="text-2xl font-bold text-gray-800 numeric-font">{{ total_influencers }}</p>
+                </div>
+                <i class="fas fa-users text-3xl text-red-600"></i>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600">Active Influencers</p>
+                    <p class="text-2xl font-bold text-green-600 numeric-font">{{ active_influencers }}</p>
+                </div>
+                <i class="fas fa-user-check text-3xl text-green-600"></i>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600">Assigned Coupons</p>
+                    <p class="text-2xl font-bold text-blue-600 numeric-font">{{ assigned_coupons }}</p>
+                </div>
+                <i class="fas fa-tags text-3xl text-blue-600"></i>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600">Available Coupons</p>
+                    <p class="text-2xl font-bold text-orange-600 numeric-font">{{ unassigned_coupons }}</p>
+                </div>
+                <i class="fas fa-tag text-3xl text-orange-600"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <a href="{% url 'influencers:admin_list' %}" class="admin-card">
+            <i class="fas fa-list text-3xl text-red-600 mb-4"></i>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Manage Influencers</h3>
+            <p class="text-gray-600">View, edit and manage all your influencers</p>
+        </a>
+        
+        <a href="{% url 'influencers:admin_create' %}" class="admin-card">
+            <i class="fas fa-user-plus text-3xl text-red-600 mb-4"></i>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Add New Influencer</h3>
+            <p class="text-gray-600">Create new influencer accounts</p>
+        </a>
+        
+        <a href="{% url 'coupons:admin_coupons' %}" class="admin-card">
+            <i class="fas fa-tags text-3xl text-red-600 mb-4"></i>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Manage Coupons</h3>
+            <p class="text-gray-600">Create and assign coupon codes</p>
+        </a>
+    </div>
+    
+    <!-- Performance Overview -->
+    {% if influencer_stats %}
+    <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+        <h3 class="text-xl font-bold text-gray-800 mb-4">Top Performing Influencers</h3>
+        <div class="space-y-3">
+            {% for stat in influencer_stats %}
+            <div class="flex justify-between items-center p-3 border border-gray-200 rounded">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-red-600 text-white rounded-full flex items-center justify-center">
+                        <span class="font-bold text-sm">{{ stat.influencer.name|first|upper }}</span>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-gray-800">{{ stat.influencer.name }}</p>
+                        <p class="text-sm text-gray-600">@{{ stat.influencer.username }}</p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <p class="font-bold text-green-600">₹{{ stat.total_revenue|floatformat:0 }}</p>
+                    <p class="text-sm text-gray-700">{{ stat.total_orders }} orders</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="mt-4">
+            <a href="{% url 'influencers:admin_list' %}" class="text-red-600 hover:text-red-700 font-semibold">View All Influencers →</a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

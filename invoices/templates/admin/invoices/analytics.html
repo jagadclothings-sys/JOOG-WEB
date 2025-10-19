@@ -1,0 +1,213 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block title %}Invoice Analytics{% endblock %}
+
+{% block extrahead %}
+<style>
+    .analytics-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin: 20px 0;
+    }
+    
+    .stat-card {
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 15px;
+        text-align: center;
+    }
+    
+    .stat-number {
+        font-size: 24px;
+        font-weight: bold;
+        color: #417690;
+        margin-bottom: 5px;
+    }
+    
+    .stat-label {
+        font-size: 12px;
+        color: #666;
+        text-transform: uppercase;
+    }
+    
+    .export-buttons {
+        display: flex;
+        gap: 10px;
+        margin: 15px 0;
+        flex-wrap: wrap;
+    }
+    
+    .export-btn {
+        background: #417690;
+        color: white;
+        padding: 8px 15px;
+        border: none;
+        border-radius: 4px;
+        text-decoration: none;
+        font-size: 12px;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+    
+    .export-btn:hover {
+        background: #205067;
+        color: white;
+    }
+    
+    .recent-list {
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        margin-top: 20px;
+    }
+    
+    .recent-header {
+        background: #f8f8f8;
+        padding: 10px 15px;
+        border-bottom: 1px solid #ddd;
+        font-weight: bold;
+    }
+    
+    .recent-item {
+        padding: 10px 15px;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        justify-content: space-between;
+    }
+    
+    .recent-item:last-child {
+        border-bottom: none;
+    }
+    
+    .invoice-number {
+        color: #417690;
+        font-weight: bold;
+    }
+    
+    .amount {
+        font-weight: bold;
+        color: #28a745;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="results">
+    <h1>📊 Invoice Analytics Dashboard</h1>
+    
+    <!-- Quick Export Actions -->
+    <div class="export-buttons">
+        <a href="{% url 'admin:invoices_taxinvoice_export_all_invoices' %}" class="export-btn">
+            📊 Export All Invoices
+        </a>
+        <a href="{% url 'admin:invoices_taxinvoice_export_sales_report' %}" class="export-btn">
+            📈 Export Sales Report
+        </a>
+        <a href="{% url 'admin:invoices_taxinvoice_changelist' %}" class="export-btn" style="background: #666;">
+            📋 Back to Invoice List
+        </a>
+    </div>
+    
+    <!-- Statistics -->
+    <div class="analytics-grid">
+        <div class="stat-card">
+            <div class="stat-number">{{ total_invoices }}</div>
+            <div class="stat-label">Total Invoices</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-number">{{ generated_invoices }}</div>
+            <div class="stat-label">Generated PDFs</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-number">{{ pending_invoices }}</div>
+            <div class="stat-label">Pending Generation</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-number">{{ monthly_invoices }}</div>
+            <div class="stat-label">This Month</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-number">₹{{ total_revenue|floatformat:0 }}</div>
+            <div class="stat-label">Total Revenue</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-number">₹{{ monthly_revenue|floatformat:0 }}</div>
+            <div class="stat-label">Monthly Revenue</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-number">₹{{ avg_invoice_value|floatformat:0 }}</div>
+            <div class="stat-label">Avg Invoice Value</div>
+        </div>
+    </div>
+    
+    <!-- Recent Invoices -->
+    <div class="recent-list">
+        <div class="recent-header">🕒 Recent Invoices</div>
+        {% for invoice in recent_invoices %}
+        <div class="recent-item">
+            <div>
+                <span class="invoice-number">{{ invoice.invoice_number }}</span>
+                <span style="margin-left: 10px; color: #666;">{{ invoice.customer_name }}</span>
+                {% if invoice.is_generated %}
+                    <span style="margin-left: 10px; color: #28a745; font-size: 11px;">✅ Generated</span>
+                {% else %}
+                    <span style="margin-left: 10px; color: #ffc107; font-size: 11px;">⏳ Pending</span>
+                {% endif %}
+            </div>
+            <div class="amount">₹{{ invoice.final_amount|floatformat:2 }}</div>
+        </div>
+        {% empty %}
+        <div class="recent-item">
+            <div style="color: #666; font-style: italic;">No invoices found</div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <!-- Orders Without Invoices -->
+    {% if orders_without_invoices %}
+    <div class="recent-list">
+        <div class="recent-header">⚠️ Orders Without Invoices</div>
+        {% for order in orders_without_invoices %}
+        <div class="recent-item">
+            <div>
+                <span class="invoice-number">{{ order.order_number }}</span>
+                <span style="margin-left: 10px; color: #666;">{{ order.user.get_full_name|default:order.user.username }}</span>
+                <span style="margin-left: 10px; color: #17a2b8; font-size: 11px;">{{ order.status|title }}</span>
+            </div>
+            <div class="amount">₹{{ order.final_amount|floatformat:2 }}</div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <!-- Quick Actions -->
+    <div style="margin-top: 30px; padding: 15px; background: #f8f8f8; border-radius: 4px;">
+        <h3>🚀 Quick Actions</h3>
+        <p style="margin: 10px 0; color: #666;">
+            Use the invoice list to:
+        </p>
+        <ul style="margin: 0; padding-left: 20px; color: #666;">
+            <li>Select invoices and use bulk actions (Export, Generate PDF, Mark as Generated)</li>
+            <li>Use the 🖨️ Print button in the Actions column to print individual invoices</li>
+            <li>Filter by generation status, date, or shipping state</li>
+            <li>Search by invoice number, customer name, or order number</li>
+        </ul>
+        
+        <div style="margin-top: 15px;">
+            <a href="{% url 'admin:invoices_taxinvoice_changelist' %}" class="export-btn">
+                📋 Go to Invoice Management
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

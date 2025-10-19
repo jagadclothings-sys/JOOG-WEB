@@ -6,12 +6,19 @@ app_name = 'orders'
 urlpatterns = [
     path('cart/', views.cart_view, name='cart'),
     path('add-to-cart/<int:product_id>/', views.add_to_cart_view, name='add_to_cart'),
+    path('buy-now/<int:product_id>/', views.buy_now_view, name='buy_now'),
+    path('process-buy-now/', views.process_buy_now_view, name='process_buy_now'),
     path('update-cart-item/<int:item_id>/', views.update_cart_item_view, name='update_cart_item'),
     path('remove-from-cart/<int:item_id>/', views.remove_from_cart_view, name='remove_from_cart'),
     path('checkout/', views.checkout_view, name='checkout'),
     path('payment/<str:order_number>/', views.payment_view, name='payment'),
     path('confirmation/<str:order_number>/', views.order_confirmation_view, name='order_confirmation'),
-    
+    path('order/<str:order_number>/', views.customer_order_detail_view, name='customer_order_detail'),
+
+    # PhonePe Payment URLs
+    path('pay/phonepe/initiate/<str:order_number>/', views.phonepe_initiate, name='phonepe_initiate'),
+    path('pay/phonepe/callback/', views.phonepe_callback, name='phonepe_callback'),
+
     # Admin URLs
     path('manage/orders/', views.admin_orders_view, name='admin_orders'),
     path('manage/order/<str:order_number>/', views.order_detail_view, name='order_detail'),

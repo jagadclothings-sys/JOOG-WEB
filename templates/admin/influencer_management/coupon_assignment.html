@@ -1,0 +1,216 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block title %}Manage Coupons - {{ influencer.name }} - JOOG Admin{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+.card-custom {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    border: 1px solid #e9ecef;
+    margin-bottom: 20px;
+}
+.coupon-badge {
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    padding: 8px 15px;
+    border-radius: 25px;
+    font-size: 0.9rem;
+}
+.btn-action {
+    border-radius: 25px;
+    padding: 8px 20px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+.gradient-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    color: white;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0">
+                <i class="fas fa-tags me-2"></i>Manage Coupons - {{ influencer.name }}
+            </h1>
+            <p class="text-muted">Assign and manage coupon codes for @{{ influencer.username }}</p>
+        </div>
+        <div>
+            <a href="{% url 'influencers:admin_list' %}" class="btn btn-outline-secondary btn-action me-2">
+                <i class="fas fa-arrow-left me-2"></i>Back to List
+            </a>
+            <a href="{% url 'influencers:admin_detail' influencer.id %}" class="btn btn-outline-info btn-action">
+                <i class="fas fa-eye me-2"></i>View Profile
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Assigned Coupons -->
+        <div class="col-lg-8">
+            <div class="card-custom">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="h5 mb-0"><i class="fas fa-check-circle me-2"></i>Assigned Coupons ({{ assigned_coupons.count }})</h4>
+                </div>
+
+                {% if assigned_coupons %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Coupon Code</th>
+                                <th>Details</th>
+                                <th>Status</th>
+                                <th>Performance</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for assignment in assigned_coupons %}
+                            <tr>
+                                <td>
+                                    <span class="coupon-badge bg-primary text-white">
+                                        {{ assignment.coupon.code }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="small">
+                                        <div>
+                                            <strong>
+                                                {% if assignment.coupon.discount_type == 'percentage' %}
+                                                    {{ assignment.coupon.discount_value }}% off
+                                                {% else %}
+₹{{ assignment.coupon.discount_amount }}
+                                                {% endif %}
+                                            </strong>
+                                        </div>
+                                        {% if assignment.coupon.valid_to %}
+                                        <div class="text-muted">Expires: {{ assignment.coupon.valid_to|date:"M d, Y" }}</div>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td>
+                                    {% if assignment.coupon.active %}
+                                        <span class="badge bg-success">Active</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Inactive</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="small">
+                                        <div><strong>{{ assignment.coupon.used_count }}</strong> uses</div>
+                                        {% if assignment.coupon.max_uses %}
+                                        <div class="text-muted">of {{ assignment.coupon.max_uses }} max</div>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td>
+                                    <form method="post" action="{% url 'influencers:admin_unassign_coupon' influencer.id assignment.id %}" 
+                                          onsubmit="return confirm('Are you sure you want to unassign this coupon?')" style="display: inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Unassign Coupon">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-4 text-muted">
+                    <i class="fas fa-tags fa-3x mb-3"></i>
+                    <p>No coupons assigned to this influencer yet.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Assign New Coupon -->
+        <div class="col-lg-4">
+            <div class="card-custom">
+                <h4 class="h5 mb-4"><i class="fas fa-plus-circle me-2"></i>Assign New Coupon</h4>
+
+                {% if unassigned_coupons %}
+                <form method="post" action="{% url 'influencers:admin_assign_coupon' influencer.id %}">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="coupon_id" class="form-label">Select Coupon</label>
+                        <select name="coupon_id" id="coupon_id" class="form-select" required>
+                            <option value="">Choose a coupon...</option>
+                            {% for coupon in unassigned_coupons %}
+                            <option value="{{ coupon.id }}">
+                                {{ coupon.code }} - 
+                                {% if coupon.discount_type == 'percentage' %}
+                                    {{ coupon.discount_value }}% off
+                                {% else %}
+₹{{ coupon.discount_amount }}
+                                {% endif %}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="notes" class="form-label">Assignment Notes (Optional)</label>
+                        <textarea name="notes" id="notes" class="form-control" rows="3" 
+                                  placeholder="Add any notes about this assignment..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn gradient-primary w-100 btn-action">
+                        <i class="fas fa-plus me-2"></i>Assign Coupon
+                    </button>
+                </form>
+                {% else %}
+                <div class="text-center py-3 text-muted">
+                    <i class="fas fa-info-circle fa-2x mb-2"></i>
+                    <p class="mb-0">All available coupons are already assigned.</p>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Available Coupons Info -->
+            <div class="card-custom">
+                <h5 class="h6 mb-3"><i class="fas fa-info-circle me-2"></i>Available Coupons</h5>
+                
+                <div class="row text-center">
+                    <div class="col-6">
+                        <div class="bg-light rounded p-3">
+                            <div class="h4 mb-1 text-primary">{{ assigned_coupons.count }}</div>
+                            <div class="small text-muted">Assigned</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="bg-light rounded p-3">
+                            <div class="h4 mb-1 text-success">{{ unassigned_coupons.count }}</div>
+                            <div class="small text-muted">Available</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-3 text-center">
+                    <a href="{% url 'admin:coupons_coupon_changelist' %}" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-external-link-alt me-1"></i>Manage All Coupons
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}

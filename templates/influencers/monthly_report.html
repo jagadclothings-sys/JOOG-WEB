@@ -1,0 +1,279 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Monthly Report - {{ selected_month_name }} {{ selected_year }} - {{ influencer.name }} - JOOG{% endblock %}
+
+{% block extra_head %}
+<style>
+    .dashboard-card {
+        background: white;
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        transition: transform 0.2s;
+    }
+    .dashboard-card:hover {
+        transform: translateY(-2px);
+    }
+    .stat-card {
+        background: linear-gradient(135deg, var(--from-color) 0%, var(--to-color) 100%);
+        color: white;
+    }
+    .table-responsive {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+    .daily-chart {
+        max-height: 300px;
+        overflow-y: auto;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-red-600 to-red-500 text-white py-8 brand-stripes">
+        <div class="container mx-auto px-4 mb-4 flex items-center justify-center">
+            <img src="{% static 'img/joog-logo.png' %}?v=4" alt="JOOG" 
+                 style="height:44px; width:auto; filter: brightness(0) invert(1) drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.3));"/>
+        </div>
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-3xl font-bold">Monthly Report - {{ selected_month_name }} {{ selected_year }}</h1>
+                    <p class="text-red-100 mt-2">{{ influencer.name }} (@{{ influencer.username }})</p>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="{% url 'influencers:dashboard' %}" class="bg-white bg-opacity-20 hover:bg-opacity-30 px-4 py-2 rounded-lg transition-colors">
+                        <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
+                    </a>
+                    <a href="{% url 'influencers:export_monthly_report' %}?year={{ selected_year }}&month={{ selected_month }}" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg transition-colors">
+                        <i class="fas fa-file-excel mr-2"></i>Export to Excel
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8">
+        <!-- Month/Year Filter -->
+        <div class="dashboard-card p-6 mb-8">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Select Report Period</h3>
+            <form method="get" class="flex flex-wrap gap-4 items-end">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Month</label>
+                    <select name="month" class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500">
+                        {% for month_num, month_name in months %}
+                        <option value="{{ month_num }}" {% if month_num == selected_month %}selected{% endif %}>
+                            {{ month_name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Year</label>
+                    <select name="year" class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500">
+                        {% for year in years %}
+                        <option value="{{ year }}" {% if year == selected_year %}selected{% endif %}>
+                            {{ year }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-md transition-colors">
+                    <i class="fas fa-search mr-2"></i>Generate Report
+                </button>
+            </form>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 mb-8">
+            <!-- Total Orders -->
+            <div class="dashboard-card stat-card p-6" style="--from-color: #3b82f6; --to-color: #1d4ed8;">
+                <div class="text-center">
+                    <p class="text-blue-100 text-sm">Total Orders</p>
+                    <p class="text-2xl font-bold">{{ total_orders }}</p>
+                </div>
+            </div>
+
+            <!-- Completed Orders -->
+            <div class="dashboard-card stat-card p-6" style="--from-color: #10b981; --to-color: #047857;">
+                <div class="text-center">
+                    <p class="text-green-100 text-sm">Completed</p>
+                    <p class="text-2xl font-bold">{{ total_completed }}</p>
+                </div>
+            </div>
+
+            <!-- Total Revenue -->
+            <div class="dashboard-card stat-card p-6" style="--from-color: #f59e0b; --to-color: #d97706;">
+                <div class="text-center">
+                    <p class="text-yellow-100 text-sm">Revenue</p>
+                    <p class="text-2xl font-bold">₹{{ total_revenue|floatformat:0 }}</p>
+                </div>
+            </div>
+
+            <!-- Commission Earned -->
+            <div class="dashboard-card stat-card p-6" style="--from-color: #8b5cf6; --to-color: #7c3aed;">
+                <div class="text-center">
+                    <p class="text-purple-100 text-sm">Commission</p>
+                    <p class="text-2xl font-bold">₹{{ commission_earned|floatformat:0 }}</p>
+                </div>
+            </div>
+
+            <!-- Average Order Value -->
+            <div class="dashboard-card stat-card p-6" style="--from-color: #ef4444; --to-color: #dc2626;">
+                <div class="text-center">
+                    <p class="text-red-100 text-sm">Avg Order</p>
+                    <p class="text-2xl font-bold">₹{{ avg_order_value|floatformat:0 }}</p>
+                </div>
+            </div>
+
+            <!-- Total Discount Given -->
+            <div class="dashboard-card stat-card p-6" style="--from-color: #06b6d4; --to-color: #0891b2;">
+                <div class="text-center">
+                    <p class="text-cyan-100 text-sm">Discount Given</p>
+                    <p class="text-2xl font-bold">₹{{ total_discount_given|floatformat:0 }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <!-- Daily Breakdown -->
+            <div class="dashboard-card p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Daily Breakdown</h3>
+                <div class="daily-chart">
+                    {% if daily_breakdown %}
+                    <div class="space-y-2">
+                        {% for day_data in daily_breakdown %}
+                        {% if day_data.orders > 0 %}
+                        <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                            <div class="font-medium">Day {{ day_data.day }}</div>
+                            <div class="text-right text-sm">
+                                <div>{{ day_data.orders }} order{{ day_data.orders|pluralize }}</div>
+                                <div class="text-green-600">₹{{ day_data.revenue|floatformat:0 }}</div>
+                                <div class="text-purple-600">₹{{ day_data.commission|floatformat:0 }} comm.</div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-8 text-gray-500">
+                        <i class="fas fa-chart-bar text-4xl mb-2"></i>
+                        <p>No data for this month</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Coupon Performance -->
+            <div class="dashboard-card p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Coupon Performance</h3>
+                {% if coupon_stats %}
+                <div class="space-y-4">
+                    {% for stat in coupon_stats %}
+                    {% if stat.orders_count > 0 %}
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <div class="font-semibold text-gray-900">{{ stat.coupon.code }}</div>
+                                <div class="text-sm text-gray-600">{{ stat.orders_count }} order{{ stat.orders_count|pluralize }}</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="font-semibold text-gray-900">₹{{ stat.revenue|floatformat:0 }}</div>
+                                <div class="text-sm text-green-600">₹{{ stat.commission|floatformat:0 }} commission</div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-8 text-gray-500">
+                    <i class="fas fa-ticket-alt text-4xl mb-2"></i>
+                    <p>No coupon activity</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Recent Orders -->
+        <div class="dashboard-card p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold text-gray-900">Orders This Month (First 50)</h3>
+                <a href="{% url 'influencers:orders' %}" class="text-blue-600 hover:text-blue-800 text-sm">
+                    View All Orders <i class="fas fa-arrow-right ml-1"></i>
+                </a>
+            </div>
+            
+            {% if orders %}
+            <div class="table-responsive">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50 sticky top-0">
+                        <tr>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Order</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Customer</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Coupon</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Commission</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for order in orders %}
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-3 text-sm font-medium text-gray-900">#{{ order.order_number }}</td>
+                            <td class="px-4 py-3 text-sm text-gray-600">{{ order.created_at|date:"M d, g:i A" }}</td>
+                            <td class="px-4 py-3 text-sm text-gray-600">{{ order.user.get_full_name|default:order.user.username }}</td>
+                            <td class="px-4 py-3 text-sm">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full 
+                                    {% if order.payment_status == 'completed' %}bg-green-100 text-green-800
+                                    {% elif order.payment_status == 'pending' %}bg-yellow-100 text-yellow-800
+                                    {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                    {{ order.payment_status|capfirst }}
+                                </span>
+                            </td>
+                            <td class="px-4 py-3 text-sm font-medium text-gray-900">₹{{ order.final_amount|floatformat:0 }}</td>
+                            <td class="px-4 py-3 text-sm text-blue-600">{{ order.coupon.code|default:"—" }}</td>
+                            <td class="px-4 py-3 text-sm font-medium text-green-600">
+                                {% if order.payment_status == 'completed' %}
+                                ₹{% widthratio order.final_amount 100 influencer.commission_rate %}
+                                {% else %}
+                                —
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-12 text-gray-500">
+                <i class="fas fa-inbox text-5xl mb-4"></i>
+                <h4 class="text-lg font-medium mb-2">No Orders This Month</h4>
+                <p>No orders were placed using your coupon codes in {{ selected_month_name }} {{ selected_year }}.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+// Add filter helpers
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto-submit form on month/year change
+    const monthSelect = document.querySelector('select[name="month"]');
+    const yearSelect = document.querySelector('select[name="year"]');
+    
+    if (monthSelect && yearSelect) {
+        monthSelect.addEventListener('change', function() {
+            this.form.submit();
+        });
+        yearSelect.addEventListener('change', function() {
+            this.form.submit();
+        });
+    }
+});
+</script>
+{% endblock %}

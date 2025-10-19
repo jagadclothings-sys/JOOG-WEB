@@ -1,0 +1,41 @@
+# Production Requirements for JOOG E-commerce
+# Base Django Requirements
+Django==5.2.6
+Pillow==10.1.0
+djangorestframework==3.14.0
+django-cors-headers==4.3.1
+requests==2.32.3
+django-allauth==65.11.2
+PyJWT==2.10.1
+cryptography==45.0.7
+
+# Email and PDF dependencies
+reportlab==4.0.7
+weasyprint==66.0
+django-ses==3.5.2
+
+# Async Task Processing
+celery==5.3.4
+redis==5.0.1
+
+# Configuration Management
+python-decouple==3.8
+
+# Production-specific Dependencies
+gunicorn==21.2.0
+psycopg2-binary==2.9.9
+dj-database-url==2.1.0
+whitenoise==6.6.0
+
+# Security & Performance
+django-ratelimit==4.0.0
+django-cors-headers==4.3.1
+
+# Monitoring & Logging
+sentry-sdk[django]==1.45.0
+
+# Static File Management
+whitenoise==6.6.0
+
+# Environment Management
+python-dotenv==1.0.0

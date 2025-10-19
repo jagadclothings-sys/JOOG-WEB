@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Invoices - JOOG{% endblock %}
+
+{% block extra_head %}
+<style>
+    .invoice-card {
+        transition: all 0.3s ease;
+        border-left: 4px solid transparent;
+    }
+    .invoice-card:hover {
+        border-left-color: var(--red-primary);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+    .status-badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    .status-paid {
+        background-color: #10B981;
+        color: white;
+    }
+    .invoice-amount {
+        font-family: 'Inter', sans-serif;
+        font-weight: 700;
+        color: var(--red-primary);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="bg-gradient-to-br from-red-50 to-orange-50 min-h-screen py-8">
+    <div class="container mx-auto px-4">
+        <!-- Page Header -->
+        <div class="mb-8 text-center">
+            <h1 class="text-4xl font-bold text-gray-900 mb-2" style="font-family: 'Playfair Display', serif;">
+                My Invoices
+            </h1>
+            <p class="text-gray-600 text-lg">View and download your purchase invoices</p>
+            <div class="w-24 h-1 bg-red-primary mx-auto mt-4 rounded-full"></div>
+        </div>
+
+        <!-- Invoice Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 text-center">
+                <div class="text-3xl font-bold text-red-primary mb-2">{{ orders.count }}</div>
+                <div class="text-gray-600">Total Invoices</div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 text-center">
+                <div class="text-3xl font-bold text-green-600 mb-2">
+                    ₹{{ orders|default:0|length|floatformat:0 }}
+                </div>
+                <div class="text-gray-600">Orders Completed</div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 text-center">
+                <div class="text-3xl font-bold text-blue-600 mb-2">
+                    {% if orders %}{{ orders.0.created_at.year }}{% else %}2024{% endif %}
+                </div>
+                <div class="text-gray-600">Latest Invoice Year</div>
+            </div>
+        </div>
+
+        {% if orders %}
+        <!-- Invoices List -->
+        <div class="space-y-4">
+            {% for order in orders %}
+            <div class="invoice-card bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between">
+                    <!-- Invoice Details -->
+                    <div class="flex-1">
+                        <div class="flex items-start justify-between mb-4 lg:mb-0">
+                            <div>
+                                <h3 class="text-xl font-semibold text-gray-900 mb-2">
+                                    Invoice #{{ order.order_number }}
+                                </h3>
+                                <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-calendar mr-2"></i>
+                                        {{ order.created_at|date:"M d, Y" }}
+                                    </div>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-clock mr-2"></i>
+                                        {{ order.created_at|date:"g:i A" }}
+                                    </div>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-box mr-2"></i>
+                                        {{ order.items.count }} item{{ order.items.count|pluralize }}
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="status-badge status-paid">
+                                <i class="fas fa-check mr-1"></i>Paid
+                            </span>
+                        </div>
+                        
+                        <!-- Order Items Preview -->
+                        <div class="mt-4 lg:mt-2">
+                            <div class="flex flex-wrap items-center gap-2">
+                                {% for item in order.items.all|slice:":3" %}
+                                <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">
+                                    {{ item.product.name }} ({{ item.quantity }})
+                                </span>
+                                {% endfor %}
+                                {% if order.items.count > 3 %}
+                                <span class="text-gray-500 text-sm">
+                                    +{{ order.items.count|add:"-3" }} more
+                                </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Amount and Actions -->
+                    <div class="flex flex-col lg:flex-row items-start lg:items-center gap-4 mt-4 lg:mt-0">
+                        <div class="text-right">
+                            <div class="text-2xl invoice-amount">₹{{ order.final_amount }}</div>
+                            <div class="text-sm text-gray-500">Total Amount</div>
+                        </div>
+                        
+                        <div class="flex flex-col sm:flex-row gap-2">
+                            <a href="{% url 'accounts:invoice_detail' order.order_number %}" 
+                               class="btn btn-outline text-sm px-4 py-2 inline-flex items-center justify-center">
+                                <i class="fas fa-eye mr-2"></i>View
+                            </a>
+                            <a href="{% url 'accounts:download_invoice' order.order_number %}" 
+                               class="btn btn-primary text-sm px-4 py-2 inline-flex items-center justify-center">
+                                <i class="fas fa-download mr-2"></i>Download
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if orders.count > 10 %}
+        <div class="mt-8 text-center">
+            <nav class="inline-flex rounded-md shadow-sm">
+                <!-- Add pagination controls here if needed -->
+            </nav>
+        </div>
+        {% endif %}
+
+        {% else %}
+        <!-- No Invoices -->
+        <div class="text-center py-16">
+            <div class="mb-6">
+                <i class="fas fa-file-invoice text-6xl text-gray-300"></i>
+            </div>
+            <h3 class="text-2xl font-semibold text-gray-900 mb-4">No Invoices Yet</h3>
+            <p class="text-gray-600 mb-6">
+                You haven't completed any orders yet. Start shopping to see your invoices here!
+            </p>
+            <a href="{% url 'products:product_list' %}" class="btn btn-primary">
+                <i class="fas fa-shopping-bag mr-2"></i>Start Shopping
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

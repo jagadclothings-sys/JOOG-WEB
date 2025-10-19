@@ -1,0 +1,68 @@
+{% extends "admin/change_form.html" %}
+{% load static %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <style>
+        .tax-info-box {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .tax-warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+        }
+        .tax-info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        .products-count {
+            font-weight: bold;
+            color: #007bff;
+        }
+    </style>
+{% endblock %}
+
+{% block after_related_objects %}
+    {{ block.super }}
+    
+    {% if original %}
+    <div class="tax-info-box tax-info">
+        <h3>📊 Category Tax Information</h3>
+        <p><strong>Current Tax Rate:</strong> <span class="products-count">{{ original.tax_percentage }}%</span></p>
+        <p><strong>Products in Category:</strong> <span class="products-count">{{ original.products.count }}</span></p>
+        
+        {% if original.products.count > 0 %}
+        <h4>Product Tax Rate Status:</h4>
+        <ul>
+            {% for product in original.products.all %}
+            <li>
+                {{ product.name }} - 
+                {% if product.tax_percentage == original.tax_percentage %}
+                    <span style="color: green;">✅ {{ product.tax_percentage }}% (Matches Category)</span>
+                {% else %}
+                    <span style="color: orange;">⚠️ {{ product.tax_percentage }}% (Custom Rate)</span>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+    
+    <div class="tax-info-box tax-warning">
+        <h3>⚠️ Important: Tax Rate Changes</h3>
+        <p>When you change the tax percentage for this category:</p>
+        <ul>
+            <li><strong>All existing products</strong> in this category will be updated to use the new tax rate</li>
+            <li>This change will affect <strong>future invoices</strong> generated for these products</li>
+            <li>Products with custom tax rates will be overridden</li>
+            <li>This action cannot be undone automatically</li>
+        </ul>
+    </div>
+    {% endif %}
+{% endblock %}

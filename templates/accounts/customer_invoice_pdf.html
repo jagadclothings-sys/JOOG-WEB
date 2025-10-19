@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Invoice #{{ order.order_number }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .header {
+            background: #dc2626;
+            color: white;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .company-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .brand-name {
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        .invoice-title {
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        .detail-section {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .section-title {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #dc2626;
+        }
+        .company-details, .customer-details {
+            line-height: 1.6;
+        }
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+        }
+        .items-table th, .items-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        .items-table th {
+            background: #f8f9fa;
+            font-weight: bold;
+        }
+        .items-table td.amount {
+            text-align: right;
+        }
+        .tax-summary {
+            max-width: 400px;
+            margin-left: auto;
+            margin-top: 30px;
+        }
+        .tax-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .tax-row.total {
+            font-weight: bold;
+            font-size: 18px;
+            border-top: 2px solid #333;
+            border-bottom: 2px solid #333;
+            color: #dc2626;
+        }
+        .note {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 30px;
+            font-size: 12px;
+            text-align: center;
+        }
+        .gst-note {
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div>
+                <div class="invoice-title">TAX INVOICE</div>
+                <div style="font-size: 16px; margin-top: 5px;">Invoice #{{ order.order_number }}</div>
+            </div>
+            <div style="text-align: right;">
+                <div style="font-size: 32px; font-weight: bold;">JOOG</div>
+                <div style="font-size: 14px; margin-top: 5px;">Premium Fashion</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Company and Customer Details -->
+    <div class="details-grid">
+        <div class="detail-section">
+            <div class="section-title">From (Seller Details)</div>
+            <div class="company-details">
+                <strong>JAGAD CLOTHINGS PRIVATE LIMITED</strong><br>
+                <em>Trading as: JOOG (Premium Fashion Brand)</em><br><br>
+                23/1, Ground Floor, Srinivasa Complex,<br>
+                2nd Mn. CKC Garden, Mission Road,<br>
+                Bengaluru-560 027<br>
+                India<br><br>
+                <strong>GSTIN:</strong> 29AAAAA0000A1Z5<br>
+                <strong>PAN:</strong> AAAAA0000A<br>
+                <strong>CIN:</strong> U18101KA2020PTC000000<br>
+                <strong>Email:</strong> orders@joog.com<br>
+                <strong>Phone:</strong> +91 98765 43210
+            </div>
+        </div>
+
+        <div class="detail-section">
+            <div class="section-title">Bill To (Buyer Details)</div>
+            <div class="customer-details">
+                <strong>{{ order.user.get_full_name|default:order.user.username }}</strong><br><br>
+                {% if order.selected_address %}
+                    {{ order.selected_address.address_line_1 }}<br>
+                    {% if order.selected_address.address_line_2 %}
+                        {{ order.selected_address.address_line_2 }}<br>
+                    {% endif %}
+                    {{ order.selected_address.city }}, {{ order.selected_address.state }} {{ order.selected_address.postal_code }}<br>
+                    {{ order.selected_address.country }}<br><br>
+                {% elif order.shipping_address %}
+                    {{ order.shipping_address }}<br>
+                    {{ order.shipping_city }}, {{ order.shipping_state }} {{ order.shipping_postal_code }}<br>
+                    {{ order.shipping_country }}<br><br>
+                {% endif %}
+                <strong>Email:</strong> {{ order.user.email }}<br>
+                <strong>Invoice Date:</strong> {{ order.created_at|date:"M d, Y" }}
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Items Table -->
+    <table class="items-table">
+        <thead>
+            <tr>
+                <th>Item Details</th>
+                <th>Qty</th>
+                <th>Rate (Incl. GST)</th>
+                <th>Tax %</th>
+                <th>Amount (Incl. GST)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in order.items.all %}
+            <tr>
+                <td>
+                    <strong>{{ item.product.name }}</strong>
+                    {% if item.product.sku %}<br><small>SKU: {{ item.product.sku }}</small>{% endif %}
+                </td>
+                <td>{{ item.quantity }}</td>
+                <td class="amount">₹{{ item.price }}</td>
+                <td>{{ item.product.tax_percentage|default:"18" }}%</td>
+                <td class="amount">₹{{ item.get_total_price }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Bill Summary -->
+    <div class="tax-summary">
+        <div class="tax-row">
+            <span>Total Amount:</span>
+            <span>₹{{ order.total_amount|floatformat:2 }}</span>
+        </div>
+        {% if order.discount_amount > 0 %}
+        <div class="tax-row">
+            <span>Discount Applied{% if order.coupon %} ({{ order.coupon.code }}){% endif %}:</span>
+            <span style="color: #16a34a;">-₹{{ order.discount_amount|floatformat:2 }}</span>
+        </div>
+        {% endif %}
+        <div class="tax-row total">
+            <span>Final Amount:</span>
+            <span>₹{{ order.final_amount|floatformat:2 }}</span>
+        </div>
+    </div>
+
+    <!-- Payment Information -->
+    <div style="margin: 30px 0; padding: 20px; background: #f0f9ff; border-radius: 8px;">
+        <div style="font-weight: bold; color: #059669; margin-bottom: 10px;">
+            ✓ Payment Status: PAID
+        </div>
+        <div style="font-size: 14px; color: #374151;">
+            Payment received on {{ order.created_at|date:"M d, Y g:i A" }}
+        </div>
+    </div>
+
+    <!-- Footer Note -->
+    <div class="note">
+        <strong>Note:</strong> This is a computer-generated invoice and does not require a physical signature.<br><br>
+        For any queries regarding this invoice, please contact <strong>JAGAD CLOTHINGS</strong> at 
+        support@joog.com or call +91 98765 43210<br><br>
+        <strong>JAGAD CLOTHINGS PRIVATE LIMITED</strong> | GSTIN: 29AAAAA0000A1Z5 | CIN: U18101KA2020PTC000000
+    </div>
+</body>
+</html>

@@ -1,0 +1,556 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Invoice {{ invoice.invoice_number }} - JOOG{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Force global red ivaro theme on this page */
+.page-header { background: linear-gradient(135deg, var(--red-primary, #E53E3E), var(--red-secondary, #C53030)) !important; }
+.nav-breadcrumb a { color: var(--red-primary, #E53E3E) !important; }
+.invoice-title { color: var(--red-primary, #E53E3E) !important; }
+.detail-section { border-left: 4px solid var(--red-primary, #E53E3E) !important; }
+.items-table th { background: var(--red-primary, #E53E3E) !important; }
+.final-total { background: var(--red-primary, #E53E3E) !important; }
+.btn-success, .btn-secondary.btn-white { color: #fff !important; }
+.btn-white { color: var(--red-primary, #E53E3E) !important; }
+.btn-success { background: #28a745 !important; }
+    .invoice-page {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    
+    .page-header {
+        background: linear-gradient(135deg, #2874f0, #1e5bb7);
+        color: white;
+        padding: 25px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .header-info h1 {
+        margin: 0;
+        font-size: 24px;
+        font-weight: 600;
+    }
+    
+    .header-info p {
+        margin: 5px 0 0 0;
+        opacity: 0.9;
+    }
+    
+    .header-actions {
+        display: flex;
+        gap: 10px;
+    }
+    
+    .btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+        transition: all 0.3s ease;
+        font-weight: 500;
+    }
+    
+    .btn-white { background: white; color: #2874f0; }
+    .btn-success { background: #28a745; color: white; }
+    .btn-secondary { background: #6c757d; color: white; }
+    
+    .btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .nav-breadcrumb {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 6px;
+        margin-bottom: 20px;
+        font-size: 14px;
+    }
+    
+    .nav-breadcrumb a {
+        color: #2874f0;
+        text-decoration: none;
+    }
+    
+    .nav-breadcrumb a:hover {
+        text-decoration: underline;
+    }
+    
+    .invoice-container {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        overflow: hidden;
+        margin-bottom: 20px;
+    }
+    
+    .invoice-header {
+        background: #f8f9fa;
+        padding: 30px;
+        text-align: center;
+        border-bottom: 1px solid #dee2e6;
+    }
+    
+    .invoice-title {
+        font-size: 32px;
+        font-weight: bold;
+        color: #2874f0;
+        margin-bottom: 15px;
+    }
+    
+    .company-info {
+        margin-bottom: 20px;
+    }
+    
+    .company-name {
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 5px;
+    }
+    
+    .company-gstin {
+        font-size: 16px;
+        font-weight: 600;
+        color: #666;
+    }
+    
+    .invoice-content {
+        padding: 30px;
+    }
+    
+    .details-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        margin-bottom: 30px;
+    }
+    
+    .detail-section {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 6px;
+        border-left: 4px solid #2874f0;
+    }
+    
+    .section-title {
+        font-size: 16px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .detail-row {
+        display: flex;
+        margin-bottom: 10px;
+        align-items: flex-start;
+    }
+    
+    .detail-label {
+        font-weight: 600;
+        color: #666;
+        min-width: 120px;
+        margin-right: 15px;
+    }
+    
+    .detail-value {
+        color: #333;
+        font-weight: 500;
+    }
+    
+    .shipping-address {
+        grid-column: span 2;
+    }
+    
+    .items-section {
+        margin: 30px 0;
+    }
+    
+    .items-table {
+        width: 100%;
+        border-collapse: collapse;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .items-table th {
+        background: #2874f0;
+        color: white;
+        padding: 15px 12px;
+        text-align: left;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 12px;
+        letter-spacing: 0.5px;
+    }
+    
+    .items-table td {
+        padding: 15px 12px;
+        border-bottom: 1px solid #f0f0f0;
+        vertical-align: top;
+    }
+    
+    .product-name {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 5px;
+    }
+    
+    .product-description {
+        color: #666;
+        font-size: 13px;
+        line-height: 1.4;
+    }
+    
+    .text-center { text-align: center; }
+    .text-right { text-align: right; }
+    
+    .totals-section {
+        margin-top: 30px;
+        display: flex;
+        justify-content: flex-end;
+    }
+    
+    .totals-table {
+        width: 400px;
+        border-collapse: collapse;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .totals-table td {
+        padding: 12px 15px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .totals-table .total-label {
+        font-weight: 600;
+        color: #666;
+        text-align: left;
+        background: #f8f9fa;
+    }
+    
+    .totals-table .total-value {
+        text-align: right;
+        font-weight: 600;
+        color: #333;
+        min-width: 120px;
+    }
+    
+    .final-total {
+        background: #2874f0 !important;
+    }
+    
+    .final-total .total-label,
+    .final-total .total-value {
+        color: white !important;
+        font-size: 16px;
+        font-weight: bold;
+    }
+    
+    .tax-row {
+        background: #fff8e1;
+    }
+    
+    .download-section {
+        background: #f8f9fa;
+        padding: 25px;
+        border-radius: 8px;
+        text-align: center;
+        border: 2px dashed #dee2e6;
+    }
+    
+    .download-section h3 {
+        margin-bottom: 15px;
+        color: #333;
+    }
+    
+    .download-actions {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+    
+    .status-badge {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 500;
+        text-transform: uppercase;
+        margin-left: 10px;
+    }
+    
+    .status-badge.generated {
+        background: #d4edda;
+        color: #155724;
+    }
+    
+    .status-badge.pending {
+        background: #fff3cd;
+        color: #856404;
+    }
+    
+    @media print {
+        .page-header, .nav-breadcrumb, .download-section {
+            display: none !important;
+        }
+        
+        .invoice-page {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .invoice-container {
+            box-shadow: none;
+            border: none;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .invoice-page {
+            padding: 10px;
+        }
+        
+        .page-header {
+            flex-direction: column;
+            gap: 15px;
+            padding: 20px;
+        }
+        
+        .header-actions {
+            flex-wrap: wrap;
+        }
+        
+        .details-grid {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        
+        .shipping-address {
+            grid-column: span 1;
+        }
+        
+        .totals-section {
+            justify-content: center;
+        }
+        
+        .totals-table {
+            width: 100%;
+        }
+        
+        .download-actions {
+            flex-direction: column;
+            align-items: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="invoice-page">
+    <div class="page-header">
+        <div class="header-info">
+            <h1>📄 Tax Invoice {{ invoice.invoice_number }}</h1>
+            <p>Order: {{ invoice.order.order_number }} • {{ invoice.invoice_date|date:"M d, Y" }}
+                <span class="status-badge {% if invoice.is_generated %}generated{% else %}pending{% endif %}">
+                    {% if invoice.is_generated %}PDF Ready{% else %}Processing{% endif %}
+                </span>
+            </p>
+        </div>
+        
+        <div class="header-actions">
+            <a href="{% url 'invoices:customer_invoices' %}" class="btn btn-white">← Back to Invoices</a>
+            {% if invoice.invoice_pdf %}
+                <a href="{% url 'invoices:customer_invoice_pdf' invoice.id %}" class="btn btn-success">📥 Download PDF</a>
+            {% endif %}
+            <button onclick="window.print()" class="btn btn-secondary">🖨️ Print</button>
+        </div>
+    </div>
+    
+    <div class="nav-breadcrumb">
+        <a href="/">Home</a> &gt; 
+        <a href="/accounts/profile/">My Account</a> &gt; 
+        <a href="{% url 'invoices:customer_invoices' %}">Tax Invoices</a> &gt; 
+        <span>{{ invoice.invoice_number }}</span>
+    </div>
+    
+    <div class="invoice-container">
+        <!-- Invoice Header -->
+        <div class="invoice-header">
+            <div class="invoice-title">TAX INVOICE</div>
+            <div class="company-info">
+                <div class="company-name">{{ invoice.company_name }}</div>
+                <div class="company-gstin">GSTIN: {{ invoice.company_gstin }}</div>
+            </div>
+        </div>
+        
+        <!-- Invoice Content -->
+        <div class="invoice-content">
+            <!-- Details Grid -->
+            <div class="details-grid">
+                <div class="detail-section">
+                    <div class="section-title">Invoice Details</div>
+                    <div class="detail-row">
+                        <div class="detail-label">Invoice No:</div>
+                        <div class="detail-value">{{ invoice.invoice_number }}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Invoice Date:</div>
+                        <div class="detail-value">{{ invoice.invoice_date|date:"d M, Y" }}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Order No:</div>
+                        <div class="detail-value">{{ invoice.order.order_number }}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Order Date:</div>
+                        <div class="detail-value">{{ invoice.order.created_at|date:"d M, Y" }}</div>
+                    </div>
+                </div>
+                
+                <div class="detail-section">
+                    <div class="section-title">Customer Details</div>
+                    <div class="detail-row">
+                        <div class="detail-label">Name:</div>
+                        <div class="detail-value">{{ invoice.customer_name }}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Email:</div>
+                        <div class="detail-value">{{ invoice.customer_email }}</div>
+                    </div>
+                    {% if invoice.customer_phone %}
+                    <div class="detail-row">
+                        <div class="detail-label">Phone:</div>
+                        <div class="detail-value">{{ invoice.customer_phone }}</div>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="detail-section shipping-address">
+                    <div class="section-title">Shipping Address</div>
+                    <div class="detail-value">
+                        {{ invoice.shipping_address }}<br>
+                        {{ invoice.shipping_city }}, {{ invoice.shipping_state }} - {{ invoice.shipping_postal_code }}<br>
+                        {{ invoice.shipping_country }}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Items Table -->
+            <div class="items-section">
+                <table class="items-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 5%;">#</th>
+                            <th style="width: 40%;">Product Description</th>
+                            <th style="width: 10%;">HSN Code</th>
+                            <th style="width: 8%;">Size</th>
+                            <th style="width: 8%; text-align: center;">Qty</th>
+                            <th style="width: 12%; text-align: right;">Unit Price</th>
+                            <th style="width: 17%; text-align: right;">Total Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in invoice_items %}
+                        <tr>
+                            <td class="text-center">{{ forloop.counter }}</td>
+                            <td>
+                                <div class="product-name">{{ item.product_name }}</div>
+                                {% if item.product_description %}
+                                    <div class="product-description">{{ item.product_description|truncatechars:100 }}</div>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">{{ item.hsn_code|default:"-" }}</td>
+                            <td class="text-center">{{ item.size|default:"-" }}</td>
+                            <td class="text-center">{{ item.quantity }}</td>
+                            <td class="text-right">₹{{ item.unit_price|floatformat:2 }}</td>
+                            <td class="text-right">₹{{ item.total_price|floatformat:2 }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center">No items found</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Totals Section -->
+            <div class="totals-section">
+                <table class="totals-table">
+                    <tr>
+                        <td class="total-label">Subtotal:</td>
+                        <td class="total-value">₹{{ invoice.subtotal|floatformat:2 }}</td>
+                    </tr>
+                    {% if invoice.discount_amount > 0 %}
+                    <tr>
+                        <td class="total-label">Discount:</td>
+                        <td class="total-value">-₹{{ invoice.discount_amount|floatformat:2 }}</td>
+                    </tr>
+                    {% endif %}
+                    
+                    <!-- Tax Breakup -->
+                    {% if invoice.cgst_amount > 0 %}
+                    <tr class="tax-row">
+                        <td class="total-label">CGST ({{ invoice.cgst_rate }}%):</td>
+                        <td class="total-value">₹{{ invoice.cgst_amount|floatformat:2 }}</td>
+                    </tr>
+                    <tr class="tax-row">
+                        <td class="total-label">SGST ({{ invoice.sgst_rate }}%):</td>
+                        <td class="total-value">₹{{ invoice.sgst_amount|floatformat:2 }}</td>
+                    </tr>
+                    {% endif %}
+                    
+                    {% if invoice.igst_amount > 0 %}
+                    <tr class="tax-row">
+                        <td class="total-label">IGST ({{ invoice.igst_rate }}%):</td>
+                        <td class="total-value">₹{{ invoice.igst_amount|floatformat:2 }}</td>
+                    </tr>
+                    {% endif %}
+                    
+                    <tr class="final-total">
+                        <td class="total-label">Total Amount:</td>
+                        <td class="total-value">₹{{ invoice.final_amount|floatformat:2 }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Download Section -->
+    <div class="download-section">
+        <h3>📥 Download Your Invoice</h3>
+        <p style="margin-bottom: 20px; color: #666;">Save this invoice for your records or for tax purposes</p>
+        
+        <div class="download-actions">
+            {% if invoice.invoice_pdf %}
+                <a href="{% url 'invoices:customer_invoice_pdf' invoice.id %}" class="btn btn-success">📄 Download PDF</a>
+            {% else %}
+                <span class="btn btn-secondary" style="opacity: 0.6; cursor: not-allowed;">PDF Processing...</span>
+            {% endif %}
+            <button onclick="window.print()" class="btn btn-secondary">🖨️ Print Invoice</button>
+        </div>
+        
+        <p style="margin-top: 15px; font-size: 12px; color: #999;">
+            This is a digitally generated invoice. No signature required.
+        </p>
+    </div>
+</div>
+{% endblock %}

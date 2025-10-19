@@ -82,7 +82,7 @@ def validate_coupon_view(request):
                     if cart_total < coupon.minimum_amount:
                         return JsonResponse({
                             'valid': False, 
-                            'message': f'Minimum order amount of ${coupon.minimum_amount} required'
+                            'message': f'Minimum order amount of ₹{coupon.minimum_amount} required'
                         })
                     
                     discount_amount = coupon.get_discount_amount(cart_total)
@@ -90,7 +90,7 @@ def validate_coupon_view(request):
                     if coupon.discount_type == 'percentage':
                         message = f'Coupon applied! {coupon.discount_value}% off'
                     else:
-                        message = f'Coupon applied! ${coupon.discount_value} off'
+                        message = f'Coupon applied! ₹{coupon.discount_value} off'
                         
                 except Cart.DoesNotExist:
                     return JsonResponse({'valid': False, 'message': 'Cart not found'})

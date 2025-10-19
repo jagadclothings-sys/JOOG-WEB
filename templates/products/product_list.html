@@ -4,81 +4,101 @@
 {% block title %}Products - JOOG{% endblock %}
 
 {% block content %}
-<div class="container mx-auto px-4 py-12">
-    <!-- Page Header -->
-    <div class="text-center mb-12">
-        <h1 class="text-4xl font-bold text-gray-800 mb-4">Our Collection</h1>
-        <p class="text-lg text-gray-600">Discover premium fashion that defines your style</p>
-    </div>
+<div class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Page Header - Modern & Clean -->
+        <div class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4 text-gray-900">Men's Undergarments</h1>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">Discover premium comfort essentials designed for the modern man</p>
+        </div>
     
-    <!-- Filters and Search -->
-    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
-        <div class="flex flex-wrap items-center justify-between gap-4">
-            <div class="flex flex-wrap gap-2">
-                <a href="{% url 'products:product_list' %}" 
-                   class="filter-btn {% if not current_category %}active{% endif %}">
-                    All Products
-                </a>
-                {% for category in categories %}
-                <a href="?category={{ category.slug }}" 
-                   class="filter-btn {% if current_category == category.slug %}active{% endif %}">
-                    {{ category.name }}
-                </a>
-                {% endfor %}
+    <!-- Search Results Info -->
+    {% if search_query %}
+    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <h3 class="font-semibold text-blue-800">Search Results for "{{ search_query }}"</h3>
+                <p class="text-blue-600 text-sm">Found <span class="numeric-font">{{ products.paginator.count }}</span> product{{ products.paginator.count|pluralize }} matching your search</p>
             </div>
-            
-            <form method="GET" class="flex">
-                <input type="text" name="q" value="{{ search_query|default:'' }}" 
-                       placeholder="Search products..." 
-                       class="form-input rounded-r-none">
-                <button type="submit" class="bg-red-600 text-white px-4 py-3 rounded-r-lg hover:bg-red-700 transition-colors">
-                    <i class="fas fa-search"></i>
-                </button>
-            </form>
+            <a href="{% url 'products:product_list' %}" class="text-blue-600 hover:text-blue-800 text-sm underline">Clear search</a>
         </div>
     </div>
+    {% endif %}
     
-    <!-- Products Grid -->
-    {% if products %}
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-        {% for product in products %}
-        <div class="product-card">
-            <div class="relative overflow-hidden group">
-                <a href="{% url 'products:product_detail' product.slug %}">
-                    {% if product.image %}
-                    <img src="{{ product.image.url }}" alt="{{ product.name }}" 
-                         class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300">
-                    {% else %}
-                    <div class="w-full h-64 bg-gray-200 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-                        <i class="fas fa-image text-gray-400 text-4xl"></i>
+        <!-- Filters and Search -->
+        <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
+            <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+                <div class="flex flex-wrap gap-2">
+                    <a href="{% url 'products:product_list' %}" 
+                       class="filter-btn {% if not current_category and not search_query %}active{% endif %}">
+                        All Products
+                    </a>
+                    {% for category in categories %}
+                    <a href="?category={{ category.slug }}" 
+                       class="filter-btn {% if current_category == category.slug %}active{% endif %}">
+                        {{ category.name }}
+                    </a>
+                    {% endfor %}
+                </div>
+                
+                <form method="GET" class="flex w-full lg:w-auto">
+                    {% if current_category %}
+                    <input type="hidden" name="category" value="{{ current_category }}">
+                    {% endif %}
+                    <div class="relative flex-1 lg:w-80">
+                        <input type="text" name="q" value="{{ search_query|default:'' }}" 
+                               placeholder="Search products..." 
+                               class="w-full px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent">
+                    </div>
+                    <button type="submit" class="bg-red-600 text-white px-6 py-2 rounded-r-lg hover:bg-red-700 transition-colors">
+                        Search
+                    </button>
+                </form>
+            </div>
+        </div>
+    
+        <!-- Products Grid -->
+        {% if products %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {% for product in products %}
+            <div class="product-card bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 group">
+                <div class="relative overflow-hidden">
+                    <a href="{% url 'products:product_detail' product.slug %}">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" 
+                             class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300">
+                        {% else %}
+                        <div class="w-full h-64 bg-gray-100 flex items-center justify-center">
+                            <i class="fas fa-image text-gray-400 text-4xl"></i>
+                        </div>
+                        {% endif %}
+                    </a>
+                    
+                    <!-- Stock badges -->
+                    {% if product.stock == 0 %}
+                    <div class="absolute top-3 left-3 bg-red-500 text-white px-2 py-1 rounded-md text-xs font-medium">
+                        Out of Stock
+                    </div>
+                    {% elif product.stock <= 5 %}
+                    <div class="absolute top-3 left-3 bg-orange-500 text-white px-2 py-1 rounded-md text-xs font-medium">
+                        Low Stock
                     </div>
                     {% endif %}
-                </a>
-                <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <button onclick="addToCartAjax({{ product.id }})" 
-                            class="bg-red-600 text-white p-3 rounded-full hover:bg-red-700 transition-colors shadow-lg">
-                        <i class="fas fa-shopping-cart"></i>
-                    </button>
                 </div>
-                {% if product.stock <= 5 %}
-                <div class="absolute top-4 left-4 bg-orange-500 text-white px-2 py-1 rounded text-sm">
-                    Only {{ product.stock }} left
-                </div>
-                {% endif %}
-            </div>
-            <div class="p-6">
-                <h3 class="font-semibold text-lg mb-2 text-gray-800 hover:text-red-600 transition-colors">
-                    <a href="{% url 'products:product_detail' product.slug %}">{{ product.name }}</a>
-                </h3>
-                <p class="text-gray-600 text-sm mb-3 line-clamp-2">{{ product.description|truncatewords:15 }}</p>
-                <div class="flex justify-between items-center">
-                    <span class="text-red-600 font-bold text-xl">₹{{ product.price }}</span>
-                    <span class="text-gray-500 text-sm">{{ product.category.name }}</span>
+                
+                <div class="p-4">
+                    <h3 class="font-medium text-base mb-2 text-gray-900 hover:text-red-600 transition-colors">
+                        <a href="{% url 'products:product_detail' product.slug %}" class="line-clamp-2">{{ product.name }}</a>
+                    </h3>
+                    <p class="text-gray-500 text-sm mb-3 line-clamp-2">{{ product.description|truncatewords:12 }}</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-red-600 font-semibold text-lg">₹{{ product.price }}</span>
+                        <span class="text-gray-400 text-xs uppercase tracking-wide">{{ product.category.name }}</span>
+                    </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
-        {% endfor %}
-    </div>
     
     <!-- Pagination -->
     {% if products.has_other_pages %}
@@ -105,27 +125,28 @@
         </nav>
     </div>
     {% endif %}
-    {% else %}
-    <div class="text-center py-16">
-        <i class="fas fa-search text-6xl text-gray-300 mb-6"></i>
-        <h2 class="text-2xl font-bold text-gray-800 mb-4">No products found</h2>
-        <p class="text-gray-600 mb-8">Try adjusting your search or browse all products</p>
-        <a href="{% url 'products:product_list' %}" class="btn btn-primary">View All Products</a>
+        {% else %}
+        <div class="text-center py-16">
+            <i class="fas fa-search text-6xl text-gray-300 mb-6"></i>
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">No products found</h2>
+            <p class="text-gray-600 mb-8">Try adjusting your search or browse all products</p>
+            <a href="{% url 'products:product_list' %}" class="btn btn-primary">View All Products</a>
+        </div>
+        {% endif %}
     </div>
-    {% endif %}
 </div>
 
 <style>
 .filter-btn {
-    @apply px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-red-50 hover:text-red-600 transition-colors;
+    @apply px-4 py-2 bg-gray-100 text-gray-700 rounded-full hover:bg-red-50 hover:text-red-600 transition-colors text-sm font-medium border border-gray-300 hover:border-red-300;
 }
 
 .filter-btn.active {
-    @apply bg-red-600 text-white;
+    @apply bg-red-600 text-white hover:bg-red-700 hover:text-white border-red-600 hover:border-red-700;
 }
 
 .pagination-btn {
-    @apply px-4 py-2 bg-white border border-gray-300 text-gray-700 hover:bg-red-50 hover:text-red-600 transition-colors;
+    @apply px-4 py-2 bg-white border border-gray-300 text-gray-700 hover:bg-red-50 hover:text-red-600 transition-colors rounded-md;
 }
 
 .pagination-current {

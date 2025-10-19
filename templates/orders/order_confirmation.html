@@ -4,7 +4,6 @@
 {% block title %}Order Confirmation - JOOG{% endblock %}
 
 {% block content %}
-<div class="container mx-auto px-4 py-12">
     <div class="max-w-2xl mx-auto text-center">
         <div class="bg-white rounded-lg shadow-lg p-8">
             <div class="mb-8">
@@ -24,6 +23,15 @@
                         <span>Order Date:</span>
                         <span>{{ order.created_at|date:"F d, Y" }}</span>
                     </div>
+                    {% if order.coupon %}
+                    <div class="flex justify-between text-green-600">
+                        <div>
+                            <span>Coupon Applied:</span>
+                            <div class="text-xs">{{ order.coupon.code }} - Saved ₹{{ order.discount_amount }}</div>
+                        </div>
+                        <span>-₹{{ order.discount_amount }}</span>
+                    </div>
+                    {% endif %}
                     <div class="flex justify-between">
                         <span>Total Amount:</span>
                         <span class="font-bold text-red-600">₹{{ order.final_amount }}</span>
@@ -36,7 +44,16 @@
             </div>
             
             <div class="space-y-4">
-                <a href="{% url 'accounts:orders' %}" class="btn btn-primary w-full">
+                {% if order.tax_invoice %}
+                <a href="{% url 'invoices:customer_invoice_pdf' order.tax_invoice.id %}" class="btn btn-primary w-full inline-flex items-center justify-center">
+                    <i class="fas fa-download mr-2"></i>Download Invoice PDF
+                </a>
+                {% else %}
+                <a href="{% url 'invoices:customer_invoices' %}" class="btn btn-primary w-full inline-flex items-center justify-center">
+                    <i class="fas fa-file-invoice mr-2"></i>View My Invoices
+                </a>
+                {% endif %}
+                <a href="{% url 'accounts:orders' %}" class="btn btn-outline w-full">
                     View Order History
                 </a>
                 <a href="{% url 'products:product_list' %}" class="btn btn-outline w-full">
@@ -45,5 +62,4 @@
             </div>
         </div>
     </div>
-</div>
 {% endblock %}

@@ -1,0 +1,373 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Invoice {{ invoice.invoice_number }}</title>
+    <style>
+        .logo { width: 100px; height: auto; display: block; margin: 0 auto 2px auto; filter: brightness(0) saturate(100%) invert(18%) sepia(93%) saturate(7093%) hue-rotate(356deg) brightness(91%) contrast(118%); }
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
+        @page {
+            size: A4 landscape;
+            margin: 0.3in 0.4in;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+        
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 7px;
+            line-height: 1.0;
+            color: #000;
+            width: 100%;
+            height: 50vh; /* Half page height */
+        }
+        
+        .invoice-container {
+            width: 100%;
+            max-width: 100%;
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Header Section */
+        .header {
+            border-bottom: 1px solid #000;
+            margin-bottom: 4px;
+            padding-bottom: 2px;
+            flex-shrink: 0;
+            text-align: center;
+        }
+        
+        .invoice-title {
+            font-size: 10px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 2px;
+            color: #E53E3E;
+        }
+        
+        .company-info {
+            text-align: center;
+            margin-bottom: 2px;
+        }
+        
+        .company-name {
+            font-size: 8px;
+            font-weight: bold;
+            margin-bottom: 1px;
+        }
+        
+        .company-gstin {
+            font-size: 6px;
+            font-weight: bold;
+            margin-bottom: 1px;
+        }
+        
+        .company-address {
+            font-size: 5px;
+            line-height: 1.0;
+        }
+        
+        /* Details Section */
+        .details-section {
+            display: table;
+            width: 100%;
+            margin-bottom: 3px;
+            flex-shrink: 0;
+        }
+        
+        .invoice-details, .billing-details, .shipping-details {
+            display: table-cell;
+            width: 33.33%;
+            vertical-align: top;
+            padding: 2px;
+            border: 1px solid #000;
+            font-size: 5px;
+        }
+        
+        .section-title {
+            font-size: 6px;
+            font-weight: bold;
+            margin-bottom: 1px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 1px;
+        }
+        
+        .detail-row {
+            margin-bottom: 0.5px;
+            display: flex;
+        }
+        
+        .detail-label {
+            font-weight: bold;
+            min-width: 35px;
+            font-size: 4px;
+        }
+        
+        .detail-value {
+            font-size: 5px;
+        }
+        
+        /* Remove shipping section - integrated above */
+        
+        /* Items Table */
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 3px;
+            flex-grow: 1;
+            min-height: 0;
+        }
+        
+        .items-table th {
+            background-color: #f0f0f0;
+            padding: 1px;
+            text-align: left;
+            border: 1px solid #000;
+            font-weight: bold;
+            font-size: 5px;
+        }
+        
+        .items-table td {
+            padding: 1px;
+            border: 1px solid #000;
+            vertical-align: top;
+            font-size: 5px;
+        }
+        
+        .items-table tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+        
+        /* Totals Section - Inline with items */
+        .totals-inline {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2px;
+            padding: 2px;
+            border: 1px solid #000;
+            background-color: #f8f8f8;
+            flex-shrink: 0;
+        }
+        
+        .totals-left {
+            font-size: 5px;
+            line-height: 1.0;
+        }
+        
+        .totals-right {
+            font-size: 6px;
+            font-weight: bold;
+            text-align: right;
+        }
+        
+        .total-amount {
+            font-size: 7px;
+            font-weight: bold;
+        }
+        
+        /* Footer */
+        .footer {
+            margin-top: 2px;
+            border-top: 1px solid #000;
+            padding-top: 1px;
+            text-align: center;
+            font-size: 4px;
+            flex-shrink: 0;
+        }
+        
+        .footer-note {
+            margin-bottom: 1px;
+            font-style: italic;
+        }
+        
+        /* Hide elements that shouldn't be printed */
+        .no-print {
+            display: none !important;
+        }
+        
+        /* Ensure proper scaling for half page */
+        @media print {
+            html, body {
+                height: 50vh;
+                width: 100vw;
+            }
+            
+            .invoice-container {
+                height: 50vh;
+                max-height: 50vh;
+            }
+            
+            /* Force page break prevention */
+            .header,
+            .details-section,
+            .shipping-section,
+            .items-table,
+            .totals-section,
+            .footer {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="{% static 'img/joog-logo.png' %}?v=4" alt="JOOG" class="logo" />
+    </div>
+    <div class="invoice-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="invoice-title">TAX INVOICE</div>
+            <div class="company-info">
+                <div class="company-name">{{ invoice.company_name }}</div>
+                <div class="company-gstin">GSTIN: {{ invoice.company_gstin }}</div>
+                <div class="company-address">{{ invoice.company_address|linebreaks|striptags }}</div>
+                {% if invoice.company_phone %}
+                    <div style="font-size: 5px;">Ph: {{ invoice.company_phone }}</div>
+                {% endif %}
+                {% if invoice.company_email %}
+                    <div style="font-size: 5px;">{{ invoice.company_email }}</div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- All Details in One Row -->
+        <div class="details-section">
+            <div class="invoice-details">
+                <div class="section-title">Invoice Details</div>
+                <div class="detail-row">
+                    <div class="detail-label">Inv#:</div>
+                    <div class="detail-value">{{ invoice.invoice_number }}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Date:</div>
+                    <div class="detail-value">{{ invoice.invoice_date|date:"d/m/Y" }}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Order:</div>
+                    <div class="detail-value">{{ invoice.order.order_number }}</div>
+                </div>
+            </div>
+            
+            <div class="billing-details">
+                <div class="section-title">Bill To</div>
+                <div class="detail-row">
+                    <div class="detail-label">Name:</div>
+                    <div class="detail-value">{{ invoice.customer_name }}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Email:</div>
+                    <div class="detail-value">{{ invoice.customer_email|truncatechars:20 }}</div>
+                </div>
+                {% if invoice.customer_phone %}
+                <div class="detail-row">
+                    <div class="detail-label">Phone:</div>
+                    <div class="detail-value">{{ invoice.customer_phone }}</div>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="shipping-details">
+                <div class="section-title">Ship To</div>
+                <div style="line-height: 1.0; font-size: 4px;">
+                    {{ invoice.shipping_address|truncatechars:30 }}<br>
+                    {{ invoice.shipping_city }}, {{ invoice.shipping_state }}<br>
+                    {{ invoice.shipping_postal_code }}, {{ invoice.shipping_country }}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Items Table -->
+        <table class="items-table">
+            <thead>
+                <tr>
+                    <th style="width: 3%;">#</th>
+                    <th style="width: 40%;">Description</th>
+                    <th style="width: 8%;">Quantity</th>
+                    <th style="width: 16%;">Base Price</th>
+                    <th style="width: 16%;">Tax Amount</th>
+                    <th style="width: 17%;">Total Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in invoice_items %}
+                <tr>
+                    <td class="text-center">{{ forloop.counter }}</td>
+                    <td>
+                        <strong style="font-size: 5px;">{{ item.product_name }}</strong>
+                        {% if item.size %}
+                            <br><span style="font-size: 4px; color: #666;">Size: {{ item.size }}</span>
+                        {% endif %}
+                        {% if item.hsn_code %}
+                            <br><span style="font-size: 4px; color: #666;">HSN: {{ item.hsn_code }}</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-center">{{ item.quantity }}</td>
+                    <td class="text-right">₹{{ item.base_amount|floatformat:2 }}</td>
+                    <td class="text-right">₹{{ item.tax_amount|floatformat:2 }}</td>
+                    <td class="text-right">₹{{ item.total_price|floatformat:2 }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center">No items found</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <!-- Totals Section - Inline -->
+        <div class="totals-inline">
+            <div class="totals-left">
+                <strong>Tax Summary:</strong>
+                {% if invoice.cgst_amount > 0 %}
+                    CGST {{ invoice.cgst_rate }}%: ₹{{ invoice.cgst_amount|floatformat:0 }} | 
+                    SGST {{ invoice.sgst_rate }}%: ₹{{ invoice.sgst_amount|floatformat:0 }}
+                {% endif %}
+                {% if invoice.igst_amount > 0 %}
+                    IGST {{ invoice.igst_rate }}%: ₹{{ invoice.igst_amount|floatformat:0 }}
+                {% endif %}
+                {% if invoice.discount_amount > 0 %}
+                    | Discount: ₹{{ invoice.discount_amount|floatformat:0 }}
+                {% endif %}
+            </div>
+            <div class="totals-right">
+                <div>Subtotal: ₹{{ invoice.subtotal|floatformat:0 }}</div>
+                <div class="total-amount">TOTAL: ₹{{ invoice.final_amount|floatformat:0 }}</div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-note">This is a system generated invoice.</div>
+            <div>Thank you for shopping with us!</div>
+        </div>
+    </div>
+    
+    <script>
+        // Auto-print when page loads
+        window.onload = function() {
+            window.print();
+        };
+        
+        // Close window after printing (optional)
+        window.onafterprint = function() {
+            // Uncomment the line below if you want to auto-close the window after printing
+            // window.close();
+        };
+    </script>
+</body>
+</html>

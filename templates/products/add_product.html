@@ -42,20 +42,54 @@
                     {% endif %}
                 </div>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="form-label">{{ form.price.label_tag }}</label>
-                        {{ form.price }}
-                        {% if form.price.errors %}
-                        <div class="form-error">{{ form.price.errors.0 }}</div>
-                        {% endif %}
-                    </div>
-                    <div>
-                        <label class="form-label">{{ form.stock.label_tag }}</label>
-                        {{ form.stock }}
-                        {% if form.stock.errors %}
-                        <div class="form-error">{{ form.stock.errors.0 }}</div>
-                        {% endif %}
+                <div>
+                    <label class="form-label">{{ form.price.label_tag }}</label>
+                    {{ form.price }}
+                    {% if form.price.errors %}
+                    <div class="form-error">{{ form.price.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                
+                <!-- Size Stock Management -->
+                <div>
+                    <label class="form-label">Available Sizes & Stock</label>
+                    <p class="text-sm text-gray-500 mb-3">Enter stock quantity for each size you want to offer. Leave as 0 to not offer that size.</p>
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                        <div class="text-center">
+                            <label class="form-label text-sm">{{ form.size_s_stock.label_tag }}</label>
+                            {{ form.size_s_stock }}
+                            {% if form.size_s_stock.errors %}
+                            <div class="form-error text-xs">{{ form.size_s_stock.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="text-center">
+                            <label class="form-label text-sm">{{ form.size_m_stock.label_tag }}</label>
+                            {{ form.size_m_stock }}
+                            {% if form.size_m_stock.errors %}
+                            <div class="form-error text-xs">{{ form.size_m_stock.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="text-center">
+                            <label class="form-label text-sm">{{ form.size_l_stock.label_tag }}</label>
+                            {{ form.size_l_stock }}
+                            {% if form.size_l_stock.errors %}
+                            <div class="form-error text-xs">{{ form.size_l_stock.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="text-center">
+                            <label class="form-label text-sm">{{ form.size_xl_stock.label_tag }}</label>
+                            {{ form.size_xl_stock }}
+                            {% if form.size_xl_stock.errors %}
+                            <div class="form-error text-xs">{{ form.size_xl_stock.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="text-center">
+                            <label class="form-label text-sm">{{ form.size_xxl_stock.label_tag }}</label>
+                            {{ form.size_xxl_stock }}
+                            {% if form.size_xxl_stock.errors %}
+                            <div class="form-error text-xs">{{ form.size_xxl_stock.errors.0 }}</div>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
                 
@@ -73,6 +107,96 @@
                     {% if form.image.errors %}
                     <div class="form-error">{{ form.image.errors.0 }}</div>
                     {% endif %}
+                </div>
+
+                <!-- Multiple Image Upload with Drag & Drop -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-2">Additional Product Images</h3>
+                    <p class="text-sm text-gray-500 mb-4">Upload multiple product images at once. Drag & drop or click to select files.</p>
+                    
+                    <!-- Drag & Drop Upload Area -->
+                    <div id="image-upload-area" class="relative border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-red-400 transition-colors cursor-pointer">
+                        <input type="file" id="multiple-image-upload" name="images" multiple accept="image/*" class="hidden">
+                        
+                        <div id="upload-prompt" class="space-y-4">
+                            <div class="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-cloud-upload-alt text-2xl text-gray-400"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-medium text-gray-700">Drop images here or click to browse</h4>
+                                <p class="text-sm text-gray-500">PNG, JPG, JPEG, GIF, WEBP up to 5MB each (Max: 10 images)</p>
+                            </div>
+                            <button type="button" id="browse-images-btn" class="btn btn-primary">
+                                <i class="fas fa-images mr-2"></i>Select Images
+                            </button>
+                        </div>
+                        
+                        <!-- Upload Progress -->
+                        <div id="upload-progress" class="hidden">
+                            <div class="space-y-2">
+                                <div class="text-sm text-gray-600">Uploading images...</div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div id="progress-bar" class="bg-red-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Image Preview Grid -->
+                    <div id="image-preview-grid" class="hidden mt-6">
+                        <h4 class="text-md font-semibold mb-3">Selected Images</h4>
+                        <div id="image-previews" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                            <!-- Image previews will be populated here -->
+                        </div>
+                        <div class="mt-4 flex justify-between items-center">
+                            <span class="text-sm text-gray-500">Click on images to edit alt text or remove them</span>
+                            <button type="button" id="clear-all-images" class="text-red-600 hover:text-red-800 text-sm">
+                                <i class="fas fa-trash mr-1"></i>Clear All
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Hidden Traditional Formset (for fallback) -->
+                    <div id="traditional-formset" class="hidden mt-6">
+                        <h4 class="text-md font-semibold mb-3">Additional Images (Traditional Upload)</h4>
+                        <div id="extra-images" class="space-y-4">
+                            {% if image_formset %}
+                                {{ image_formset.management_form }}
+                                {% for img_form in image_formset %}
+                                <div class="p-4 border rounded-lg">
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                                        <div>
+                                            <label class="form-label">Image</label>
+                                            {{ img_form.image }}
+                                        </div>
+                                        <div>
+                                            <label class="form-label">Alt text</label>
+                                            {{ img_form.alt_text }}
+                                        </div>
+                                        <div class="flex items-center space-x-4">
+                                            {% if img_form.DELETE %}
+                                            <label class="flex items-center space-x-2">
+                                                {{ img_form.DELETE }}
+                                                <span class="text-sm text-gray-600">Remove</span>
+                                            </label>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <div class="mt-3">
+                            <button type="button" id="add-image-row" class="btn btn-outline">+ Add another image</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Toggle Upload Method -->
+                    <div class="mt-4 text-center">
+                        <button type="button" id="toggle-upload-method" class="text-blue-600 hover:text-blue-800 text-sm">
+                            <i class="fas fa-exchange-alt mr-1"></i>Switch to traditional upload
+                        </button>
+                    </div>
                 </div>
                 
                 <div class="flex items-center">
@@ -95,4 +219,467 @@
         </div>
     </div>
 </div>
+
+<style>
+/* Enhanced styles for drag & drop upload */
+.drag-over {
+    border-color: #dc2626 !important;
+    background-color: #fef2f2 !important;
+}
+
+.image-preview-item {
+    position: relative;
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.2s ease;
+}
+
+.image-preview-item:hover {
+    border-color: #dc2626;
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.image-preview-item img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+}
+
+.image-preview-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.image-preview-item:hover .image-preview-overlay {
+    opacity: 1;
+}
+
+.image-preview-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.image-preview-btn {
+    background: white;
+    color: #374151;
+    border: none;
+    border-radius: 4px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.image-preview-btn:hover {
+    background: #dc2626;
+    color: white;
+}
+
+.image-name {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 4px 8px;
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Modal styles */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 8px;
+    padding: 24px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 90%;
+    overflow-y: auto;
+}
+</style>
+
+<script>
+// Multiple Image Upload with Drag & Drop
+(function() {
+    'use strict';
+    
+    // Global variables
+    let selectedFiles = [];
+    let isTraditionalMode = false;
+    
+    // DOM elements
+    const uploadArea = document.getElementById('image-upload-area');
+    const fileInput = document.getElementById('multiple-image-upload');
+    const browseBtn = document.getElementById('browse-images-btn');
+    const uploadPrompt = document.getElementById('upload-prompt');
+    const uploadProgress = document.getElementById('upload-progress');
+    const progressBar = document.getElementById('progress-bar');
+    const previewGrid = document.getElementById('image-preview-grid');
+    const previewContainer = document.getElementById('image-previews');
+    const clearAllBtn = document.getElementById('clear-all-images');
+    const toggleModeBtn = document.getElementById('toggle-upload-method');
+    const traditionalFormset = document.getElementById('traditional-formset');
+    
+    // Configuration
+    const config = {
+        maxFiles: 10,
+        maxSize: 5 * 1024 * 1024, // 5MB
+        allowedTypes: ['image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'image/webp']
+    };
+    
+    // Initialize
+    function init() {
+        if (!uploadArea || !fileInput) return;
+        
+        setupEventListeners();
+        setupTraditionalFormset();
+    }
+    
+    // Setup event listeners
+    function setupEventListeners() {
+        // Upload area events
+        uploadArea.addEventListener('click', () => fileInput.click());
+        uploadArea.addEventListener('dragover', handleDragOver);
+        uploadArea.addEventListener('dragleave', handleDragLeave);
+        uploadArea.addEventListener('drop', handleDrop);
+        
+        // File input events
+        fileInput.addEventListener('change', handleFileSelect);
+        browseBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            fileInput.click();
+        });
+        
+        // Control buttons
+        clearAllBtn?.addEventListener('click', clearAllImages);
+        toggleModeBtn?.addEventListener('click', toggleUploadMode);
+        
+        // Prevent default drag behaviors on document
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            document.addEventListener(eventName, preventDefaults, false);
+        });
+    }
+    
+    // Prevent default drag behaviors
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+    
+    // Handle drag over
+    function handleDragOver(e) {
+        preventDefaults(e);
+        uploadArea.classList.add('drag-over');
+    }
+    
+    // Handle drag leave
+    function handleDragLeave(e) {
+        preventDefaults(e);
+        uploadArea.classList.remove('drag-over');
+    }
+    
+    // Handle file drop
+    function handleDrop(e) {
+        preventDefaults(e);
+        uploadArea.classList.remove('drag-over');
+        
+        const files = Array.from(e.dataTransfer.files);
+        processFiles(files);
+    }
+    
+    // Handle file selection
+    function handleFileSelect(e) {
+        const files = Array.from(e.target.files);
+        processFiles(files);
+    }
+    
+    // Process selected files
+    function processFiles(files) {
+        // Filter image files
+        const imageFiles = files.filter(file => {
+            return config.allowedTypes.includes(file.type);
+        });
+        
+        if (imageFiles.length === 0) {
+            showMessage('Please select valid image files (PNG, JPG, JPEG, GIF, WEBP)', 'error');
+            return;
+        }
+        
+        // Check total file count
+        const totalFiles = selectedFiles.length + imageFiles.length;
+        if (totalFiles > config.maxFiles) {
+            showMessage(`You can only upload a maximum of ${config.maxFiles} images. Currently selected: ${selectedFiles.length}`, 'error');
+            return;
+        }
+        
+        // Validate file sizes
+        const oversizedFiles = imageFiles.filter(file => file.size > config.maxSize);
+        if (oversizedFiles.length > 0) {
+            showMessage(`Some files are too large. Maximum size is 5MB per file.`, 'error');
+            return;
+        }
+        
+        // Add files to selection
+        imageFiles.forEach(file => {
+            if (!selectedFiles.find(f => f.name === file.name && f.size === file.size)) {
+                selectedFiles.push(file);
+            }
+        });
+        
+        updateUI();
+        generatePreviews();
+    }
+    
+    // Update UI based on state
+    function updateUI() {
+        if (selectedFiles.length > 0) {
+            uploadPrompt.classList.add('hidden');
+            previewGrid.classList.remove('hidden');
+        } else {
+            uploadPrompt.classList.remove('hidden');
+            previewGrid.classList.add('hidden');
+        }
+    }
+    
+    // Generate image previews
+    function generatePreviews() {
+        previewContainer.innerHTML = '';
+        
+        selectedFiles.forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const previewItem = createPreviewItem(file, e.target.result, index);
+                previewContainer.appendChild(previewItem);
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+    
+    // Create preview item
+    function createPreviewItem(file, src, index) {
+        const div = document.createElement('div');
+        div.className = 'image-preview-item';
+        div.innerHTML = `
+            <img src="${src}" alt="${file.name}">
+            <div class="image-name">${file.name}</div>
+            <div class="image-preview-overlay">
+                <div class="image-preview-actions">
+                    <button type="button" class="image-preview-btn" onclick="editImageAltText(${index})" title="Edit Alt Text">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button type="button" class="image-preview-btn" onclick="removeImage(${index})" title="Remove Image">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+        return div;
+    }
+    
+    // Remove image
+    window.removeImage = function(index) {
+        selectedFiles.splice(index, 1);
+        updateUI();
+        generatePreviews();
+        updateFileInput();
+    };
+    
+    // Edit image alt text
+    window.editImageAltText = function(index) {
+        const file = selectedFiles[index];
+        const currentAlt = file.altText || '';
+        
+        const modal = createModal(`
+            <h3 class="text-lg font-semibold mb-4">Edit Image Details</h3>
+            <div class="mb-4">
+                <img src="${URL.createObjectURL(file)}" alt="Preview" class="w-full h-32 object-cover rounded mb-2">
+                <p class="text-sm text-gray-600">${file.name}</p>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Alt Text (for accessibility)</label>
+                <input type="text" id="alt-text-input" value="${currentAlt}" placeholder="Describe this image..." class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500">
+            </div>
+            <div class="flex space-x-3">
+                <button type="button" onclick="saveAltText(${index})" class="btn btn-primary flex-1">Save</button>
+                <button type="button" onclick="closeModal()" class="btn btn-outline flex-1">Cancel</button>
+            </div>
+        `);
+        
+        document.body.appendChild(modal);
+        document.getElementById('alt-text-input').focus();
+    };
+    
+    // Save alt text
+    window.saveAltText = function(index) {
+        const altTextInput = document.getElementById('alt-text-input');
+        if (altTextInput) {
+            selectedFiles[index].altText = altTextInput.value;
+        }
+        closeModal();
+    };
+    
+    // Create modal
+    function createModal(content) {
+        const modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.innerHTML = `<div class="modal-content">${content}</div>`;
+        return modal;
+    }
+    
+    // Close modal
+    window.closeModal = function() {
+        const modal = document.querySelector('.modal');
+        if (modal) {
+            modal.remove();
+        }
+    };
+    
+    // Clear all images
+    function clearAllImages() {
+        if (confirm('Are you sure you want to remove all selected images?')) {
+            selectedFiles = [];
+            updateUI();
+            updateFileInput();
+        }
+    }
+    
+    // Toggle upload mode
+    function toggleUploadMode() {
+        isTraditionalMode = !isTraditionalMode;
+        
+        if (isTraditionalMode) {
+            uploadArea.classList.add('hidden');
+            previewGrid.classList.add('hidden');
+            traditionalFormset.classList.remove('hidden');
+            toggleModeBtn.innerHTML = '<i class="fas fa-exchange-alt mr-1"></i>Switch to drag & drop upload';
+        } else {
+            uploadArea.classList.remove('hidden');
+            updateUI();
+            traditionalFormset.classList.add('hidden');
+            toggleModeBtn.innerHTML = '<i class="fas fa-exchange-alt mr-1"></i>Switch to traditional upload';
+        }
+    }
+    
+    // Update file input with selected files
+    function updateFileInput() {
+        // Create new FileList from selected files
+        const dt = new DataTransfer();
+        selectedFiles.forEach(file => dt.items.add(file));
+        fileInput.files = dt.files;
+    }
+    
+    // Setup traditional formset functionality
+    function setupTraditionalFormset() {
+        const addImageBtn = document.getElementById('add-image-row');
+        if (!addImageBtn) return;
+        
+        const container = document.getElementById('extra-images');
+        const totalFormsInput = document.querySelector('[name="{{ image_formset.prefix|default:'productimage_set'|escapejs }}-TOTAL_FORMS"]');
+        const emptyFormHtml = `{{ image_formset.empty_form.as_p|default:''|escapejs }}`;
+        
+        addImageBtn.addEventListener('click', function() {
+            if (!totalFormsInput || !emptyFormHtml) return;
+            let total = parseInt(totalFormsInput.value, 10);
+            const html = emptyFormHtml.replace(/__prefix__/g, total);
+            const wrapper = document.createElement('div');
+            wrapper.className = 'p-4 border rounded-lg';
+            wrapper.innerHTML = html;
+            container.appendChild(wrapper);
+            totalFormsInput.value = total + 1;
+        });
+    }
+    
+    // Show message
+    function showMessage(message, type = 'info') {
+        // Create message element
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg max-w-sm ${
+            type === 'error' ? 'bg-red-50 text-red-700 border border-red-200' : 
+            type === 'success' ? 'bg-green-50 text-green-700 border border-green-200' :
+            'bg-blue-50 text-blue-700 border border-blue-200'
+        }`;
+        messageDiv.innerHTML = `
+            <div class="flex items-center">
+                <i class="fas fa-${
+                    type === 'error' ? 'exclamation-circle' :
+                    type === 'success' ? 'check-circle' : 'info-circle'
+                } mr-2"></i>
+                <span>${message}</span>
+            </div>
+        `;
+        
+        document.body.appendChild(messageDiv);
+        
+        // Remove after 5 seconds
+        setTimeout(() => {
+            if (messageDiv.parentNode) {
+                messageDiv.parentNode.removeChild(messageDiv);
+            }
+        }, 5000);
+    }
+    
+    // Form submission handling
+    function handleFormSubmission() {
+        const form = document.querySelector('form');
+        if (!form) return;
+        
+        form.addEventListener('submit', function(e) {
+            if (!isTraditionalMode && selectedFiles.length > 0) {
+                // Update file input before submission
+                updateFileInput();
+                
+                // Create hidden inputs for alt texts
+                const existingAltInputs = document.querySelectorAll('input[name="image_alt_texts"]');
+                existingAltInputs.forEach(input => input.remove());
+                
+                selectedFiles.forEach((file, index) => {
+                    const altTextInput = document.createElement('input');
+                    altTextInput.type = 'hidden';
+                    altTextInput.name = 'image_alt_texts';
+                    altTextInput.value = file.altText || '';
+                    form.appendChild(altTextInput);
+                });
+            }
+        });
+    }
+    
+    // Initialize on DOM ready
+    document.addEventListener('DOMContentLoaded', function() {
+        init();
+        handleFormSubmission();
+    });
+    
+})();
+</script>
 {% endblock %}

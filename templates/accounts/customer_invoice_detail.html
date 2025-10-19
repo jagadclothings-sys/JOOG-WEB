@@ -1,0 +1,279 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Invoice #{{ order.order_number }} - JOOG{% endblock %}
+
+{% block extra_head %}
+<style>
+    .invoice-header {
+        background: linear-gradient(135deg, var(--red-primary) 0%, var(--red-accent) 100%);
+    }
+    .invoice-section {
+        border: 1px solid #e5e7eb;
+        border-radius: 0.75rem;
+        background: white;
+    }
+    .tax-breakdown {
+        background: linear-gradient(to right, #f8fafc, #f1f5f9);
+    }
+    .amount-highlight {
+        font-family: 'Inter', sans-serif;
+        font-weight: 700;
+        color: var(--red-primary);
+    }
+    @media print {
+        .no-print { display: none !important; }
+        .invoice-section { border: 1px solid #000; }
+        body { background: white !important; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="bg-gray-50 min-h-screen py-8">
+    <div class="container mx-auto px-4 max-w-4xl">
+        <!-- Back Button -->
+        <div class="mb-6 no-print">
+            <a href="{% url 'accounts:invoices' %}" class="inline-flex items-center text-gray-600 hover:text-red-600 transition-colors">
+                <i class="fas fa-arrow-left mr-2"></i>Back to Invoices
+            </a>
+        </div>
+
+        <!-- Invoice Container -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <!-- Invoice Header -->
+            <div class="invoice-header text-white p-8">
+                <div class="flex flex-col md:flex-row justify-between items-start">
+                    <div>
+                        <h1 class="text-3xl font-bold mb-2" style="font-family: 'Playfair Display', serif;">
+                            Tax Invoice
+                        </h1>
+                        <p class="text-red-100">Invoice #{{ order.order_number }}</p>
+                    </div>
+                    <div class="mt-4 md:mt-0 text-right">
+                        <div class="text-4xl font-bold mb-2">JOOG</div>
+                        <div class="text-red-100 text-sm">Premium Fashion Retailer</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Invoice Details -->
+            <div class="p-8">
+                <!-- Company & Customer Info -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                    <!-- From (Company) -->
+                    <div class="invoice-section p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4 border-b border-red-200 pb-3">
+                            <i class="fas fa-building mr-2 text-red-primary"></i>From (Seller Details)
+                        </h3>
+                        <div class="space-y-2 text-gray-700">
+                            <div class="font-semibold text-gray-900">JAGAD CLOTHINGS PRIVATE LIMITED</div>
+                            <div class="text-sm text-red-primary font-medium">Trading as: JOOG (Premium Fashion Brand)</div>
+                            <div>23/1, Ground Floor, Srinivasa Complex,</div>
+                            <div>2nd Mn. CKC Garden, Mission Road,</div>
+                            <div>Bengaluru-560 027</div>
+                            <div>India</div>
+                            <div class="pt-2">
+                                <div><strong>GSTIN:</strong> 29AAAAA0000A1Z5</div>
+                                <div><strong>PAN:</strong> AAAAA0000A</div>
+                                <div><strong>CIN:</strong> U18101KA2020PTC000000</div>
+                                <div><strong>Email:</strong> orders@joog.com</div>
+                                <div><strong>Phone:</strong> +91 98765 43210</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- To (Customer) -->
+                    <div class="invoice-section p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4 border-b border-blue-200 pb-3">
+                            <i class="fas fa-user mr-2 text-blue-600"></i>Bill To (Buyer Details)
+                        </h3>
+                        <div class="space-y-2 text-gray-700">
+                            <div class="font-semibold text-gray-900">{{ order.user.get_full_name|default:order.user.username }}</div>
+                            {% if order.selected_address %}
+                                <div>{{ order.selected_address.address_line_1 }}</div>
+                                {% if order.selected_address.address_line_2 %}
+                                <div>{{ order.selected_address.address_line_2 }}</div>
+                                {% endif %}
+                                <div>{{ order.selected_address.city }}, {{ order.selected_address.state }} {{ order.selected_address.postal_code }}</div>
+                                <div>{{ order.selected_address.country }}</div>
+                            {% elif order.shipping_address %}
+                                <div>{{ order.shipping_address }}</div>
+                                <div>{{ order.shipping_city }}, {{ order.shipping_state }} {{ order.shipping_postal_code }}</div>
+                                <div>{{ order.shipping_country }}</div>
+                            {% else %}
+                                <div class="text-gray-500 italic">Address not available</div>
+                            {% endif %}
+                            <div class="pt-2">
+                                <div><strong>Email:</strong> {{ order.user.email }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Invoice Meta Information -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                    <div class="bg-gray-50 p-4 rounded-lg text-center">
+                        <div class="text-sm text-gray-600 mb-1">Invoice Date</div>
+                        <div class="font-semibold">{{ order.created_at|date:"M d, Y" }}</div>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg text-center">
+                        <div class="text-sm text-gray-600 mb-1">Payment Method</div>
+                        <div class="font-semibold capitalize">{{ order.payment_method|default:"Online Payment" }}</div>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg text-center">
+                        <div class="text-sm text-gray-600 mb-1">Payment Status</div>
+                        <div class="font-semibold text-green-600">
+                            <i class="fas fa-check-circle mr-1"></i>Paid
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Items -->
+                <div class="invoice-section mb-8">
+                    <div class="bg-gray-50 px-6 py-4 border-b">
+                        <h3 class="text-lg font-semibold text-gray-900">
+                            <i class="fas fa-list mr-2 text-red-primary"></i>Order Items
+                        </h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead>
+                                    <tr class="border-b border-gray-200">
+                                        <th class="text-left py-3 px-2 font-semibold text-gray-700">Description</th>
+                                        <th class="text-center py-3 px-2 font-semibold text-gray-700">Quantity</th>
+                                        <th class="text-right py-3 px-2 font-semibold text-gray-700">Base Price</th>
+                                        <th class="text-center py-3 px-2 font-semibold text-gray-700">Tax %</th>
+                                        <th class="text-right py-3 px-2 font-semibold text-gray-700">Tax Amount</th>
+                                        <th class="text-right py-3 px-2 font-semibold text-gray-700">Total Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in order.items.all %}
+                                    <tr class="border-b border-gray-100">
+                                        <td class="py-4 px-2">
+                                            <div class="flex items-center">
+                                                {% if item.product.image %}
+                                                <img src="{{ item.product.image.url }}" 
+                                                     alt="{{ item.product.name }}" 
+                                                     class="w-12 h-12 object-cover rounded-lg mr-4">
+                                                {% else %}
+                                                <div class="w-12 h-12 bg-gray-200 rounded-lg mr-4 flex items-center justify-center">
+                                                    <i class="fas fa-image text-gray-400"></i>
+                                                </div>
+                                                {% endif %}
+                                                <div>
+                                                    <div class="font-semibold text-gray-900">{{ item.product.name }}</div>
+                                                    {% if item.size %}<div class="text-sm text-gray-500">Size: {{ item.size }}</div>{% endif %}
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="py-4 px-2 text-center">{{ item.quantity }}</td>
+                                        <td class="py-4 px-2 text-right">₹{{ item.base_price|floatformat:2 }}</td>
+                                        <td class="py-4 px-2 text-center">{{ item.product.tax_percentage|default:"18" }}%</td>
+                                        <td class="py-4 px-2 text-right">₹{{ item.tax_amount|floatformat:2 }}</td>
+                                        <td class="py-4 px-2 text-right font-semibold">₹{{ item.get_total_price|floatformat:2 }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bill Summary -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Discount & Total Information -->
+                    <div class="invoice-section">
+                        <div class="bg-gray-50 px-6 py-4 border-b">
+                            <h3 class="text-lg font-semibold text-gray-900">
+                                <i class="fas fa-receipt mr-2 text-red-primary"></i>Bill Summary
+                            </h3>
+                        </div>
+                        <div class="p-6">
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center py-2 border-b border-gray-200">
+                                    <span class="text-gray-700 font-medium">Total Amount:</span>
+                                    <span class="font-semibold text-lg">₹{{ order.total_amount|floatformat:2 }}</span>
+                                </div>
+                                
+                                {% if order.discount_amount > 0 %}
+                                <div class="flex justify-between items-center py-2 border-b border-gray-200">
+                                    <div class="flex flex-col">
+                                        <span class="text-green-700 font-medium">Discount Applied:</span>
+                                        {% if order.coupon %}
+                                        <span class="text-xs text-green-600">Coupon: {{ order.coupon.code }}</span>
+                                        {% endif %}
+                                    </div>
+                                    <span class="font-semibold text-lg text-green-600">-₹{{ order.discount_amount|floatformat:2 }}</span>
+                                </div>
+                                {% endif %}
+                                
+                                <div class="flex justify-between items-center py-3 border-t-2 border-gray-400 bg-red-50 rounded-lg px-4">
+                                    <span class="text-gray-900 font-bold text-xl">Final Amount:</span>
+                                    <span class="font-bold text-2xl text-red-primary">₹{{ order.final_amount|floatformat:2 }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Total Amount -->
+                    <div class="invoice-section">
+                        <div class="bg-gradient-to-r from-red-primary to-red-accent text-white px-6 py-4 border-b">
+                            <h3 class="text-lg font-semibold">
+                                <i class="fas fa-rupee-sign mr-2"></i>Total Amount
+                            </h3>
+                        </div>
+                        <div class="p-6 text-center">
+                            <div class="mb-4">
+                                <div class="text-4xl amount-highlight mb-2">₹{{ order.final_amount }}</div>
+                                <div class="text-gray-600">Amount Paid</div>
+                            </div>
+                            <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                                <div class="text-green-800 font-semibold mb-1">
+                                    <i class="fas fa-check-circle mr-2"></i>Payment Confirmed
+                                </div>
+                                <div class="text-green-600 text-sm">
+                                    Paid on {{ order.created_at|date:"M d, Y g:i A" }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4 mt-8 no-print">
+                    <a href="{% url 'accounts:download_invoice' order.order_number %}" 
+                       class="btn btn-primary inline-flex items-center justify-center">
+                        <i class="fas fa-download mr-2"></i>Download PDF
+                    </a>
+                    <button onclick="window.print()" 
+                            class="btn btn-outline inline-flex items-center justify-center">
+                        <i class="fas fa-print mr-2"></i>Print Invoice
+                    </button>
+                    <a href="{% url 'orders:customer_order_detail' order.order_number %}" 
+                       class="btn btn-secondary inline-flex items-center justify-center">
+                        <i class="fas fa-box mr-2"></i>View Order Details
+                    </a>
+                </div>
+
+                <!-- Footer Note -->
+                <div class="mt-8 p-6 bg-gray-50 rounded-lg text-center text-sm text-gray-600">
+                    <p class="mb-2">
+                        <strong>Note:</strong> This is a computer-generated invoice and does not require a physical signature.
+                    </p>
+                    <p>
+                        For any queries regarding this invoice, please contact <strong>JAGAD CLOTHINGS</strong> at 
+                        <a href="mailto:support@joog.com" class="text-red-primary hover:underline">support@joog.com</a> 
+                        or call <a href="tel:+919876543210" class="text-red-primary hover:underline">+91 98765 43210</a>
+                    </p>
+                    <p class="text-xs mt-2 text-gray-500">
+                        JAGAD CLOTHINGS PRIVATE LIMITED | GSTIN: 29AAAAA0000A1Z5 | CIN: U18101KA2020PTC000000
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

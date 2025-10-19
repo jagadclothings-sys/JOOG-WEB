@@ -1,0 +1,71 @@
+ORDER CONFIRMED - JOOG WEAR
+===========================
+
+Hi {{ order.user.first_name|default:order.user.email }},
+
+Thank you for your order! We're excited to let you know that your order has been confirmed and is being processed.
+
+ORDER INFORMATION
+-----------------
+Order Number: #{{ order.id }}
+Order Date: {{ order.created_at|date:"F d, Y g:i A" }}
+Payment Status: {% if order.payment_status == 'completed' %}Paid{% else %}Processing{% endif %}
+
+SHIPPING ADDRESS
+---------------
+{{ order.user.first_name }} {{ order.user.last_name }}
+{{ order.shipping_address }}
+{{ order.shipping_city }}, {{ order.shipping_state }} {{ order.shipping_postal_code }}
+{{ order.shipping_country }}
+
+CUSTOMER INFORMATION
+------------------
+Email: {{ order.user.email }}
+Phone: {{ order.user.phone_number|default:"Not provided" }}
+Order Number: {{ order.order_number }}
+
+ITEMS ORDERED
+------------
+{% for item in order.items.all %}
+• {{ item.product.name }}
+  {% if item.color %}Color: {{ item.color }} | {% endif %}{% if item.size %}Size: {{ item.size }} | {% endif %}Quantity: {{ item.quantity }}
+  Price: ₹{{ item.price }}
+
+{% endfor %}
+
+ORDER SUMMARY
+------------
+Subtotal: ₹{{ order.total_amount }}
+{% if order.discount_amount %}Discount: -₹{{ order.discount_amount }}{% endif %}
+Shipping: FREE
+------------------------
+Total: ₹{{ order.final_amount|default:order.total_amount }}
+
+WHAT'S NEXT?
+-----------
+You can track your order status and view details anytime in your account:
+{{ site_url }}/accounts/dashboard/
+
+Continue Shopping: {{ site_url }}/
+
+If you have any questions about your order, please don't hesitate to contact our customer service team.
+
+Thank you for choosing JOOG Wear!
+
+Best regards,
+The JOOG Wear Team
+
+---
+JOOG WEAR
+Premium Fashion & Lifestyle
+
+Contact Us: {{ site_url }}/contact/
+Help Center: {{ site_url }}/help-center/
+Returns: {{ site_url }}/returns/
+
+This email was sent to {{ order.user.email }}.
+
+📧 NEED HELP?
+=============
+For any questions or support, please contact us at: contact@joogwear.com
+We're here to help and will respond within 24 hours!

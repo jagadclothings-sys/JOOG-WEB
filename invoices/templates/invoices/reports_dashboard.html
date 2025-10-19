@@ -1,0 +1,139 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Reports & Analytics - JOOG Admin</title>
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+    <link href="{% static 'css/theme.css' %}" rel="stylesheet">
+</head>
+<body>
+<div class="header brand-stripes">
+        <div class="header-content">
+            <h1>📈 Invoice Reports & Analytics</h1>
+            
+            <div class="nav-buttons">
+                <a href="{% url 'invoices:admin_dashboard' %}" class="btn btn-primary">🏠 Back to Dashboard</a>
+                <a href="{% url 'invoices:orders_report_dashboard' %}" class="btn btn-secondary">📦 Orders Reports</a>
+                <a href="{% url 'invoices:admin_invoice_list' %}" class="btn btn-secondary">📋 All Invoices</a>
+                <a href="{% url 'invoices:export_excel' %}{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}" class="btn btn-warning">📊 Export Excel</a>
+                <a href="{% url 'invoices:export_sales_report_excel' %}{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}" class="btn btn-warning">📈 Create Sales Report</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <!-- Date Filters -->
+        <div class="filters">
+            <form method="get">
+                <div class="filters-row">
+                    <div class="filter-group">
+                        <label for="start_date">Start Date</label>
+                        <input type="date" id="start_date" name="start_date" value="{{ start_date|date:'Y-m-d' }}">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="end_date">End Date</label>
+                        <input type="date" id="end_date" name="end_date" value="{{ end_date|date:'Y-m-d' }}">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <button type="submit" class="btn btn-primary">Apply Filters</button>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <a href="{% url 'invoices:reports_dashboard' %}" class="btn btn-secondary">Clear</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Statistics Overview -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">{{ total_invoices }}</div>
+                <div class="stat-label">Total Invoices</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-number">₹{{ total_revenue|floatformat:0 }}</div>
+                <div class="stat-label">Total Revenue</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-number">₹{{ total_tax|floatformat:0 }}</div>
+                <div class="stat-label">Total Tax Collected</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-number">₹{{ total_discounts|floatformat:0 }}</div>
+                <div class="stat-label">Total Discounts</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-number">₹{{ avg_invoice_value|floatformat:0 }}</div>
+                <div class="stat-label">Average Invoice Value</div>
+            </div>
+        </div>
+        
+        <!-- Charts and Analytics -->
+        <div class="charts-section">
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>🏆 Top Customers by Revenue</h3>
+                </div>
+                <div class="chart-content">
+                    {% if top_customers %}
+                        {% for customer in top_customers %}
+                        <div class="customer-item">
+                            <div class="customer-info">
+                                <div class="customer-name">{{ customer.customer_name }}</div>
+                                <div class="customer-email">{{ customer.customer_email }}</div>
+                            </div>
+                            <div class="customer-stats">
+                                <div class="customer-amount">₹{{ customer.total_spent|floatformat:2 }}</div>
+                                <div class="customer-count">{{ customer.invoice_count }} invoice{{ customer.invoice_count|pluralize }}</div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="no-data">No customer data available</div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>📅 Monthly Performance</h3>
+                </div>
+                <div class="chart-content">
+                    {% if monthly_data %}
+                        {% for month in monthly_data %}
+                        <div class="monthly-item">
+                            <div class="month-info">
+                                <div class="month-label">
+                                    {% if month.month == 1 %}Jan{% elif month.month == 2 %}Feb{% elif month.month == 3 %}Mar{% elif month.month == 4 %}Apr{% elif month.month == 5 %}May{% elif month.month == 6 %}Jun{% elif month.month == 7 %}Jul{% elif month.month == 8 %}Aug{% elif month.month == 9 %}Sep{% elif month.month == 10 %}Oct{% elif month.month == 11 %}Nov{% else %}Dec{% endif %} {{ month.year }}
+                                </div>
+                            </div>
+                            <div class="month-stats">
+                                <div class="stat-item">
+                                    <div class="stat-value">{{ month.count }}</div>
+                                    <div class="stat-desc">Invoices</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value">₹{{ month.revenue|floatformat:0 }}</div>
+                                    <div class="stat-desc">Revenue</div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="no-data">No monthly data available</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,234 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard - {{ influencer.name }} - JOOG{% endblock %}
+
+{% block extra_head %}
+<style>
+    .dashboard-card {
+        background: white;
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        transition: transform 0.2s;
+    }
+    .dashboard-card:hover {
+        transform: translateY(-2px);
+    }
+    .stat-card {
+        background: linear-gradient(135deg, var(--from-color) 0%, var(--to-color) 100%);
+        color: white;
+    }
+    /* Hide login/register options for influencers */
+    .nav-header .btn-primary,
+    .nav-header .btn-outline,
+    footer .btn-white:contains('My Account'),
+    footer .btn-outline:contains('Logout') {
+        display: none !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="bg-gray-50 min-h-screen">
+    <!-- Influencer Dashboard Header -->
+<div class="bg-gradient-to-r from-red-600 to-red-500 text-white py-8 brand-stripes">
+        <div class="container mx-auto px-4 mb-4 flex items-center justify-center">
+            <img src="{% static 'img/joog-logo.png' %}?v=4" alt="JOOG" 
+                 style="height:44px; width:auto; filter: brightness(0) saturate(100%) invert(18%) sepia(93%) saturate(7093%) hue-rotate(356deg) brightness(91%) contrast(118%) drop-shadow(2px 4px 6px rgba(220, 38, 38, 0.3));"/>
+        </div>
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-3xl font-bold">Welcome back, {{ influencer.name }}!</h1>
+                    <p class="text-red-100 mt-2">@{{ influencer.username }} • Last login: {{ influencer.last_login|date:"M d, Y g:i A"|default:"First time" }}</p>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="{% url 'influencers:orders' %}" class="bg-white bg-opacity-20 hover:bg-opacity-30 px-4 py-2 rounded-lg transition-colors">
+                        <i class="fas fa-list mr-2"></i>View Orders
+                    </a>
+                    <a href="{% url 'influencers:monthly_report' %}" class="bg-white bg-opacity-20 hover:bg-opacity-30 px-4 py-2 rounded-lg transition-colors">
+                        <i class="fas fa-chart-bar mr-2"></i>Monthly Report
+                    </a>
+                    <a href="{% url 'influencers:logout' %}" class="bg-red-900 hover:bg-red-800 px-4 py-2 rounded-lg transition-colors">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8">
+        <!-- Statistics Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- Total Orders -->
+            <div class="dashboard-card stat-card p-6" style="--from-color: #3b82f6; --to-color: #1d4ed8;">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-blue-100 text-sm">Total Orders</p>
+                        <p class="text-3xl font-bold">{{ total_orders }}</p>
+                    </div>
+                    <i class="fas fa-shopping-cart text-4xl opacity-20"></i>
+                </div>
+            </div>
+
+            <!-- Total Revenue -->
+            <div class="dashboard-card stat-card p-6" style="--from-color: #10b981; --to-color: #047857;">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-green-100 text-sm">Total Revenue</p>
+                        <p class="text-3xl font-bold">₹{{ total_revenue|floatformat:0 }}</p>
+                    </div>
+                    <i class="fas fa-chart-line text-4xl opacity-20"></i>
+                </div>
+            </div>
+
+            <!-- Commission Earned -->
+            <div class="dashboard-card stat-card p-6" style="--from-color: #f59e0b; --to-color: #d97706;">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-yellow-100 text-sm">Commission Earned</p>
+                        <p class="text-3xl font-bold">₹{{ commission_earned|floatformat:0 }}</p>
+                        <p class="text-yellow-200 text-xs">{{ influencer.commission_rate }}% rate</p>
+                    </div>
+                    <i class="fas fa-coins text-4xl opacity-20"></i>
+                </div>
+            </div>
+
+            <!-- Active Coupons -->
+            <div class="dashboard-card stat-card p-6" style="--from-color: #8b5cf6; --to-color: #7c3aed;">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-purple-100 text-sm">Active Coupons</p>
+                        <p class="text-3xl font-bold">{{ assigned_coupons_count }}</p>
+                    </div>
+                    <i class="fas fa-ticket-alt text-4xl opacity-20"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Recent Orders -->
+            <div class="dashboard-card p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold text-gray-900">Recent Orders</h3>
+                    <a href="{% url 'influencers:orders' %}" class="text-blue-600 hover:text-blue-800 text-sm">
+                        View All <i class="fas fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+                
+                {% if recent_orders %}
+                <div class="space-y-3">
+                    {% for order in recent_orders %}
+                    <div class="flex justify-between items-center py-3 border-b border-gray-100 last:border-b-0">
+                        <div>
+                            <div class="font-medium text-gray-900">Order #{{ order.order_number }}</div>
+                            <div class="text-sm text-gray-600">
+                                {{ order.user.get_full_name|default:order.user.username }} • {{ order.coupon.code }}
+                            </div>
+                            <div class="text-xs text-gray-500">{{ order.created_at|date:"M d, Y g:i A" }}</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="font-semibold text-gray-900">₹{{ order.final_amount|floatformat:0 }}</div>
+                            <div class="text-xs text-green-600">-₹{{ order.discount_amount|floatformat:0 }} saved</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-8 text-gray-500">
+                    <i class="fas fa-inbox text-4xl mb-2"></i>
+                    <p>No orders yet</p>
+                    <p class="text-sm">Orders using your coupon codes will appear here</p>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Coupon Performance -->
+            <div class="dashboard-card p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Coupon Performance</h3>
+                
+                {% if coupon_stats %}
+                <div class="space-y-4">
+                    {% for stat in coupon_stats %}
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <div>
+                                <div class="font-semibold text-gray-900">{{ stat.coupon.code }}</div>
+                                <div class="text-sm text-gray-600">
+                                    {% if stat.coupon.discount_type == 'percentage' %}
+                                        {{ stat.coupon.discount_value }}% off
+                                    {% else %}
+                                        ₹{{ stat.coupon.discount_value }} off
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="font-semibold text-gray-900">{{ stat.orders_count }} orders</div>
+                                <div class="text-sm text-green-600">₹{{ stat.revenue|floatformat:0 }} revenue</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Usage Bar -->
+                        {% if stat.max_uses %}
+                        <div class="mt-2">
+                            <div class="flex justify-between text-xs text-gray-500 mb-1">
+                                <span>Usage</span>
+                                <span>{{ stat.usage_count }}/{{ stat.max_uses }}</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-blue-600 h-2 rounded-full" style="width: {% widthratio stat.usage_count stat.max_uses 100 %}%"></div>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="mt-2 text-xs text-gray-500">
+                            {{ stat.usage_count }} total uses • No limit
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-8 text-gray-500">
+                    <i class="fas fa-ticket-alt text-4xl mb-2"></i>
+                    <p>No coupons assigned</p>
+                    <p class="text-sm">Contact support to get your coupon codes</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Social Media Info -->
+        {% if influencer.instagram_handle or influencer.youtube_channel or influencer.tiktok_handle %}
+        <div class="dashboard-card p-6 mt-8">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Your Social Media</h3>
+            <div class="flex flex-wrap gap-4">
+                {% if influencer.instagram_handle %}
+                <div class="flex items-center bg-pink-50 px-3 py-2 rounded-lg">
+                    <i class="fab fa-instagram text-pink-600 mr-2"></i>
+                    <span class="text-gray-700">@{{ influencer.instagram_handle }}</span>
+                </div>
+                {% endif %}
+                {% if influencer.youtube_channel %}
+                <div class="flex items-center bg-red-50 px-3 py-2 rounded-lg">
+                    <i class="fab fa-youtube text-red-600 mr-2"></i>
+                    <span class="text-gray-700">{{ influencer.youtube_channel }}</span>
+                </div>
+                {% endif %}
+                {% if influencer.tiktok_handle %}
+                <div class="flex items-center bg-gray-50 px-3 py-2 rounded-lg">
+                    <i class="fab fa-tiktok text-gray-700 mr-2"></i>
+                    <span class="text-gray-700">@{{ influencer.tiktok_handle }}</span>
+                </div>
+                {% endif %}
+                {% if influencer.website %}
+                <div class="flex items-center bg-blue-50 px-3 py-2 rounded-lg">
+                    <i class="fas fa-globe text-blue-600 mr-2"></i>
+                    <a href="{{ influencer.website }}" target="_blank" class="text-blue-700 hover:text-blue-800">Website</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

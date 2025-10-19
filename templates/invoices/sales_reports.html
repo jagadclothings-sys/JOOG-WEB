@@ -1,0 +1,388 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Sales Reports - JOOG Admin{% endblock %}
+
+{% block extra_head %}
+<style>
+    .admin-header {
+        background: linear-gradient(135deg, #E53E3E 0%, #C53030 100%);
+    }
+    .stats-card {
+        background: white;
+        border-radius: 1rem;
+        border: 1px solid #e5e7eb;
+        transition: transform 0.2s ease;
+    }
+    .stats-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+    .export-card {
+        background: white;
+        border-radius: 1rem;
+        border: 1px solid #e5e7eb;
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+    .export-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        border-color: #ef4444;
+    }
+    .filter-card {
+        background: white;
+        border-radius: 1rem;
+        border: 1px solid #e5e7eb;
+    }
+    .report-table {
+        background: white;
+        border-radius: 1rem;
+        border: 1px solid #e5e7eb;
+        overflow: hidden;
+    }
+    .chart-container {
+        background: white;
+        border-radius: 1rem;
+        border: 1px solid #e5e7eb;
+        padding: 1.5rem;
+    }
+    .date-input {
+        border: 2px solid #e5e7eb;
+        border-radius: 0.5rem;
+        padding: 0.75rem;
+        transition: all 0.3s ease;
+    }
+    .date-input:focus {
+        border-color: #ef4444;
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+        outline: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="bg-gray-50 min-h-screen">
+    <!-- Admin Header -->
+    <div class="admin-header text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-start">
+                <div>
+                    <h1 class="text-3xl font-bold mb-2" style="font-family: 'Playfair Display', serif;">
+                        Sales Reports & Analytics
+                    </h1>
+                    <p class="text-gray-300">Comprehensive sales insights and data export</p>
+                </div>
+                <div class="mt-4 md:mt-0 flex items-center space-x-6">
+                    <div class="text-right">
+                        <div class="text-2xl font-bold">₹{{ total_revenue|floatformat:0 }}</div>
+                        <div class="text-gray-300 text-sm">Total Revenue</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-2xl font-bold">{{ total_orders }}</div>
+                        <div class="text-gray-300 text-sm">Total Orders</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8">
+        <!-- Date Filter -->
+        <div class="filter-card p-6 mb-8">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                <i class="fas fa-filter mr-2 text-red-600"></i>Filter Reports
+            </h3>
+            <form method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Start Date</label>
+                    <input type="date" name="start_date" value="{{ start_date|date:'Y-m-d' }}" 
+                           class="date-input w-full">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">End Date</label>
+                    <input type="date" name="end_date" value="{{ end_date|date:'Y-m-d' }}" 
+                           class="date-input w-full">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                    <select name="status" class="date-input w-full">
+                        <option value="all">All Orders</option>
+                        <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
+                        <option value="confirmed" {% if status_filter == 'confirmed' %}selected{% endif %}>Confirmed</option>
+                        <option value="shipped" {% if status_filter == 'shipped' %}selected{% endif %}>Shipped</option>
+                        <option value="delivered" {% if status_filter == 'delivered' %}selected{% endif %}>Delivered</option>
+                        <option value="cancelled" {% if status_filter == 'cancelled' %}selected{% endif %}>Cancelled</option>
+                    </select>
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-primary w-full">
+                        <i class="fas fa-filter mr-2"></i>Apply Filters
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Statistics Overview -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="stats-card p-6 text-center">
+                <div class="text-3xl font-bold text-red-600 mb-2">{{ total_orders }}</div>
+                <div class="text-gray-600 text-sm">Total Orders</div>
+                <div class="text-xs text-gray-500 mt-1">
+                    {% if start_date %}{{ start_date|date:"M d" }} - {{ end_date|date:"M d" }}{% else %}All Time{% endif %}
+                </div>
+            </div>
+            <div class="stats-card p-6 text-center">
+                <div class="text-3xl font-bold text-green-600 mb-2">₹{{ total_revenue|floatformat:0 }}</div>
+                <div class="text-gray-600 text-sm">Total Revenue</div>
+                <div class="text-xs text-gray-500 mt-1">Gross Sales</div>
+            </div>
+            <div class="stats-card p-6 text-center">
+                <div class="text-3xl font-bold text-purple-600 mb-2">₹{{ avg_order_value|floatformat:0 }}</div>
+                <div class="text-gray-600 text-sm">Avg Order Value</div>
+                <div class="text-xs text-gray-500 mt-1">Per Transaction</div>
+            </div>
+            <div class="stats-card p-6 text-center">
+                <div class="text-3xl font-bold text-red-600 mb-2">₹{{ total_discount|floatformat:0 }}</div>
+                <div class="text-gray-600 text-sm">Total Discounts</div>
+                <div class="text-xs text-gray-500 mt-1">Savings Given</div>
+            </div>
+        </div>
+
+        <!-- Export Options -->
+        <div class="mb-8">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                <i class="fas fa-download mr-2 text-green-600"></i>Export Reports
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <a href="{% url 'invoices:export_sales_report' %}?{{ request.GET.urlencode }}" class="export-card p-6 block">
+                    <div class="text-center">
+                        <i class="fas fa-file-excel text-4xl text-green-600 mb-4"></i>
+                        <h4 class="text-lg font-semibold mb-2">Sales Report</h4>
+                        <p class="text-gray-600 text-sm">Comprehensive sales data with customer analysis, product performance, and revenue metrics</p>
+                        <div class="mt-3 text-green-600 font-semibold">
+                            <i class="fas fa-download mr-1"></i>Download Excel
+                        </div>
+                    </div>
+                </a>
+                
+                <a href="{% url 'invoices:export_orders_report' %}?{{ request.GET.urlencode }}" class="export-card p-6 block">
+                    <div class="text-center">
+                        <i class="fas fa-file-alt text-4xl text-red-600 mb-4"></i>
+                        <h4 class="text-lg font-semibold mb-2">Orders Report</h4>
+                        <p class="text-gray-600 text-sm">Detailed order information with items, shipping details, and payment status</p>
+                        <div class="mt-3 text-red-600 font-semibold">
+                            <i class="fas fa-download mr-1"></i>Download Excel
+                        </div>
+                    </div>
+                </a>
+                
+                <a href="{% url 'invoices:export_invoices_excel' %}?{{ request.GET.urlencode }}" class="export-card p-6 block">
+                    <div class="text-center">
+                        <i class="fas fa-file-invoice-dollar text-4xl text-red-600 mb-4"></i>
+                        <h4 class="text-lg font-semibold mb-2">Tax Invoices</h4>
+                        <p class="text-gray-600 text-sm">GST invoices with detailed tax breakdowns and compliance data</p>
+                        <div class="mt-3 text-red-600 font-semibold">
+                            <i class="fas fa-download mr-1"></i>Download Excel
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Sales Performance Charts -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <!-- Order Status Breakdown -->
+            <div class="chart-container">
+                <h4 class="text-lg font-semibold mb-4">
+                    <i class="fas fa-chart-pie mr-2 text-red-600"></i>Order Status Breakdown
+                </h4>
+                {% if status_stats %}
+                <div class="space-y-3">
+                    {% for status in status_stats %}
+                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+                        <div class="flex items-center">
+                            <div class="w-4 h-4 rounded bg-{{ status.status|lower }}-500 mr-3"></div>
+                            <span class="font-medium">{{ status.status|title }}</span>
+                        </div>
+                        <div class="text-right">
+                            <div class="font-bold">{{ status.count }}</div>
+                            <div class="text-sm text-gray-600">₹{{ status.revenue|floatformat:0 }}</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-gray-500 text-center py-8">No status data available</p>
+                {% endif %}
+            </div>
+
+            <!-- Payment Method Analysis -->
+            <div class="chart-container">
+                <h4 class="text-lg font-semibold mb-4">
+                    <i class="fas fa-credit-card mr-2 text-red-600"></i>Payment Methods
+                </h4>
+                {% if payment_stats %}
+                <div class="space-y-3">
+                    {% for payment in payment_stats %}
+                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+                        <div class="flex items-center">
+                            <i class="fas fa-{% if payment.payment_method == 'razorpay' %}credit-card{% elif payment.payment_method == 'cod' %}truck{% else %}wallet{% endif %} text-gray-600 mr-3"></i>
+                            <span class="font-medium">{{ payment.payment_method|title }}</span>
+                        </div>
+                        <div class="text-right">
+                            <div class="font-bold">{{ payment.count }}</div>
+                            <div class="text-sm text-gray-600">₹{{ payment.revenue|floatformat:0 }}</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-gray-500 text-center py-8">No payment data available</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Top Products -->
+        <div class="report-table mb-8">
+            <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                <h3 class="text-lg font-semibold text-gray-900">
+                    <i class="fas fa-star mr-2 text-yellow-500"></i>Top Selling Products
+                </h3>
+            </div>
+            {% if top_products %}
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="text-left py-3 px-6 font-semibold text-gray-700">Product</th>
+                            <th class="text-right py-3 px-6 font-semibold text-gray-700">Quantity Sold</th>
+                            <th class="text-right py-3 px-6 font-semibold text-gray-700">Revenue</th>
+                            <th class="text-center py-3 px-6 font-semibold text-gray-700">Orders</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in top_products %}
+                        <tr class="border-b border-gray-100">
+                            <td class="py-3 px-6">
+                                <div class="font-semibold text-gray-900">{{ product.product__name }}</div>
+                                <div class="text-sm text-gray-600">{{ product.product__category__name|default:"No Category" }}</div>
+                            </td>
+                            <td class="py-3 px-6 text-right font-bold text-blue-600">{{ product.total_quantity }}</td>
+                            <td class="py-3 px-6 text-right font-bold text-green-600">₹{{ product.total_revenue|floatformat:0 }}</td>
+                            <td class="py-3 px-6 text-center font-bold text-purple-600">{{ product.order_count }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="p-12 text-center text-gray-500">
+                <i class="fas fa-box-open text-6xl text-gray-300 mb-4"></i>
+                <p>No product sales data available for the selected period</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Top Customers -->
+        <div class="report-table mb-8">
+            <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                <h3 class="text-lg font-semibold text-gray-900">
+                    <i class="fas fa-users mr-2 text-red-600"></i>Top Customers
+                </h3>
+            </div>
+            {% if top_customers %}
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="text-left py-3 px-6 font-semibold text-gray-700">Customer</th>
+                            <th class="text-center py-3 px-6 font-semibold text-gray-700">Orders</th>
+                            <th class="text-right py-3 px-6 font-semibold text-gray-700">Total Spent</th>
+                            <th class="text-right py-3 px-6 font-semibold text-gray-700">Avg Order Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for customer in top_customers %}
+                        <tr class="border-b border-gray-100">
+                            <td class="py-3 px-6">
+                                <div class="flex items-center">
+                                    <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center mr-3">
+                                        <i class="fas fa-user text-red-600 text-xs"></i>
+                                    </div>
+                                    <div>
+                                        <div class="font-semibold text-gray-900">
+                                            {{ customer.user__first_name }} {{ customer.user__last_name }}
+                                        </div>
+                                        <div class="text-sm text-gray-600">{{ customer.user__email }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-3 px-6 text-center font-bold text-blue-600">{{ customer.total_orders }}</td>
+                            <td class="py-3 px-6 text-right font-bold text-green-600">₹{{ customer.total_spent|floatformat:0 }}</td>
+                            <td class="py-3 px-6 text-right font-bold text-purple-600">₹{{ customer.avg_order_value|floatformat:0 }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="p-12 text-center text-gray-500">
+                <i class="fas fa-user-slash text-6xl text-gray-300 mb-4"></i>
+                <p>No customer data available for the selected period</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                <i class="fas fa-bolt mr-2 text-yellow-500"></i>Quick Actions
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <a href="{% url 'products:admin_dashboard' %}" 
+                   class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                    <i class="fas fa-tachometer-alt text-blue-600 mr-3"></i>
+                    <div>
+                        <div class="font-semibold text-gray-900">Dashboard</div>
+                        <div class="text-sm text-gray-600">Main admin panel</div>
+                    </div>
+                </a>
+                <a href="{% url 'accounts:admin_invoices' %}" 
+                   class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                    <i class="fas fa-file-invoice-dollar text-red-600 mr-3"></i>
+                    <div>
+                        <div class="font-semibold text-gray-900">Invoices</div>
+                        <div class="text-sm text-gray-600">Tax invoices</div>
+                    </div>
+                </a>
+                <a href="{% url 'orders:admin_orders' %}" 
+                   class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                    <i class="fas fa-shopping-bag text-purple-600 mr-3"></i>
+                    <div>
+                        <div class="font-semibold text-gray-900">Orders</div>
+                        <div class="text-sm text-gray-600">Manage orders</div>
+                    </div>
+                </a>
+                <button onclick="window.print()" 
+                        class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                    <i class="fas fa-print text-green-600 mr-3"></i>
+                    <div>
+                        <div class="font-semibold text-gray-900">Print Report</div>
+                        <div class="text-sm text-gray-600">Print this page</div>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Auto-submit form on filter change
+document.querySelectorAll('select[name="status"]').forEach(select => {
+    select.addEventListener('change', function() {
+        this.form.submit();
+    });
+});
+</script>
+{% endblock %}

@@ -3,14 +3,126 @@
 
 {% block title %}Profile - JOOG{% endblock %}
 
+{% block extra_head %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@19.5.6/build/css/intlTelInput.css">
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@19.5.6/build/js/intlTelInput.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@19.5.6/build/js/utils.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Form validation
+    const form = document.querySelector('form');
+    const emailField = document.querySelector('#id_email');
+    
+    if (emailField) {
+        emailField.addEventListener('blur', function() {
+            const email = this.value;
+            if (email && !isValidEmail(email)) {
+                showFieldError(this, 'Please enter a valid email address.');
+            } else {
+                clearFieldError(this);
+            }
+        });
+    }
+    
+    // Phone number validation
+    // Phone with intl-tel-input
+    const phoneField = document.querySelector('#id_phone_number');
+    let iti = null;
+    if (phoneField) {
+        iti = window.intlTelInput(phoneField, {
+            initialCountry: 'in',
+            separateDialCode: true,
+            utilsScript: 'https://cdn.jsdelivr.net/npm/intl-tel-input@19.5.6/build/js/utils.js'
+        });
+        phoneField.addEventListener('blur', function() {
+            const e164 = iti.getNumber();
+            if (phoneField.value && (!e164 || !/^\+?[1-9]\d{6,14}$/.test(e164))) {
+                showFieldError(phoneField, 'Enter a valid international phone number.');
+            } else {
+                clearFieldError(phoneField);
+                // Store back in the input
+                if (e164) phoneField.value = e164;
+            }
+        });
+    }
+    
+    // PIN code validation + simple location suggestion
+    const postalField = document.querySelector('#id_postal_code');
+    const cityField = document.querySelector('#id_city');
+    const stateField = document.querySelector('#id_state');
+    const countryField = document.querySelector('#id_country');
+    if (postalField) {
+        postalField.maxLength = 6;
+        postalField.addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9]/g, '').slice(0,6);
+        });
+        postalField.addEventListener('blur', async function(){
+            const pin = this.value;
+            if(pin && !/^\d{6}$/.test(pin)){
+                showFieldError(this, 'Enter a valid 6-digit PIN code.');
+                return;
+            } else {
+                clearFieldError(this);
+            }
+            const hint = { '560001':'Bengaluru', '560027':'Bengaluru', '560002':'Bengaluru' };
+            try{
+                const res = await fetch(`https://api.postalpincode.in/pincode/${pin}`);
+                const data = await res.json();
+                if(Array.isArray(data) && data[0] && data[0].Status === 'Success'){
+                    const po = data[0].PostOffice && data[0].PostOffice[0];
+                    if(cityField && po && po.District){ cityField.value = po.District; }
+                    if(stateField && po && po.State){ stateField.value = po.State; }
+                    if(countryField){ countryField.value = (po && po.Country) ? po.Country : 'India'; }
+                } else if(hint[pin]){
+                    if(cityField){ cityField.value = hint[pin]; }
+                    if(countryField){ countryField.value = 'India'; }
+                }
+            } catch(err){
+                if(hint[pin]){
+                    if(cityField){ cityField.value = hint[pin]; }
+                    if(countryField){ countryField.value = 'India'; }
+                }
+            }
+        });
+    }
+});
+
+function isValidEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
+
+function showFieldError(field, message) {
+    clearFieldError(field);
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'form-error';
+    errorDiv.textContent = message;
+    field.parentNode.appendChild(errorDiv);
+    field.classList.add('border-red-500');
+}
+
+function clearFieldError(field) {
+    const existingError = field.parentNode.querySelector('.form-error');
+    if (existingError) {
+        existingError.remove();
+    }
+    field.classList.remove('border-red-500');
+}
+</script>
+{% endblock %}
+
 {% block content %}
-<div class="container mx-auto px-4 py-12">
-    <div class="max-w-2xl mx-auto">
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-            <div class="bg-gradient-to-r from-red-600 to-red-700 text-white p-6">
-                <h1 class="text-2xl font-bold">Profile Settings</h1>
-                <p class="text-red-100">Update your personal information</p>
-            </div>
+<div class="page-container">
+    <div class="content-wrapper max-w-2xl mx-auto">
+        <div class="page-header">
+            <h1 class="page-title">Profile Settings</h1>
+            <p class="page-subtitle">Update your personal information</p>
+        </div>
+        
+        <div class="form-section">
             
             <div class="p-6">
                 <form method="POST" class="space-y-6">
@@ -57,7 +169,7 @@
                         {% endif %}
                     </div>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <div>
                             <label class="form-label">{{ form.city.label_tag }}</label>
                             {{ form.city }}
@@ -66,8 +178,17 @@
                             {% endif %}
                         </div>
                         <div>
+                            <label class="form-label">{{ form.state.label_tag }}</label>
+                            {{ form.state }}
+                            <div class="text-xs text-gray-500 mt-1">State may auto-fill from PIN</div>
+                            {% if form.state.errors %}
+                            <div class="form-error">{{ form.state.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <div>
                             <label class="form-label">{{ form.postal_code.label_tag }}</label>
                             {{ form.postal_code }}
+                            <div class="text-xs text-gray-500 mt-1">Enter 6-digit PIN code</div>
                             {% if form.postal_code.errors %}
                             <div class="form-error">{{ form.postal_code.errors.0 }}</div>
                             {% endif %}
@@ -81,10 +202,13 @@
                         </div>
                     </div>
                     
-                    <div class="flex space-x-4">
+                    <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
                         <button type="submit" class="btn btn-primary">
                             Update Profile <i class="fas fa-save ml-2"></i>
                         </button>
+                        <a href="{% url 'accounts:change_password' %}" class="btn btn-outline">
+                            Change Password <i class="fas fa-key ml-2"></i>
+                        </a>
                         <a href="{% url 'accounts:dashboard' %}" class="btn btn-outline">
                             Cancel
                         </a>

@@ -1,0 +1,678 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block title %}{{ influencer.name }} - Influencer Details - JOOG Admin{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+/* Use JOOG luxury theme variables */
+:root {
+    --joog-red-primary: #8b0000;
+    --joog-red-accent: #a52a2a;
+    --joog-gold-accent: #d4af37;
+    --joog-champagne: #f7e7ce;
+    --joog-ivory: #fffff0;
+    --joog-ivory-linen: #faf0e6;
+    --joog-text-primary: #2d1810;
+    --joog-text-secondary: #5d4e37;
+    --joog-gradient-red: linear-gradient(135deg, #8b0000 0%, #a52a2a 100%);
+    --joog-gradient-luxury: linear-gradient(135deg, #8b0000 0%, #d4af37 50%, #f7e7ce 100%);
+}
+
+/* Header styling to match list page */
+.page-header {
+    background: var(--joog-gradient-luxury);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    color: var(--joog-ivory);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(139, 0, 0, 0.2);
+}
+
+.page-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(circle at 20% 80%, rgba(255,255,255,0.1) 1px, transparent 1px),
+                      radial-gradient(circle at 80% 20%, rgba(255,255,255,0.1) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+}
+
+.page-header h1 {
+    color: var(--joog-ivory) !important;
+    font-family: 'Playfair Display', serif !important;
+    font-weight: 700 !important;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    position: relative;
+    z-index: 1;
+}
+
+.page-header p {
+    color: var(--joog-champagne) !important;
+    position: relative;
+    z-index: 1;
+}
+
+.profile-header {
+    background: var(--joog-gradient-luxury);
+    color: var(--joog-ivory);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 25px rgba(139, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.profile-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(circle at 20% 80%, rgba(255,255,255,0.1) 1px, transparent 1px),
+                      radial-gradient(circle at 80% 20%, rgba(255,255,255,0.1) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+}
+
+.profile-header .avatar {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border: 3px solid var(--joog-gold-accent);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 1;
+}
+
+.profile-header .content {
+    position: relative;
+    z-index: 1;
+}
+
+.info-card {
+    background: var(--joog-ivory);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 8px 25px rgba(139, 0, 0, 0.1);
+    border: 2px solid var(--joog-champagne);
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.info-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--joog-gradient-red);
+    z-index: 1;
+}
+
+.info-card h4, .info-card h5 {
+    color: var(--joog-text-primary) !important;
+    font-family: 'Inter', sans-serif !important;
+    font-weight: 700 !important;
+}
+
+/* High contrast stat cards */
+.stat-card {
+    text-align: center;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Custom high-contrast stat card colors */
+.stat-card.orders {
+    background: linear-gradient(135deg, #1e40af, #1d4ed8);
+    border-color: #1e3a8a;
+    color: white;
+}
+
+.stat-card.revenue {
+    background: linear-gradient(135deg, #059669, #10b981);
+    border-color: #047857;
+    color: white;
+}
+
+.stat-card.commission {
+    background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+    border-color: #6d28d9;
+    color: white;
+}
+
+.stat-card.coupons {
+    background: linear-gradient(135deg, #d97706, #f59e0b);
+    border-color: #b45309;
+    color: white;
+}
+
+.stat-card .h3 {
+    font-size: 2rem !important;
+    font-weight: 900 !important;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    margin-bottom: 0.5rem;
+}
+
+.stat-card .small {
+    font-size: 0.9rem !important;
+    font-weight: 600 !important;
+    opacity: 0.95 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn-action {
+    border-radius: 25px;
+    padding: 10px 20px;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid;
+}
+
+.btn-action::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.btn-action:hover::before {
+    left: 100%;
+}
+
+/* Header button styling for luxury theme */
+.profile-header .btn-light {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+    color: var(--joog-ivory) !important;
+    backdrop-filter: blur(10px);
+}
+
+.profile-header .btn-light:hover {
+    background: rgba(255, 255, 255, 0.3) !important;
+    border-color: var(--joog-champagne) !important;
+    color: var(--joog-ivory) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+}
+
+/* Table styling */
+.table {
+    margin: 0 !important;
+}
+
+.table thead th {
+    background: var(--joog-champagne) !important;
+    color: var(--joog-text-primary) !important;
+    font-weight: 700 !important;
+    font-family: 'Inter', sans-serif !important;
+    padding: 1rem !important;
+    border-bottom: 3px solid var(--joog-gold-accent) !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.85rem;
+}
+
+.table tbody tr {
+    transition: all 0.3s ease;
+}
+
+.table tbody tr:hover {
+    background: rgba(139, 0, 0, 0.05) !important;
+    transform: scale(1.005);
+}
+
+.table tbody td {
+    padding: 1rem !important;
+    border-bottom: 1px solid var(--joog-ivory-linen) !important;
+    vertical-align: middle !important;
+}
+
+/* Form controls */
+.form-control {
+    border: 2px solid var(--joog-champagne) !important;
+    border-radius: 6px !important;
+    padding: 0.75rem !important;
+    font-family: 'Inter', sans-serif !important;
+    transition: all 0.3s ease !important;
+    background: var(--joog-ivory) !important;
+}
+
+.form-control:focus {
+    border-color: var(--joog-red-primary) !important;
+    box-shadow: 0 0 0 3px rgba(139, 0, 0, 0.15) !important;
+    outline: none !important;
+    background: white !important;
+}
+
+/* Enhanced badges */
+.badge {
+    font-weight: 600 !important;
+    padding: 8px 12px !important;
+    border-radius: 20px !important;
+    font-size: 0.75rem !important;
+    border: 2px solid;
+}
+
+.badge.bg-success {
+    background: linear-gradient(135deg, #22c55e, #16a34a) !important;
+    border-color: #15803d !important;
+}
+
+.badge.bg-danger {
+    background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+    border-color: #b91c1c !important;
+}
+
+.badge.bg-purple {
+    background: linear-gradient(135deg, #7c3aed, #8b5cf6) !important;
+    border-color: #6d28d9 !important;
+    color: white !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .profile-header, .info-card {
+        padding: 1.5rem;
+        border-radius: 8px;
+    }
+    
+    .stat-card {
+        padding: 1rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .btn-action {
+        padding: 8px 16px;
+        font-size: 0.85rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Profile Header -->
+    <div class="profile-header">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <div class="d-flex align-items-center content">
+                    <div class="rounded-circle avatar d-flex align-items-center justify-content-center me-4" 
+                         style="width: 80px; height: 80px; font-size: 2rem; font-weight: bold;">
+                        {{ influencer.name|first|upper }}
+                    </div>
+                    <div>
+                        <h1 class="h2 mb-2"><i class="fas fa-user-star me-3"></i>{{ influencer.name }}</h1>
+                        <p class="mb-2">@{{ influencer.username }} • Influencer Details</p>
+                        <div class="d-flex align-items-center">
+                            {% if influencer.is_active %}
+                                <span class="badge bg-success me-3">Active</span>
+                            {% else %}
+                                <span class="badge bg-danger me-3">Inactive</span>
+                            {% endif %}
+                            <span>{{ influencer.commission_rate }}% Commission Rate</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 text-end">
+                <div class="content">
+                    <a href="{% url 'influencers:admin_list' %}" class="btn btn-light btn-action me-3">
+                        <i class="fas fa-arrow-left me-2"></i>Back to List
+                    </a>
+                    <a href="{% url 'influencers:admin_edit' influencer.id %}" class="btn btn-light btn-action me-2">
+                        <i class="fas fa-edit me-2"></i>Edit
+                    </a>
+                    <a href="{% url 'influencers:admin_coupon_assignment' influencer.id %}" class="btn btn-light btn-action">
+                        <i class="fas fa-tags me-2"></i>Manage Coupons
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Performance Stats -->
+        <div class="col-lg-8">
+            <div class="info-card">
+                <h4 class="mb-4"><i class="fas fa-chart-line me-2"></i>Performance Overview</h4>
+                
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="stat-card orders">
+                            <div class="h3 mb-1"><i class="fas fa-shopping-bag me-2"></i>{{ total_orders }}</div>
+                            <div class="small">Total Orders</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card revenue">
+                            <div class="h3 mb-1"><i class="fas fa-rupee-sign me-2"></i>{{ total_revenue|floatformat:0 }}</div>
+                            <div class="small">Revenue Generated</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card commission">
+                            <div class="h3 mb-1"><i class="fas fa-percentage me-2"></i>{{ commission_earned|floatformat:0 }}</div>
+                            <div class="small">Commission Earned</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card coupons">
+                            <div class="h3 mb-1"><i class="fas fa-tags me-2"></i>{{ active_coupons_count }}</div>
+                            <div class="small">Active Coupons</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Orders -->
+            <div class="info-card">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="mb-0"><i class="fas fa-shopping-bag me-2"></i>Recent Orders</h4>
+                    <a href="{% url 'influencers:admin_list' %}" class="btn btn-outline-primary btn-sm">View All Orders</a>
+                </div>
+
+                {% if recent_orders %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Order #</th>
+                                <th>Customer</th>
+                                <th>Coupon Used</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in recent_orders %}
+                            <tr>
+                                <td class="font-monospace">#{{ order.order_number }}</td>
+                                <td>{{ order.user.get_full_name|default:order.user.username }}</td>
+                                <td>
+                                    <span class="badge bg-purple text-white font-monospace">{{ order.coupon.code }}</span>
+                                </td>
+                                <td class="fw-bold text-success">₹{{ order.final_amount|floatformat:2 }}</td>
+                                <td>
+                                    {% if order.status == 'pending' %}
+                                        <span class="badge bg-warning">Pending</span>
+                                    {% elif order.status == 'confirmed' %}
+                                        <span class="badge bg-info">Confirmed</span>
+                                    {% elif order.status == 'shipped' %}
+                                        <span class="badge bg-primary">Shipped</span>
+                                    {% elif order.status == 'delivered' %}
+                                        <span class="badge bg-success">Delivered</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">{{ order.status|title }}</span>
+                                    {% endif %}
+                                </td>
+                                <td class="small">{{ order.created_at|date:"M d, Y" }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-4 text-muted">
+                    <i class="fas fa-shopping-bag fa-3x mb-3"></i>
+                    <p>No orders found using this influencer's coupons.</p>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Coupon Performance -->
+            <div class="info-card">
+                <h4 class="mb-4"><i class="fas fa-tags me-2"></i>Coupon Performance</h4>
+
+                {% if coupon_stats %}
+                <div class="row">
+                    {% for stat in coupon_stats %}
+                    <div class="col-md-6 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h6 class="card-title font-monospace text-primary">{{ stat.coupon.code }}</h6>
+                                    {% if stat.coupon.active %}
+                                        <span class="badge bg-success">Active</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Inactive</span>
+                                    {% endif %}
+                                </div>
+                                <div class="row text-center">
+                                    <div class="col-4">
+                                        <div class="small text-muted">Orders</div>
+                                        <div class="fw-bold">{{ stat.orders_count }}</div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="small text-muted">Revenue</div>
+                                        <div class="fw-bold text-success">₹{{ stat.revenue|floatformat:0 }}</div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="small text-muted">Commission</div>
+                                        <div class="fw-bold text-primary">₹{{ stat.commission|floatformat:0 }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-4 text-muted">
+                    <i class="fas fa-tags fa-3x mb-3"></i>
+                    <p>No coupon codes assigned to this influencer.</p>
+                    <a href="{% url 'influencers:admin_coupon_assignment' influencer.id %}" class="btn btn-primary">
+                        Assign Coupons
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Contact Information -->
+            <div class="info-card">
+                <h5 class="mb-3"><i class="fas fa-address-card me-2"></i>Contact Information</h5>
+                
+                <div class="mb-3">
+                    <div class="small text-muted">Email</div>
+                    <div>{{ influencer.email|default:"Not provided" }}</div>
+                </div>
+                
+                {% if influencer.phone %}
+                <div class="mb-3">
+                    <div class="small text-muted">Phone</div>
+                    <div>{{ influencer.phone }}</div>
+                </div>
+                {% endif %}
+                
+                <div class="mb-3">
+                    <div class="small text-muted">Member Since</div>
+                    <div>{{ influencer.created_at|date:"F d, Y" }}</div>
+                </div>
+                
+                {% if influencer.last_login %}
+                <div class="mb-3">
+                    <div class="small text-muted">Last Login</div>
+                    <div>{{ influencer.last_login|date:"M d, Y g:i A" }}</div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Social Media -->
+            <div class="info-card">
+                <h5 class="mb-3"><i class="fas fa-hashtag me-2"></i>Social Media</h5>
+                
+                {% if influencer.instagram_handle %}
+                <div class="mb-2">
+                    <a href="https://instagram.com/{{ influencer.instagram_handle }}" target="_blank" class="text-decoration-none">
+                        <i class="fab fa-instagram text-danger me-2"></i>@{{ influencer.instagram_handle }}
+                    </a>
+                </div>
+                {% endif %}
+                
+                {% if influencer.youtube_channel %}
+                <div class="mb-2">
+                    <a href="https://youtube.com/c/{{ influencer.youtube_channel }}" target="_blank" class="text-decoration-none">
+                        <i class="fab fa-youtube text-danger me-2"></i>{{ influencer.youtube_channel }}
+                    </a>
+                </div>
+                {% endif %}
+                
+                {% if influencer.tiktok_handle %}
+                <div class="mb-2">
+                    <a href="https://tiktok.com/@{{ influencer.tiktok_handle }}" target="_blank" class="text-decoration-none">
+                        <i class="fab fa-tiktok text-dark me-2"></i>@{{ influencer.tiktok_handle }}
+                    </a>
+                </div>
+                {% endif %}
+                
+                {% if influencer.website %}
+                <div class="mb-2">
+                    <a href="{{ influencer.website }}" target="_blank" class="text-decoration-none">
+                        <i class="fas fa-globe text-primary me-2"></i>Website
+                    </a>
+                </div>
+                {% endif %}
+                
+                {% if not influencer.instagram_handle and not influencer.youtube_channel and not influencer.tiktok_handle and not influencer.website %}
+                <div class="text-muted">
+                    <i class="fas fa-info-circle me-2"></i>No social media profiles added
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- API Access -->
+            <div class="info-card">
+                <h5 class="mb-3"><i class="fas fa-key me-2"></i>API Access</h5>
+                
+                <div class="mb-3">
+                    <div class="small text-muted mb-2">API Key</div>
+                    <div class="input-group input-group-sm">
+                        <input type="text" class="form-control font-monospace" 
+                               value="{{ influencer.api_key }}" readonly id="api-key">
+                        <button class="btn btn-outline-secondary" onclick="copyApiKey()">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <div class="small text-muted mb-2">Dashboard URL</div>
+                    <div class="small text-break">
+                        {{ request.scheme }}://{{ request.get_host }}/influencers/login/?username={{ influencer.username }}&api_key={{ influencer.api_key }}
+                    </div>
+                </div>
+                
+                <button class="btn btn-warning btn-sm btn-action w-100" 
+                        onclick="regenerateApiKey({{ influencer.id }})">
+                    <i class="fas fa-sync me-2"></i>Regenerate API Key
+                </button>
+            </div>
+
+            <!-- Actions -->
+            <div class="info-card">
+                <h5 class="mb-3"><i class="fas fa-cog me-2"></i>Actions</h5>
+                
+                <div class="d-grid gap-2">
+                    <a href="{% url 'influencers:admin_edit' influencer.id %}" class="btn btn-primary btn-action">
+                        <i class="fas fa-edit me-2"></i>Edit Profile
+                    </a>
+                    <a href="{% url 'influencers:admin_coupon_assignment' influencer.id %}" class="btn btn-info btn-action">
+                        <i class="fas fa-tags me-2"></i>Manage Coupons
+                    </a>
+                    <a href="{% url 'influencers:admin_list' %}" class="btn btn-outline-secondary btn-action">
+                        <i class="fas fa-arrow-left me-2"></i>Back to List
+                    </a>
+                    
+                    <button class="btn btn-danger btn-action" onclick="deleteInfluencer({{ influencer.id }}, '{{ influencer.name }}')">
+                        <i class="fas fa-trash me-2"></i>Delete Influencer
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function copyApiKey() {
+    const apiKeyField = document.getElementById('api-key');
+    apiKeyField.select();
+    navigator.clipboard.writeText(apiKeyField.value).then(() => {
+        alert('API key copied to clipboard!');
+    });
+}
+
+function regenerateApiKey(influencerId) {
+    if (confirm('Are you sure you want to regenerate the API key? The influencer will need the new key to access their dashboard.')) {
+        fetch(`/influencers/admin/${influencerId}/regenerate-api-key/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Error: ' + data.message);
+            }
+        });
+    }
+}
+
+function deleteInfluencer(influencerId, name) {
+    if (confirm(`Are you sure you want to delete "${name}"? This action cannot be undone.`)) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `/influencers/admin/${influencerId}/delete/`;
+        
+        const csrfToken = document.createElement('input');
+        csrfToken.type = 'hidden';
+        csrfToken.name = 'csrfmiddlewaretoken';
+        csrfToken.value = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        
+        form.appendChild(csrfToken);
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+</script>
+{% endblock %}

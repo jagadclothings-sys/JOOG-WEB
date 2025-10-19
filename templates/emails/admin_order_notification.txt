@@ -1,0 +1,55 @@
+NEW ORDER RECEIVED - JOOG WEAR ADMIN
+===================================
+
+🔔 Action Required - New customer order needs processing
+
+ORDER INFORMATION
+-----------------
+Order Number: #{{ order.id }}
+Order Date: {{ order.created_at|date:"F d, Y g:i A" }}
+Status: {{ order.status|title }}
+Payment Status: {{ order.payment_status|title }}
+Total Amount: ₹{{ order.total_amount }}
+
+CUSTOMER INFORMATION
+-------------------
+Name: {{ order.user.first_name }} {{ order.user.last_name }}
+Email: {{ order.user.email }}
+Phone: {{ order.user.phone_number|default:"Not provided" }}
+Customer Since: {{ order.user.date_joined|date:"F Y" }}
+
+SHIPPING ADDRESS
+---------------
+{{ order.shipping_address }}
+{{ order.shipping_city }}, {{ order.shipping_state }} {{ order.shipping_postal_code }}
+{{ order.shipping_country }}
+
+ITEMS ORDERED ({{ order.items.count }} item{{ order.items.count|pluralize }})
+-------------
+{% for item in order.items.all %}
+• {{ item.product.name }}
+  Quantity: {{ item.quantity }} | Unit Price: ₹{{ item.price }} | Total: ₹{{ item.get_total_price }}
+{% endfor %}
+
+ORDER SUMMARY
+------------
+Subtotal: ₹{{ order.total_amount|floatformat:2 }}
+{% if order.discount_amount %}Discount: -₹{{ order.discount_amount }}{% endif %}
+------------------------
+Total: ₹{{ order.final_amount|default:order.total_amount }}
+
+ADMIN ACTIONS
+------------
+View Admin Dashboard: {{ site_url }}/admin-dashboard/
+View Customer Details: {{ site_url }}/manage/customers/{{ order.user.id }}/
+
+NEXT STEPS
+----------
+□ Process payment if pending
+□ Update inventory levels  
+□ Prepare items for shipping
+□ Update order status when ready
+
+---
+This notification was sent from JOOG Wear Admin System
+Time: {{ order.created_at|date:"F d, Y g:i A" }}

@@ -1,0 +1,144 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tax Invoice Management - JOOG Admin</title>
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+    <link href="{% static 'css/theme.css' %}" rel="stylesheet">
+</head>
+<body>
+<div class="header brand-stripes">
+        <div class="header-content">
+            <h1>📊 Tax Invoice Management</h1>
+            
+            <div class="nav-buttons">
+                <a href="{% url 'invoices:admin_invoice_list' %}" class="btn btn-primary">📋 All Invoices</a>
+                <a href="{% url 'invoices:reports_dashboard' %}" class="btn btn-success">📈 Reports</a>
+                <a href="{% url 'invoices:export_excel' %}" class="btn btn-warning">📊 Export Excel</a>
+                <a href="{% url 'admin:index' %}" class="btn btn-secondary">🏠 Admin Home</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <!-- Statistics Dashboard -->
+        <div class="dashboard-grid">
+            <div class="stat-card">
+                <div class="stat-number">{{ total_invoices }}</div>
+                <div class="stat-label">Total Invoices</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-number">{{ generated_invoices }}</div>
+                <div class="stat-label">Generated PDFs</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-number">{{ pending_invoices }}</div>
+                <div class="stat-label">Pending Generation</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-number">{{ monthly_invoices }}</div>
+                <div class="stat-label">This Month</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-number">₹{{ monthly_revenue|floatformat:0 }}</div>
+                <div class="stat-label">Monthly Revenue</div>
+            </div>
+        </div>
+        
+        <!-- Quick Actions -->
+        <div class="action-grid">
+            <div class="action-card">
+                <h3>📋 Invoice Management</h3>
+                <div class="action-buttons">
+                    <a href="{% url 'invoices:admin_invoice_list' %}" class="btn btn-primary">View All Invoices</a>
+                    <a href="{% url 'admin:orders_order_changelist' %}" class="btn btn-secondary">Generate New Invoices</a>
+                </div>
+            </div>
+            
+            <div class="action-card">
+                <h3>📈 Reports & Analytics</h3>
+                <div class="action-buttons">
+                    <a href="{% url 'invoices:reports_dashboard' %}" class="btn btn-success">Invoice Reports</a>
+                    <a href="{% url 'invoices:orders_report_dashboard' %}" class="btn btn-success">📦 Sales Dashboard</a>
+                    <a href="{% url 'invoices:export_excel' %}" class="btn btn-warning">Export Invoices</a>
+                    <a href="{% url 'invoices:export_sales_report_excel' %}" class="btn btn-warning">📊 Quick Sales Report</a>
+                </div>
+            </div>
+            
+            <div class="action-card">
+                <h3>⚙️ System Management</h3>
+                <div class="action-buttons">
+                    <a href="{% url 'admin:products_product_changelist' %}" class="btn btn-secondary">Manage Products</a>
+                    <a href="{% url 'admin:orders_order_changelist' %}" class="btn btn-secondary">Manage Orders</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Activity -->
+        <div class="recent-section">
+            <div class="section-card">
+                <div class="section-header">
+                    <h3>🕒 Recent Invoices</h3>
+                </div>
+                <div class="section-content">
+                    {% if recent_invoices %}
+                        {% for invoice in recent_invoices %}
+                        <div class="invoice-item">
+                            <div class="item-info">
+                                <div class="item-number">{{ invoice.invoice_number }}</div>
+                                <div class="item-details">
+                                    {{ invoice.customer_name }} • {{ invoice.created_at|date:"M d, Y" }}
+                                    <span class="status {% if invoice.is_generated %}generated{% else %}pending{% endif %}">
+                                        {% if invoice.is_generated %}Generated{% else %}Pending{% endif %}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="item-amount">₹{{ invoice.final_amount|floatformat:2 }}</div>
+                        </div>
+                        {% endfor %}
+                        
+                        <div style="text-align: center; margin-top: 15px;">
+                            <a href="{% url 'invoices:admin_invoice_list' %}" class="btn btn-primary">View All</a>
+                        </div>
+                    {% else %}
+                        <div class="no-data">No invoices found</div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="section-card">
+                <div class="section-header">
+                    <h3>⚠️ Orders Without Invoices</h3>
+                </div>
+                <div class="section-content">
+                    {% if orders_without_invoices %}
+                        {% for order in orders_without_invoices %}
+                        <div class="order-item">
+                            <div class="item-info">
+                                <div class="item-number">{{ order.order_number }}</div>
+                                <div class="item-details">
+                                    {{ order.user.get_full_name|default:order.user.username }} • {{ order.status|title }}
+                                </div>
+                            </div>
+                            <div class="item-amount">₹{{ order.final_amount|floatformat:2 }}</div>
+                        </div>
+                        {% endfor %}
+                        
+                        <div style="text-align: center; margin-top: 15px;">
+                            <a href="{% url 'admin:orders_order_changelist' %}" class="btn btn-warning">Generate Invoices</a>
+                        </div>
+                    {% else %}
+                        <div class="no-data">All orders have invoices! 🎉</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

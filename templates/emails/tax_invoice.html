@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tax Invoice - {{ site_name }}</title>
+    {% load static %}
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .logo {
+            max-width: 150px;
+            height: auto;
+            margin-bottom: 15px;
+            filter: brightness(0) saturate(100%) invert(18%) sepia(93%) saturate(7093%) hue-rotate(356deg) brightness(91%) contrast(118%);
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .invoice-details {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .invoice-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .invoice-info div {
+            min-width: 45%;
+        }
+        
+        .invoice-info strong {
+            color: #28a745;
+        }
+        
+        .company-info {
+            background: #e9ecef;
+            border-left: 4px solid #28a745;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .customer-info {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .items-table th,
+        .items-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .items-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #28a745;
+        }
+        
+        .items-table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .tax-section {
+            background: #28a745;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .tax-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+        }
+        
+        .final-total {
+            font-size: 18px;
+            font-weight: bold;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255,255,255,0.3);
+        }
+        
+        .gst-info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+        
+        .cta-section {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: #28a745;
+            color: white !important;
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+        
+        .cta-button:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+        
+        .footer {
+            background: #2d3748;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .footer a {
+            color: #28a745;
+            text-decoration: none;
+        }
+        
+        .legal-info {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 12px;
+            color: #856404;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                margin: 10px;
+                border-radius: 5px;
+            }
+            
+            .header,
+            .content,
+            .footer {
+                padding: 20px;
+            }
+            
+            .invoice-info {
+                flex-direction: column;
+            }
+            
+            .invoice-info div {
+                min-width: 100%;
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            {% if company_logo_url %}
+                <img src="{{ company_logo_url }}?v=4" alt="{{ site_name }}" class="logo">
+            {% else %}
+                <img src="{{ site_url }}{% static 'img/joog-logo.png' %}?v=4" alt="{{ site_name }}" class="logo">
+            {% endif %}
+            <h1>📄 Tax Invoice</h1>
+            <p>Your official tax invoice is ready</p>
+        </div>
+        
+        <!-- Content -->
+        <div class="content">
+            <p>Dear {{ customer_name }},</p>
+            <p>Please find your tax invoice for order <strong>{{ order.order_number }}</strong> attached to this email.</p>
+            
+            <!-- Invoice Details -->
+            <div class="invoice-details">
+                <h3>Invoice Information</h3>
+                <div class="invoice-info">
+                    <div>
+                        <strong>Invoice Number:</strong><br>
+                        {{ invoice.invoice_number }}
+                    </div>
+                    <div>
+                        <strong>Invoice Date:</strong><br>
+                        {{ invoice.invoice_date|date:"F d, Y" }}
+                    </div>
+                    <div>
+                        <strong>Order Number:</strong><br>
+                        {{ order.order_number }}
+                    </div>
+                    <div>
+                        <strong>Order Date:</strong><br>
+                        {{ order.created_at|date:"F d, Y" }}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Company Information -->
+            <div class="company-info">
+                <h3>🏢 From: {{ invoice.company_name }}</h3>
+                {% if invoice.company_gstin %}
+                    <p><strong>GSTIN:</strong> {{ invoice.company_gstin }}</p>
+                {% endif %}
+                {% if invoice.company_address %}
+                    <p><strong>Address:</strong><br>{{ invoice.company_address|linebreaks }}</p>
+                {% endif %}
+                {% if invoice.company_email %}
+                    <p><strong>Email:</strong> {{ invoice.company_email }}</p>
+                {% endif %}
+            </div>
+            
+            <!-- Customer Information -->
+            <div class="customer-info">
+                <h3>📋 Bill To:</h3>
+                <p><strong>{{ invoice.customer_name }}</strong></p>
+                <p><strong>Email:</strong> {{ invoice.customer_email }}</p>
+                {% if invoice.customer_phone %}
+                    <p><strong>Phone:</strong> {{ invoice.customer_phone }}</p>
+                {% endif %}
+                
+                <p style="margin-top: 15px;"><strong>Shipping Address:</strong></p>
+                <address>
+                    {{ invoice.shipping_address }}<br>
+                    {{ invoice.shipping_city }}, {{ invoice.shipping_state }} {{ invoice.shipping_postal_code }}<br>
+                    {{ invoice.shipping_country }}
+                </address>
+            </div>
+            
+            <!-- Items Table -->
+            <h3>Invoice Items</h3>
+            <table class="items-table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>HSN</th>
+                        <th>Qty</th>
+                        <th>Rate</th>
+                        <th>Tax %</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in invoice.items.all %}
+                    <tr>
+                        <td>
+                            <strong>{{ item.product_name }}</strong>
+                            {% if item.size %}<br><small>Size: {{ item.size }}</small>{% endif %}
+                        </td>
+                        <td>{{ item.hsn_code|default:"N/A" }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>₹{{ item.unit_price }}</td>
+                        <td>{{ item.tax_percentage }}%</td>
+                        <td><strong>₹{{ item.total_price }}</strong></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            <!-- Tax Calculation -->
+            <div class="tax-section">
+                <h3>💰 Tax Calculation</h3>
+                <div class="tax-row">
+                    <span>Taxable Amount:</span>
+                    <span>₹{{ invoice.subtotal }}</span>
+                </div>
+                
+                {% if invoice.cgst_amount > 0 %}
+                <div class="tax-row">
+                    <span>CGST ({{ invoice.cgst_rate }}%):</span>
+                    <span>₹{{ invoice.cgst_amount }}</span>
+                </div>
+                <div class="tax-row">
+                    <span>SGST ({{ invoice.sgst_rate }}%):</span>
+                    <span>₹{{ invoice.sgst_amount }}</span>
+                </div>
+                {% endif %}
+                
+                {% if invoice.igst_amount > 0 %}
+                <div class="tax-row">
+                    <span>IGST ({{ invoice.igst_rate }}%):</span>
+                    <span>₹{{ invoice.igst_amount }}</span>
+                </div>
+                {% endif %}
+                
+                <div class="tax-row">
+                    <span>Total Tax:</span>
+                    <span>₹{{ invoice.total_tax }}</span>
+                </div>
+                
+                {% if invoice.discount_amount > 0 %}
+                <div class="tax-row">
+                    <span>Discount:</span>
+                    <span>-₹{{ invoice.discount_amount }}</span>
+                </div>
+                {% endif %}
+                
+                <div class="tax-row final-total">
+                    <span>Final Amount:</span>
+                    <span>₹{{ invoice.final_amount }}</span>
+                </div>
+            </div>
+            
+            <!-- GST Information -->
+            <div class="gst-info">
+                <h4>📋 GST Information:</h4>
+                <p>This invoice is generated in compliance with GST regulations. 
+                {% if invoice.cgst_amount > 0 %}
+                    CGST and SGST are applicable as this is an intra-state supply.
+                {% else %}
+                    IGST is applicable as this is an inter-state supply.
+                {% endif %}
+                </p>
+            </div>
+            
+            <!-- Call to Action -->
+            <div class="cta-section">
+                <p>Keep this invoice for your records and tax purposes.</p>
+                <a href="{{ site_url }}/accounts/dashboard/" class="cta-button">View Order Details</a>
+            </div>
+            
+            <!-- Legal Information -->
+            <div class="legal-info">
+                <p><strong>Important:</strong> This is a computer-generated invoice and is valid without signature. 
+                Please retain this invoice for warranty claims and tax purposes. 
+                For any queries regarding this invoice, please contact our support team.</p>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <p><strong>{{ site_name }}</strong></p>
+            {% if company_address %}
+                <p>{{ company_address }}</p>
+            {% endif %}
+            <p>Email: <a href="mailto:{{ support_email }}">{{ support_email }}</a></p>
+            
+            <p style="font-size: 12px; color: #a0aec0; margin-top: 20px;">
+                This invoice was sent to {{ invoice.customer_email }}. 
+                If you have any questions about this invoice, please contact our support team.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

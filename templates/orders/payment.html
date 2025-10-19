@@ -4,9 +4,14 @@
 {% block title %}Payment - JOOG{% endblock %}
 
 {% block content %}
-<div class="container mx-auto px-4 py-12">
     <div class="max-w-2xl mx-auto">
-        <h1 class="text-3xl font-bold mb-8 text-gray-800">Payment</h1>
+        <div class="text-center mb-10 bg-gradient-to-r from-red-600 via-red-500 to-red-600 text-white rounded-2xl p-8 shadow-lg animate-fade-in-up">
+            <div class="flex items-center justify-center space-x-3 hero-title">
+<img src="{% static 'img/joog-logo.png' %}?v=4" alt="JOOG" class="logo-img" style="filter: brightness(0) invert(1);"/>
+                <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight">Payment</h1>
+            </div>
+            <p class="text-red-100 mt-2">Complete your purchase securely</p>
+        </div>
         
         <div class="bg-white rounded-lg shadow-lg p-8">
             <div class="mb-8">
@@ -37,39 +42,40 @@
             
             <form method="POST" class="space-y-6">
                 {% csrf_token %}
-                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                    <h3 class="font-semibold text-blue-800 mb-2">
-                        <i class="fas fa-info-circle mr-2"></i>
-                        Demo Payment
+{% load static %}
+                <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
+                    <h3 class="font-semibold text-green-800 mb-2">
+                        <i class="fas fa-flask mr-2"></i>
+                        Test Mode Active
                     </h3>
-                    <p class="text-blue-700 text-sm">
-                        This is a demo payment system. In production, this would integrate with Stripe or another payment processor.
+                    <p class="text-green-700 text-sm">
+                        🧪 <strong>Development Mode:</strong> Clicking "Pay with PhonePe" will simulate a successful payment and redirect you to order confirmation. No actual payment will be processed.
                     </p>
                 </div>
                 
-                <div>
-                    <label class="form-label">Payment Method</label>
-                    <select name="payment_method" class="form-input">
-                        <option value="stripe">Credit Card (Stripe)</option>
-                        <option value="paypal">PayPal</option>
-                        <option value="bank_transfer">Bank Transfer</option>
-                    </select>
+                <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                    <h3 class="font-semibold text-purple-800 mb-2">
+                        <i class="fas fa-info-circle mr-2"></i>
+                        PhonePe Payment
+                    </h3>
+                    <p class="text-purple-700 text-sm">
+                        You'll be redirected to PhonePe's secure payment page to complete the transaction.
+                    </p>
                 </div>
                 
                 <div class="bg-gray-50 p-4 rounded-lg">
                     <h4 class="font-semibold mb-2">Shipping Address</h4>
                     <p class="text-gray-600">
                         {{ order.shipping_address }}<br>
-                        {{ order.shipping_city }}, {{ order.shipping_postal_code }}<br>
+                        {{ order.shipping_city }}{% if order.shipping_state %}, {{ order.shipping_state }}{% endif %}, {{ order.shipping_postal_code }}<br>
                         {{ order.shipping_country }}
                     </p>
                 </div>
                 
-                <button type="submit" class="btn btn-primary w-full">
-                    Complete Payment <i class="fas fa-credit-card ml-2"></i>
-                </button>
+<a href="{% url 'orders:phonepe_initiate' order.order_number %}" class="btn btn-primary w-full text-center">
+                    Pay with PhonePe <i class="fas fa-mobile-alt ml-2"></i>
+                </a>
             </form>
         </div>
     </div>
-</div>
 {% endblock %}

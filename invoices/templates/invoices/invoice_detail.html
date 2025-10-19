@@ -1,0 +1,225 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice {{ invoice.invoice_number }} - JOOG</title>
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+    <link href="{% static 'css/theme.css' %}" rel="stylesheet">
+</head>
+<body>
+<div class="header brand-stripes">
+        <div class="header-content">
+            <h1>
+                Invoice {{ invoice.invoice_number }}
+                <span class="status-badge {% if invoice.is_generated %}generated{% else %}pending{% endif %}">
+                    {% if invoice.is_generated %}Generated{% else %}Pending{% endif %}
+                </span>
+            </h1>
+            
+            <div class="header-actions">
+                <a href="{% url 'invoices:admin_dashboard' %}" class="btn btn-primary">🏠 Back to Dashboard</a>
+                <a href="{% url 'invoices:invoice_list' %}" class="btn btn-secondary">Back to List</a>
+                <a href="{% url 'invoices:manage_invoice_items' invoice.id %}" class="btn btn-outline">🛠️ Manage Items</a>
+                <a href="{% url 'invoices:admin_invoice_detail' invoice.id %}?print=true" class="btn btn-success" target="_blank">🖨️ Print Clean Invoice</a>
+                {% if invoice.invoice_pdf %}
+                    <a href="{% url 'invoices:invoice_pdf' invoice.id %}" class="btn btn-outline" target="_blank">Download PDF</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="invoice-card">
+            <!-- Invoice Header -->
+            <div class="invoice-header">
+                <div class="invoice-title">TAX INVOICE</div>
+                <div class="company-info">
+                    <div class="company-name">{{ invoice.company_name }}</div>
+                    <div class="company-gstin">GSTIN: {{ invoice.company_gstin }}</div>
+                </div>
+            </div>
+            
+            <!-- Invoice Content -->
+            <div class="invoice-content">
+                <!-- Details Grid -->
+                <div class="details-grid">
+                    <div class="detail-section">
+                        <div class="section-title">Invoice Details</div>
+                        <div class="detail-row">
+                            <div class="detail-label">Invoice No:</div>
+                            <div class="detail-value">{{ invoice.invoice_number }}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Invoice Date:</div>
+                            <div class="detail-value">{{ invoice.invoice_date|date:"d M, Y" }}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Order No:</div>
+                            <div class="detail-value">{{ invoice.order.order_number }}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Order Date:</div>
+                            <div class="detail-value">{{ invoice.order.created_at|date:"d M, Y" }}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <div class="section-title">Customer Details</div>
+                        <div class="detail-row">
+                            <div class="detail-label">Name:</div>
+                            <div class="detail-value">{{ invoice.customer_name }}</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Email:</div>
+                            <div class="detail-value">{{ invoice.customer_email }}</div>
+                        </div>
+                        {% if invoice.customer_phone %}
+                        <div class="detail-row">
+                            <div class="detail-label">Phone:</div>
+                            <div class="detail-value">{{ invoice.customer_phone }}</div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="detail-section shipping-address">
+                        <div class="section-title">Shipping Address</div>
+                        <div class="detail-value">
+                            {{ invoice.shipping_address }}<br>
+                            {{ invoice.shipping_city }}, {{ invoice.shipping_state }} - {{ invoice.shipping_postal_code }}<br>
+                            {{ invoice.shipping_country }}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Items Table -->
+                <div class="items-section">
+                    <table class="items-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 5%;">#</th>
+                                <th style="width: 35%;">Description</th>
+                                <th style="width: 10%; text-align: center;">Quantity</th>
+                                <th style="width: 15%; text-align: right;">Base Price</th>
+                                <th style="width: 15%; text-align: right;">Tax Amount</th>
+                                <th style="width: 20%; text-align: right;">Total Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in invoice_items %}
+                            <tr>
+                                <td class="text-center">{{ forloop.counter }}</td>
+                                <td>
+                                    <div class="product-name">{{ item.product_name }}</div>
+                                    {% if item.size %}<div class="product-description">Size: {{ item.size }}</div>{% endif %}
+                                    {% if item.hsn_code %}<div class="product-description">HSN: {{ item.hsn_code }}</div>{% endif %}
+                                    {% if item.product_description %}
+                                        <div class="product-description">{{ item.product_description|truncatechars:60 }}</div>
+                                    {% endif %}
+                                </td>
+                                <td class="text-center">{{ item.quantity }}</td>
+                                <td class="text-right">₹{{ item.base_amount|floatformat:2 }}</td>
+                                <td class="text-right">₹{{ item.tax_amount|floatformat:2 }}</td>
+                                <td class="text-right">₹{{ item.total_price|floatformat:2 }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center">No items found</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Totals Section -->
+                <div class="totals-section">
+                    <table class="totals-table">
+                        <tr>
+                            <td class="total-label">Subtotal:</td>
+                            <td class="total-value">₹{{ invoice.subtotal|floatformat:2 }}</td>
+                        </tr>
+                        {% if invoice.discount_amount > 0 %}
+                        <tr>
+                            <td class="total-label">Discount:</td>
+                            <td class="total-value">-₹{{ invoice.discount_amount|floatformat:2 }}</td>
+                        </tr>
+                        {% endif %}
+                        
+                        <!-- Tax Breakup -->
+                        {% if invoice.cgst_amount > 0 %}
+                        <tr class="tax-row">
+                            <td class="total-label">CGST ({{ invoice.cgst_rate }}%):</td>
+                            <td class="total-value">₹{{ invoice.cgst_amount|floatformat:2 }}</td>
+                        </tr>
+                        <tr class="tax-row">
+                            <td class="total-label">SGST ({{ invoice.sgst_rate }}%):</td>
+                            <td class="total-value">₹{{ invoice.sgst_amount|floatformat:2 }}</td>
+                        </tr>
+                        {% endif %}
+                        
+                        {% if invoice.igst_amount > 0 %}
+                        <tr class="tax-row">
+                            <td class="total-label">IGST ({{ invoice.igst_rate }}%):</td>
+                            <td class="total-value">₹{{ invoice.igst_amount|floatformat:2 }}</td>
+                        </tr>
+                        {% endif %}
+                        
+                        <tr class="final-total">
+                            <td class="total-label">Total Amount:</td>
+                            <td class="total-value">₹{{ invoice.final_amount|floatformat:2 }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Print/Share Section -->
+        <div class="print-section">
+            <h3 style="margin-bottom: 15px;">Share & Print Options</h3>
+            <div class="print-actions">
+                {% if invoice.invoice_pdf %}
+                    <a href="{% url 'invoices:invoice_pdf' invoice.id %}" class="btn btn-primary" target="_blank">View PDF</a>
+                    <a href="{% url 'invoices:invoice_pdf' invoice.id %}?download=1" class="btn btn-success">Download PDF</a>
+                {% endif %}
+                <button onclick="window.print()" class="btn btn-outline">Print Invoice</button>
+                <button onclick="shareInvoice()" class="btn btn-secondary">Share Link</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function shareInvoice() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Invoice {{ invoice.invoice_number }}',
+                    text: 'Tax Invoice from {{ invoice.company_name }}',
+                    url: window.location.href
+                });
+            } else {
+                // Fallback: Copy link to clipboard
+                const url = window.location.href;
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(url).then(() => {
+                        alert('Invoice link copied to clipboard!');
+                    });
+                } else {
+                    // Fallback for older browsers
+                    const textArea = document.createElement('textarea');
+                    textArea.value = url;
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    try {
+                        document.execCommand('copy');
+                        alert('Invoice link copied to clipboard!');
+                    } catch (err) {
+                        alert('Unable to copy link. Please copy manually: ' + url);
+                    }
+                    document.body.removeChild(textArea);
+                }
+            }
+        }
+    </script>
+</body>
+</html>

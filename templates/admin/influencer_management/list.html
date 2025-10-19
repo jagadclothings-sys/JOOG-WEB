@@ -1,0 +1,566 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block title %}Manage Influencers - JOOG Admin{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+/* Use JOOG luxury theme variables */
+:root {
+    --joog-red-primary: #8b0000;
+    --joog-red-accent: #a52a2a;
+    --joog-gold-accent: #d4af37;
+    --joog-champagne: #f7e7ce;
+    --joog-ivory: #fffff0;
+    --joog-ivory-linen: #faf0e6;
+    --joog-text-primary: #2d1810;
+    --joog-text-secondary: #5d4e37;
+    --joog-gradient-red: linear-gradient(135deg, #8b0000 0%, #a52a2a 100%);
+    --joog-gradient-luxury: linear-gradient(135deg, #8b0000 0%, #d4af37 50%, #f7e7ce 100%);
+}
+
+.search-filter-card {
+    background: var(--joog-ivory);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 8px 25px rgba(139, 0, 0, 0.15);
+    border: 2px solid var(--joog-champagne);
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.search-filter-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--joog-gradient-red);
+}
+
+.table-card {
+    background: var(--joog-ivory);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(139, 0, 0, 0.15);
+    border: 2px solid var(--joog-champagne);
+    position: relative;
+}
+
+.table-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--joog-gradient-luxury);
+    z-index: 1;
+}
+
+.influencer-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: var(--joog-ivory);
+    margin-right: 15px;
+    background: var(--joog-gradient-red) !important;
+    border: 3px solid var(--joog-gold-accent);
+    box-shadow: 0 4px 8px rgba(139, 0, 0, 0.3);
+    font-size: 1.1rem;
+    position: relative;
+}
+
+.influencer-avatar::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 50%;
+    background: var(--joog-gradient-luxury);
+    z-index: -1;
+}
+
+.status-badge {
+    border-radius: 25px;
+    padding: 8px 16px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    font-family: 'Inter', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 2px solid;
+    position: relative;
+    overflow: hidden;
+}
+
+.status-badge.bg-success {
+    background: linear-gradient(135deg, #22c55e, #16a34a) !important;
+    border-color: #15803d !important;
+    color: white !important;
+}
+
+.status-badge.bg-danger {
+    background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+    border-color: #b91c1c !important;
+    color: white !important;
+}
+
+.btn-action {
+    border-radius: 25px;
+    padding: 10px 20px;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid;
+}
+
+.btn-action::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.btn-action:hover::before {
+    left: 100%;
+}
+
+.gradient-primary {
+    background: var(--joog-gradient-red) !important;
+    border-color: var(--joog-gold-accent) !important;
+    color: var(--joog-ivory) !important;
+    box-shadow: 0 4px 12px rgba(139, 0, 0, 0.3);
+}
+
+.gradient-primary:hover {
+    background: var(--joog-gradient-luxury) !important;
+    border-color: var(--joog-gold-accent) !important;
+    color: var(--joog-ivory) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(139, 0, 0, 0.4);
+}
+
+.btn-outline-secondary {
+    border-color: rgba(255, 255, 255, 0.3) !important;
+    color: var(--joog-ivory) !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(10px);
+}
+
+.btn-outline-secondary:hover {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-color: var(--joog-champagne) !important;
+    color: var(--joog-ivory) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+}
+
+/* Regular outline secondary for other sections */
+.search-filter-card .btn-outline-secondary,
+.table-card .btn-outline-secondary {
+    border-color: var(--joog-text-secondary) !important;
+    color: var(--joog-text-secondary) !important;
+    background: transparent !important;
+}
+
+.search-filter-card .btn-outline-secondary:hover,
+.table-card .btn-outline-secondary:hover {
+    background: var(--joog-champagne) !important;
+    border-color: var(--joog-red-primary) !important;
+    color: var(--joog-red-primary) !important;
+    transform: translateY(-2px);
+}
+
+/* Table styling */
+.table {
+    margin: 0 !important;
+}
+
+.table thead th {
+    background: var(--joog-champagne) !important;
+    color: var(--joog-text-primary) !important;
+    font-weight: 700 !important;
+    font-family: 'Inter', sans-serif !important;
+    padding: 1.25rem 1rem !important;
+    border-bottom: 3px solid var(--joog-gold-accent) !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.85rem;
+    position: relative;
+}
+
+.table tbody tr {
+    transition: all 0.3s ease;
+}
+
+.table tbody tr:nth-child(even) {
+    background: rgba(212, 175, 55, 0.08) !important;
+}
+
+.table tbody tr:hover {
+    background: rgba(139, 0, 0, 0.05) !important;
+    transform: scale(1.01);
+    box-shadow: 0 4px 12px rgba(139, 0, 0, 0.1);
+}
+
+.table tbody td {
+    padding: 1rem !important;
+    border-bottom: 1px solid var(--joog-ivory-linen) !important;
+    vertical-align: middle !important;
+}
+
+/* Form controls */
+.form-control, .form-select {
+    border: 2px solid var(--joog-champagne) !important;
+    border-radius: 8px !important;
+    padding: 0.75rem 1rem !important;
+    font-family: 'Inter', sans-serif !important;
+    transition: all 0.3s ease !important;
+    background: var(--joog-ivory) !important;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--joog-red-primary) !important;
+    box-shadow: 0 0 0 3px rgba(139, 0, 0, 0.15) !important;
+    outline: none !important;
+    background: white !important;
+}
+
+.form-label {
+    font-weight: 600 !important;
+    color: var(--joog-text-primary) !important;
+    font-family: 'Inter', sans-serif !important;
+    margin-bottom: 0.5rem !important;
+}
+
+/* Button group styling */
+.btn-group .btn {
+    border-radius: 6px !important;
+    margin-right: 4px;
+    font-size: 0.85rem;
+    padding: 8px 12px;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-primary {
+    border-color: var(--joog-red-primary) !important;
+    color: var(--joog-red-primary) !important;
+}
+
+.btn-outline-primary:hover {
+    background: var(--joog-red-primary) !important;
+    color: white !important;
+    transform: translateY(-1px);
+}
+
+.btn-outline-info:hover {
+    background: var(--joog-gold-accent) !important;
+    border-color: var(--joog-gold-accent) !important;
+    color: white !important;
+}
+
+
+/* Pagination styling */
+.pagination .page-link {
+    border: 2px solid var(--joog-champagne) !important;
+    color: var(--joog-text-primary) !important;
+    background: var(--joog-ivory) !important;
+    font-weight: 500;
+    margin: 0 2px;
+    border-radius: 6px !important;
+    transition: all 0.3s ease;
+}
+
+.pagination .page-link:hover {
+    background: var(--joog-red-primary) !important;
+    border-color: var(--joog-red-primary) !important;
+    color: white !important;
+    transform: translateY(-1px);
+}
+
+.pagination .page-item.active .page-link {
+    background: var(--joog-gradient-red) !important;
+    border-color: var(--joog-gold-accent) !important;
+    color: white !important;
+}
+
+/* Badge styling */
+.badge {
+    font-weight: 600 !important;
+    padding: 6px 12px !important;
+    border-radius: 20px !important;
+    font-size: 0.75rem !important;
+}
+
+.badge.bg-success {
+    background: linear-gradient(135deg, #22c55e, #16a34a) !important;
+}
+
+.badge.bg-secondary {
+    background: linear-gradient(135deg, #6b7280, #4b5563) !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .search-filter-card, .table-card {
+        border-radius: 8px;
+        padding: 1rem;
+    }
+    
+    .influencer-avatar {
+        width: 40px;
+        height: 40px;
+        margin-right: 10px;
+    }
+    
+    .btn-action {
+        padding: 8px 16px;
+        font-size: 0.85rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0"><i class="fas fa-users me-2"></i>Manage Influencers</h1>
+            <p class="text-muted mb-0">View and manage all your influencers</p>
+        </div>
+        <div>
+            <a href="{% url 'influencers:admin_dashboard' %}" class="btn btn-outline-secondary btn-action me-2">
+                <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+            </a>
+            <a href="{% url 'influencers:admin_create' %}" class="btn btn-outline-info btn-action">
+                <i class="fas fa-plus me-2"></i>Add New Influencer
+            </a>
+        </div>
+    </div>
+
+    <!-- Search and Filters -->
+    <div class="search-filter-card">
+        <form method="get" class="row g-3">
+            <div class="col-md-4">
+                <label for="search" class="form-label">Search</label>
+                <input type="text" class="form-control" id="search" name="search" 
+                       value="{{ search_query|default:'' }}" 
+                       placeholder="Search by name, username, or email...">
+            </div>
+            <div class="col-md-3">
+                <label for="status" class="form-label">Status</label>
+                <select class="form-select" id="status" name="status">
+                    <option value="">All Status</option>
+                    <option value="active" {% if status_filter == 'active' %}selected{% endif %}>Active</option>
+                    <option value="inactive" {% if status_filter == 'inactive' %}selected{% endif %}>Inactive</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="order_by" class="form-label">Sort By</label>
+                <select class="form-select" id="order_by" name="order_by">
+                    <option value="-created_at" {% if order_by == '-created_at' %}selected{% endif %}>Newest First</option>
+                    <option value="created_at" {% if order_by == 'created_at' %}selected{% endif %}>Oldest First</option>
+                    <option value="name" {% if order_by == 'name' %}selected{% endif %}>Name (A-Z)</option>
+                    <option value="-name" {% if order_by == '-name' %}selected{% endif %}>Name (Z-A)</option>
+                    <option value="username" {% if order_by == 'username' %}selected{% endif %}>Username (A-Z)</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">&nbsp;</label>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search me-2"></i>Filter
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Influencers Table -->
+    <div class="table-card">
+        {% if influencer_data %}
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Influencer</th>
+                        <th>Contact</th>
+                        <th>Performance</th>
+                        <th>Coupons</th>
+                        <th>Commission</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for data in influencer_data %}
+                    {% with influencer=data.influencer %}
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="influencer-avatar" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+                                    {{ influencer.name|first|upper }}
+                                </div>
+                                <div>
+                                    <div class="fw-bold">{{ influencer.name }}</div>
+                                    <small class="text-muted">@{{ influencer.username }}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                <div class="small">{{ influencer.email }}</div>
+                                {% if influencer.phone %}
+                                <div class="small text-muted">{{ influencer.phone }}</div>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="small">
+                                <div><strong>{{ data.total_orders }}</strong> orders</div>
+                                <div class="text-success">₹{{ data.total_revenue|floatformat:2 }}</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="small">
+                                <span class="badge bg-success">{{ data.active_coupons }}</span> active
+                                <br>
+                                <span class="badge bg-secondary">{{ data.total_coupons }}</span> total
+                            </div>
+                        </td>
+                        <td>
+                            <div class="small">
+                                <div><strong>{{ influencer.commission_rate }}%</strong> rate</div>
+                                <div class="text-primary">₹{{ data.commission_earned|floatformat:2 }}</div>
+                            </div>
+                        </td>
+                        <td>
+                            {% if influencer.is_active %}
+                                <span class="badge bg-success status-badge">Active</span>
+                            {% else %}
+                                <span class="badge bg-danger status-badge">Inactive</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a href="{% url 'influencers:admin_detail' influencer.id %}" 
+                                   class="btn btn-sm btn-outline-primary" 
+                                   title="View Details">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{% url 'influencers:admin_edit' influencer.id %}" 
+                                   class="btn btn-sm btn-outline-secondary" 
+                                   title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url 'influencers:admin_coupon_assignment' influencer.id %}" 
+                                   class="btn btn-sm btn-outline-info" 
+                                   title="Manage Coupons">
+                                    <i class="fas fa-tags"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endwith %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        {% if influencers.has_other_pages %}
+        <div class="d-flex justify-content-between align-items-center p-3 border-top">
+            <div class="text-muted small">
+                Showing {{ influencers.start_index }} to {{ influencers.end_index }} of {{ influencers.paginator.count }} influencers
+            </div>
+            <nav aria-label="Influencer pagination">
+                <ul class="pagination pagination-sm mb-0">
+                    {% if influencers.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if order_by %}&order_by={{ order_by }}{% endif %}">First</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ influencers.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if order_by %}&order_by={{ order_by }}{% endif %}">Previous</a>
+                    </li>
+                    {% endif %}
+
+                    {% for num in influencers.paginator.page_range %}
+                        {% if influencers.number == num %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ num }}</span>
+                        </li>
+                        {% elif num > influencers.number|add:'-3' and num < influencers.number|add:'3' %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if order_by %}&order_by={{ order_by }}{% endif %}">{{ num }}</a>
+                        </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if influencers.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ influencers.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if order_by %}&order_by={{ order_by }}{% endif %}">Next</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ influencers.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if order_by %}&order_by={{ order_by }}{% endif %}">Last</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+        {% endif %}
+
+        {% else %}
+        <!-- No Influencers -->
+        <div class="text-center py-5">
+            <i class="fas fa-users fa-4x text-muted mb-3"></i>
+            <h4 class="text-muted">No Influencers Found</h4>
+            {% if search_query or status_filter %}
+                <p class="text-muted">Try adjusting your search criteria or filters.</p>
+                <a href="{% url 'influencers:admin_list' %}" class="btn btn-outline-secondary me-2">
+                    <i class="fas fa-times me-2"></i>Clear Filters
+                </a>
+            {% else %}
+                <p class="text-muted">You haven't created any influencers yet.</p>
+            {% endif %}
+            <a href="{% url 'influencers:admin_create' %}" class="btn gradient-primary">
+                <i class="fas fa-plus me-2"></i>Create First Influencer
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Bulk Actions (if needed in future) -->
+    {% if influencer_data %}
+    <div class="mt-3">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="text-muted small">
+                Total: {{ influencers.paginator.count }} influencer{{ influencers.paginator.count|pluralize }}
+            </div>
+            <div>
+                <a href="{% url 'influencers:admin_export' %}" class="btn btn-outline-success btn-sm">
+                    <i class="fas fa-download me-2"></i>Export All Data
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}

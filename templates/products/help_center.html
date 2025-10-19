@@ -3,7 +3,6 @@
 {% block title %}Help Center - JOOG{% endblock %}
 
 {% block content %}
-<div class="container mx-auto px-4 py-12">
     <!-- Hero Section -->
     <div class="text-center mb-16">
         <h1 class="text-5xl font-bold text-gray-800 mb-6">Help Center</h1>
@@ -61,41 +60,7 @@
         <div class="mb-12">
             <h2 class="text-2xl font-bold text-gray-800 mb-6">Order Management</h2>
             <div class="space-y-4">
-                <div class="bg-white rounded-lg shadow-md">
-                    <button class="w-full text-left p-6 focus:outline-none" onclick="toggleFAQ(this)">
-                        <div class="flex justify-between items-center">
-                            <h3 class="text-lg font-semibold text-gray-800">How can I track my order?</h3>
-                            <i class="fas fa-chevron-down text-gray-400"></i>
-                        </div>
-                    </button>
-                    <div class="px-6 pb-6 hidden">
-                        <p class="text-gray-600">Once your order ships, you'll receive a tracking number via email. You can also check your order status by logging into your account and visiting the "Orders" section.</p>
-                    </div>
-                </div>
-                
-                <div class="bg-white rounded-lg shadow-md">
-                    <button class="w-full text-left p-6 focus:outline-none" onclick="toggleFAQ(this)">
-                        <div class="flex justify-between items-center">
-                            <h3 class="text-lg font-semibold text-gray-800">Can I modify or cancel my order?</h3>
-                            <i class="fas fa-chevron-down text-gray-400"></i>
-                        </div>
-                    </button>
-                    <div class="px-6 pb-6 hidden">
-                        <p class="text-gray-600">You can modify or cancel your order if it hasn't shipped yet. Please contact our customer service team immediately. Once your order has shipped, you can return items following our return policy.</p>
-                    </div>
-                </div>
-                
-                <div class="bg-white rounded-lg shadow-md">
-                    <button class="w-full text-left p-6 focus:outline-none" onclick="toggleFAQ(this)">
-                        <div class="flex justify-between items-center">
-                            <h3 class="text-lg font-semibold text-gray-800">What payment methods do you accept?</h3>
-                            <i class="fas fa-chevron-down text-gray-400"></i>
-                        </div>
-                    </button>
-                    <div class="px-6 pb-6 hidden">
-                        <p class="text-gray-600">We accept all major credit cards (Visa, MasterCard, American Express), PayPal, and Apple Pay. All payments are processed securely through Stripe.</p>
-                    </div>
-                </div>
+                <!-- FAQ items will be added here -->
             </div>
         </div>
 
@@ -103,41 +68,7 @@
         <div class="mb-12">
             <h2 class="text-2xl font-bold text-gray-800 mb-6">Account & Profile</h2>
             <div class="space-y-4">
-                <div class="bg-white rounded-lg shadow-md">
-                    <button class="w-full text-left p-6 focus:outline-none" onclick="toggleFAQ(this)">
-                        <div class="flex justify-between items-center">
-                            <h3 class="text-lg font-semibold text-gray-800">How do I create an account?</h3>
-                            <i class="fas fa-chevron-down text-gray-400"></i>
-                        </div>
-                    </button>
-                    <div class="px-6 pb-6 hidden">
-                        <p class="text-gray-600">Click the "Register" button in the top navigation, fill out the registration form with your details, and verify your email address. You'll then have access to your personal dashboard.</p>
-                    </div>
-                </div>
-                
-                <div class="bg-white rounded-lg shadow-md">
-                    <button class="w-full text-left p-6 focus:outline-none" onclick="toggleFAQ(this)">
-                        <div class="flex justify-between items-center">
-                            <h3 class="text-lg font-semibold text-gray-800">How do I update my profile information?</h3>
-                            <i class="fas fa-chevron-down text-gray-400"></i>
-                        </div>
-                    </button>
-                    <div class="px-6 pb-6 hidden">
-                        <p class="text-gray-600">Log into your account, go to "Profile" in the navigation menu, and update your information. Don't forget to save your changes.</p>
-                    </div>
-                </div>
-                
-                <div class="bg-white rounded-lg shadow-md">
-                    <button class="w-full text-left p-6 focus:outline-none" onclick="toggleFAQ(this)">
-                        <div class="flex justify-between items-center">
-                            <h3 class="text-lg font-semibold text-gray-800">I forgot my password. How can I reset it?</h3>
-                            <i class="fas fa-chevron-down text-gray-400"></i>
-                        </div>
-                    </button>
-                    <div class="px-6 pb-6 hidden">
-                        <p class="text-gray-600">On the login page, click "Forgot Password" and enter your email address. We'll send you a link to reset your password.</p>
-                    </div>
-                </div>
+                <!-- FAQ items will be added here -->
             </div>
         </div>
 
@@ -145,41 +76,7 @@
         <div class="mb-12">
             <h2 class="text-2xl font-bold text-gray-800 mb-6">Product Information</h2>
             <div class="space-y-4">
-                <div class="bg-white rounded-lg shadow-md">
-                    <button class="w-full text-left p-6 focus:outline-none" onclick="toggleFAQ(this)">
-                        <div class="flex justify-between items-center">
-                            <h3 class="text-lg font-semibold text-gray-800">How do I find the right size?</h3>
-                            <i class="fas fa-chevron-down text-gray-400"></i>
-                        </div>
-                    </button>
-                    <div class="px-6 pb-6 hidden">
-                        <p class="text-gray-600">Check our detailed size guide for each product. We provide measurements and fit information to help you choose the perfect size.</p>
-                    </div>
-                </div>
-                
-                <div class="bg-white rounded-lg shadow-md">
-                    <button class="w-full text-left p-6 focus:outline-none" onclick="toggleFAQ(this)">
-                        <div class="flex justify-between items-center">
-                            <h3 class="text-lg font-semibold text-gray-800">Are your products authentic?</h3>
-                            <i class="fas fa-chevron-down text-gray-400"></i>
-                        </div>
-                    </button>
-                    <div class="px-6 pb-6 hidden">
-                        <p class="text-gray-600">Yes, all our products are 100% authentic. We work directly with brands and authorized retailers to ensure authenticity.</p>
-                    </div>
-                </div>
-                
-                <div class="bg-white rounded-lg shadow-md">
-                    <button class="w-full text-left p-6 focus:outline-none" onclick="toggleFAQ(this)">
-                        <div class="flex justify-between items-center">
-                            <h3 class="text-lg font-semibold text-gray-800">Do you offer international shipping?</h3>
-                            <i class="fas fa-chevron-down text-gray-400"></i>
-                        </div>
-                    </button>
-                    <div class="px-6 pb-6 hidden">
-                        <p class="text-gray-600">Yes, we ship to most countries worldwide. Shipping costs and delivery times vary by location. Check our shipping information page for details.</p>
-                    </div>
-                </div>
+                <!-- FAQ items will be added here -->
             </div>
         </div>
     </div>
@@ -197,7 +94,6 @@
             </a>
         </div>
     </div>
-</div>
 
 <script>
 function toggleFAQ(button) {

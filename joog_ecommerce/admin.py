@@ -33,10 +33,11 @@ class CustomAdminSite(AdminSite):
 custom_admin_site = CustomAdminSite(name='custom_admin')
 
 # Register models with custom admin site
-from products.models import Category, Product, ProductImage, Review
+from products.models import Category, Product, ProductImage, Review, BannerImage
 from accounts.models import CustomUser
 from orders.models import Order, OrderItem
 from coupons.models import Coupon
+# from invoices.models import TaxInvoice, TaxInvoiceItem  # Disabled - using integrated invoice system
 
 @admin.register(Category, site=custom_admin_site)
 class CategoryAdmin(admin.ModelAdmin):
@@ -80,3 +81,11 @@ class CouponAdmin(admin.ModelAdmin):
     list_display = ['code', 'discount_type', 'discount_value', 'valid_from', 'valid_to', 'active']
     list_filter = ['active', 'discount_type', 'valid_from', 'valid_to']
     search_fields = ['code']
+
+# TaxInvoice admin disabled - using integrated invoice system in accounts app
+# The invoice functionality is now integrated with the Order model
+# and accessed through accounts:admin_invoices and accounts:invoices URLs
+
+# Register BannerImage with the custom admin using the existing ModelAdmin from products
+from products.admin import BannerImageAdmin as CoreBannerImageAdmin
+custom_admin_site.register(BannerImage, CoreBannerImageAdmin)

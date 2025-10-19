@@ -1,0 +1,245 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}{{ block.super }}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="{% static 'css/styles.css' %}" rel="stylesheet">
+
+<style>
+body, html {
+    font-family: 'Inter', sans-serif !important;
+    background: linear-gradient(135deg, var(--red-primary) 0%, var(--red-accent) 30%, var(--gold-accent) 70%, var(--champagne) 100%) !important;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Background pattern */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 2px, transparent 2px), 
+                      radial-gradient(circle at 75% 75%, rgba(255,255,255,0.1) 2px, transparent 2px);
+    background-size: 60px 60px;
+    background-position: 0 0, 30px 30px;
+    pointer-events: none;
+}
+
+#container {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 100vh !important;
+    position: relative;
+    z-index: 10;
+}
+
+#content {
+    background: rgba(255, 255, 240, 0.95) !important;
+    backdrop-filter: blur(20px) !important;
+    border-radius: 24px !important;
+    padding: 3rem !important;
+    box-shadow: 0 25px 50px rgba(139, 0, 0, 0.3) !important;
+    border: 1px solid rgba(139, 0, 0, 0.1) !important;
+    width: 100%;
+    max-width: 450px;
+    margin: 2rem;
+}
+
+#content-main {
+    text-align: center;
+}
+
+.login {
+    background: transparent !important;
+}
+
+.login h1 {
+    font-family: 'Inter', sans-serif !important;
+    font-size: 2.5rem !important;
+    font-weight: 700 !important;
+    color: var(--red-primary) !important;
+    margin-bottom: 0.5rem !important;
+    text-shadow: 0 2px 4px rgba(139, 0, 0, 0.1) !important;
+}
+
+.login h1 a {
+    color: var(--red-primary) !important;
+    text-decoration: none !important;
+}
+
+.login-subtitle {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    font-weight: 500;
+}
+
+.form-row {
+    margin-bottom: 1.5rem !important;
+}
+
+.form-row label {
+    display: block !important;
+    font-weight: 600 !important;
+    color: var(--text-primary) !important;
+    margin-bottom: 0.5rem !important;
+    font-size: 0.95rem !important;
+}
+
+.form-row input[type="text"],
+.form-row input[type="password"] {
+    width: 100% !important;
+    padding: 1rem 1.25rem !important;
+    border: 2px solid var(--ivory-linen) !important;
+    border-radius: 12px !important;
+    font-size: 1rem !important;
+    font-family: 'Inter', sans-serif !important;
+    background: var(--ivory) !important;
+    color: var(--text-primary) !important;
+    transition: all 0.3s ease !important;
+}
+
+.form-row input[type="text"]:focus,
+.form-row input[type="password"]:focus {
+    outline: none !important;
+    border-color: var(--red-primary) !important;
+    box-shadow: 0 0 0 4px rgba(139, 0, 0, 0.1) !important;
+    background: white !important;
+}
+
+.submit-row {
+    margin-top: 2rem !important;
+}
+
+.submit-row input[type="submit"] {
+    width: 100% !important;
+    background: var(--gradient-red) !important;
+    color: var(--ivory) !important;
+    border: none !important;
+    padding: 1rem 2rem !important;
+    border-radius: 12px !important;
+    font-size: 1.1rem !important;
+    font-weight: 600 !important;
+    font-family: 'Inter', sans-serif !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;
+    box-shadow: 0 4px 12px rgba(139, 0, 0, 0.3) !important;
+}
+
+.submit-row input[type="submit"]:hover {
+    background: var(--gradient-luxury) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(139, 0, 0, 0.4) !important;
+}
+
+/* Error messages */
+.errornote {
+    background: rgba(220, 53, 69, 0.1) !important;
+    border: 1px solid rgba(220, 53, 69, 0.3) !important;
+    border-radius: 8px !important;
+    padding: 1rem !important;
+    color: #dc3545 !important;
+    margin-bottom: 1rem !important;
+    font-weight: 500 !important;
+}
+
+/* Remove default Django admin styles */
+#header, #branding, #footer {
+    display: none !important;
+}
+
+/* Decorative elements */
+.login-decoration {
+    position: absolute;
+    top: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 100px;
+    background: var(--gradient-luxury);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 25px rgba(139, 0, 0, 0.3);
+}
+
+.login-decoration i {
+    font-size: 2.5rem;
+    color: var(--ivory);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    #content {
+        margin: 1rem;
+        padding: 2rem !important;
+    }
+    
+    .login h1 {
+        font-size: 2rem !important;
+    }
+}
+</style>
+{% endblock %}
+
+{% block bodyclass %}{{ block.super }} login{% endblock %}
+
+{% block usertools %}{% endblock %}
+
+{% block nav-global %}{% endblock %}
+
+{% block nav-sidebar %}{% endblock %}
+
+{% block content %}
+<div class="login-decoration">
+    <i class="fas fa-shield-alt"></i>
+</div>
+
+{% if form.errors and not form.non_field_errors %}
+    <p class="errornote">
+    {% if form.errors.items|length == 1 %}
+        {% trans "Please correct the error below." %}
+    {% else %}
+        {% trans "Please correct the errors below." %}
+    {% endif %}
+    </p>
+{% endif %}
+
+{% if form.non_field_errors %}
+    {% for error in form.non_field_errors %}
+        <p class="errornote">{{ error }}</p>
+    {% endfor %}
+{% endif %}
+
+<div class="login">
+    <h1>JOOG Admin</h1>
+    <p class="login-subtitle">Premium Fashion Administration</p>
+    
+    <form action="{{ app_path }}" method="post" id="login-form">{% csrf_token %}
+        <div class="form-row">
+            {{ form.username.label_tag }}{{ form.username }}
+        </div>
+        <div class="form-row">
+            {{ form.password.label_tag }}{{ form.password }}
+        </div>
+        {% url 'admin_password_reset' as password_reset_url %}
+        {% if password_reset_url %}
+        <div class="password-reset-link">
+            <a href="{{ password_reset_url }}" style="color: var(--red-primary); text-decoration: none; font-size: 0.9rem;">{% trans 'Forgotten your password or username?' %}</a>
+        </div>
+        {% endif %}
+        <div class="submit-row">
+            <input type="submit" value="{% trans 'Log in' %}" />
+            <input type="hidden" name="next" value="{{ next }}" />
+        </div>
+    </form>
+</div>
+{% endblock %}

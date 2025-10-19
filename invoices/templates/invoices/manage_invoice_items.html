@@ -1,0 +1,177 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Items - Invoice {{ invoice.invoice_number }}</title>
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+    <link href="{% static 'css/theme.css' %}" rel="stylesheet">
+</head>
+<body>
+<div class="header brand-stripes">
+        <div class="header-content">
+            <h1>🛠️ Manage Items - Invoice {{ invoice.invoice_number }}</h1>
+            <div class="header-actions">
+                <a href="{% url 'invoices:admin_dashboard' %}" class="btn btn-outline">🏠 Back to Dashboard</a>
+                <a href="{% url 'invoices:admin_invoice_detail' invoice.id %}" class="btn btn-secondary">📋 View Invoice</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <!-- Invoice Info -->
+        <div class="invoice-info">
+            <h3>Invoice Information</h3>
+            <p><strong>Invoice Number:</strong> {{ invoice.invoice_number }}</p>
+            <p><strong>Customer:</strong> {{ invoice.customer_name }}</p>
+            <p><strong>Current Total:</strong> ₹{{ invoice.final_amount|floatformat:2 }}</p>
+        </div>
+        
+        <!-- Messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert {% if message.tags == 'error' %}error{% else %}{{ message.tags }}{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        <!-- Form -->
+        <div class="form-container">
+            <h3 style="margin-bottom: 20px;">Edit Invoice Items</h3>
+            
+            <form method="post">
+                {% csrf_token %}
+                {{ formset.management_form }}
+                
+                <table class="formset-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 22%;">Product Name</th>
+                            <th style="width: 7%;">HSN Code</th>
+                            <th style="width: 6%;">Size</th>
+                            <th style="width: 6%;">Quantity</th>
+                            <th style="width: 10%;">Unit Price (₹)</th>
+                            <th style="width: 8%;">Tax %</th>
+                            <th style="width: 10%;">Tax Amt</th>
+                            <th style="width: 10%;">Total (₹)</th>
+                            <th style="width: 6%;">Delete?</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for form in formset %}
+                            <tr>
+                                <td>
+                                    {{ form.product_name }}
+                                    {{ form.product_name.errors }}
+                                    {% for hidden in form.hidden_fields %}
+                                        {{ hidden }}
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    {{ form.hsn_code }}
+                                    {{ form.hsn_code.errors }}
+                                </td>
+                                <td>
+                                    {{ form.size }}
+                                    {{ form.size.errors }}
+                                </td>
+                                <td>
+                                    {{ form.quantity }}
+                                    {{ form.quantity.errors }}
+                                </td>
+                                <td>
+                                    {{ form.unit_price }}
+                                    {{ form.unit_price.errors }}
+                                </td>
+                                <td>
+                                    {{ form.tax_percentage }}
+                                    {{ form.tax_percentage.errors }}
+                                </td>
+                                <td>
+                                    <span class="tax-display">
+                                        {% if form.instance.pk %}
+                                            ₹{{ form.instance.tax_amount|floatformat:2 }}
+                                        {% else %}
+                                            ₹0.00
+                                        {% endif %}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="total-display">
+                                        {% if form.instance.pk %}
+                                            ₹{{ form.instance.total_price|floatformat:2 }}
+                                        {% else %}
+                                            ₹0.00
+                                        {% endif %}
+                                    </span>
+                                </td>
+                                <td class="delete-checkbox">
+                                    {% if form.DELETE %}
+                                        {{ form.DELETE }}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                
+                <div class="help-text">
+                    <strong>Instructions:</strong>
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li>Fill in the last empty row to add a new item to the invoice</li>
+                        <li>Check "Delete?" to remove an item from the invoice</li>
+                        <li>Tax amount and total price will be calculated automatically (Unit Price + Tax)</li>
+                        <li>Invoice totals and taxes will be recalculated after saving</li>
+                        <li>The invoice PDF will be regenerated automatically</li>
+                    </ul>
+                </div>
+                
+                <div class="form-actions">
+                    <div class="left">
+                        <a href="{% url 'invoices:admin_invoice_detail' invoice.id %}" class="btn btn-outline">Cancel</a>
+                    </div>
+                    <div class="right">
+                        <button type="submit" class="btn btn-success">💾 Save Changes</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        // Calculate total price on quantity/price changes
+        document.addEventListener('DOMContentLoaded', function() {
+            const rows = document.querySelectorAll('.formset-table tbody tr');
+            
+            rows.forEach(function(row) {
+                const quantityInput = row.querySelector('input[name$="-quantity"]');
+                const priceInput = row.querySelector('input[name$="-unit_price"]');
+                const taxInput = row.querySelector('input[name$="-tax_percentage"]');
+                const taxDisplay = row.querySelector('.tax-display');
+                const totalDisplay = row.querySelector('.total-display');
+                
+                if (quantityInput && priceInput && taxInput && taxDisplay && totalDisplay) {
+                    function updateCalculations() {
+                        const quantity = parseFloat(quantityInput.value) || 0;
+                        const price = parseFloat(priceInput.value) || 0;
+                        const taxRate = parseFloat(taxInput.value) || 0;
+                        
+                        const baseAmount = quantity * price;
+                        const taxAmount = (baseAmount * taxRate) / 100;
+                        const totalAmount = baseAmount + taxAmount;
+                        
+                        taxDisplay.textContent = '₹' + taxAmount.toFixed(2);
+                        totalDisplay.textContent = '₹' + totalAmount.toFixed(2);
+                    }
+                    
+                    quantityInput.addEventListener('input', updateCalculations);
+                    priceInput.addEventListener('input', updateCalculations);
+                    taxInput.addEventListener('input', updateCalculations);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

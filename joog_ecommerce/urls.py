@@ -11,6 +11,9 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('orders/', include('orders.urls')),
     path('coupons/', include('coupons.urls')),
+    path('invoices/', include('invoices.urls')),  # Invoice management system
+    path('influencers/', include('influencers.urls')),  # Influencer dashboard system
+    path('accounts/', include('allauth.urls')),
 ]
 
 if settings.DEBUG:
