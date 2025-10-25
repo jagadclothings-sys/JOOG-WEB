@@ -1,9 +1,47 @@
+# Core Django
 Django==5.2.6
 Pillow==10.1.0
+
+# REST Framework
 djangorestframework==3.14.0
 django-cors-headers==4.3.1
-requests==2.32.3
+
+# Authentication
 django-allauth==65.11.2
 PyJWT==2.10.1
 cryptography==45.0.7
+
+# HTTP & Requests
+requests==2.32.3
+certifi==2025.4.26
+charset-normalizer==3.4.2
+idna==3.10
+urllib3==2.4.0
+
+# Configuration
 python-decouple==3.8
+
+# PDF Generation
+reportlab==4.4.3
+# weasyprint==66.0  # Removed - requires system dependencies
+xhtml2pdf==0.2.17
+pypdf==6.0.0
+
+# Excel/Data Processing
+openpyxl==3.1.5
+
+# Payment Gateway
+stripe==7.8.0
+
+# Database
+sqlparse==0.5.3
+
+# Utilities
+python-dateutil==2.9.0.post0
+pytz==2025.2
+tzdata==2025.2
+PyYAML==6.0.2
+
+# Math & Graphics (if needed for reports)
+numpy==2.2.0
+matplotlib==3.10.0
